@@ -675,9 +675,9 @@
             </div>
         </div>
 
-        <!-- FLASH CARD BERGERAK TERHUBUNG DENGAN TAB PENGUMUMAN GOOGLE SHEET -->
+        <!-- FLASH CARD BERGERAK TERHUBUNG DENGAN SEL B2 TAB PENGUMUMAN GOOGLE SHEET -->
         <div class="flash-card-banner">
-            <marquee scrollamount="5" id="announcementMarquee">✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Memuatkan pengumuman dari Google Sheet...</marquee>
+            <marquee scrollamount="5" id="announcementMarquee">✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Memuatkan pengumuman dari sel B2 Google Sheet...</marquee>
         </div>
 
         <div class="dashboard-body">
@@ -693,7 +693,7 @@
                 </div>
                 <div class="hero-right">
                     <div class="sesi-badge">SESI 2026</div>
-                    <div class="disahkan-badge">✓ Sheet Terhubung</div>
+                    <div class="disahkan-badge">✓ Sheet Terhubung (Sel B2)</div>
                 </div>
             </div>
 
@@ -824,12 +824,13 @@
         const SHEET_ANNOUNCEMENT = "Pengumuman";
         let cachedStudentsData = [];
 
-        // Fungsi Tarik Data Pengumuman dari Tab 'Pengumuman'
+        // Fungsi Tarik Data KHUSUS dari Sel B2 Tab 'Pengumuman'
         async function loadAnnouncementData() {
-            const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_ANNOUNCEMENT)}`;
+            // Menggunakan parameter range=B2:B2 untuk mengambil isi sel B2 secara spesifik
+            const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_ANNOUNCEMENT)}&range=B2:B2`;
             const marqueeElement = document.getElementById('announcementMarquee');
             
-            let defaultText = "✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 📢 PENGUMUMAN RASMI: Sila pastikan semua pelajar mematuhi peraturan asrama yang telah ditetapkan.";
+            let defaultText = "✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨";
 
             try {
                 const response = await fetch(url);
@@ -837,26 +838,16 @@
                 const json = JSON.parse(text.substring(47, text.length - 2));
                 const rows = json.table.rows;
 
-                if (rows && rows.length > 0) {
-                    let announcements = [];
-                    rows.forEach(r => {
-                        if (r.c && r.c[0] && r.c[0].v) {
-                            announcements.push(r.c[0].v);
-                        }
-                    });
-
-                    if (announcements.length > 0) {
-                        let dynamicAnnounceHtml = "✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨";
-                        announcements.forEach(item => {
-                            dynamicAnnounceHtml += ` &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 📢 ${item}`;
-                        });
-                        marqueeElement.innerHTML = dynamicAnnounceHtml;
+                if (rows && rows.length > 0 && rows[0].c && rows[0].c[0] && rows[0].c[0].v !== null) {
+                    let cellB2Value = rows[0].c[0].v;
+                    if (cellB2Value.toString().trim() !== "") {
+                        marqueeElement.innerHTML = `✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 📢 ${cellB2Value}`;
                         return;
                     }
                 }
                 marqueeElement.innerHTML = defaultText;
             } catch (error) {
-                console.error('Gagal memuatkan tab Pengumuman:', error);
+                console.error('Gagal memuatkan sel B2 dari tab Pengumuman:', error);
                 marqueeElement.innerHTML = defaultText;
             }
         }
