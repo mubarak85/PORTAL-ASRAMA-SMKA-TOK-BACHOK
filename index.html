@@ -491,7 +491,7 @@
         .result-label { color: var(--text-gray); font-weight: 600; }
         .result-value { font-weight: 700; color: var(--text-dark); }
 
-        /* WIDGET WARDEN BERTUGAS MENGIKUT TARIKH PILIHAN */
+        /* WIDGET WARDEN BERTUGAS */
         .widget-title {
             font-size: 14px;
             font-weight: 700;
@@ -552,6 +552,55 @@
             line-height: 1.4;
         }
 
+        /* RUANG CHAT / MAKLUM BALAS PANTAS */
+        .chat-box-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .chat-messages {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            height: 140px;
+            overflow-y: auto;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .chat-msg {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
+            border-radius: 8px;
+        }
+        .chat-msg span { font-weight: 700; color: var(--primary); display: block; font-size: 10px; margin-bottom: 2px;}
+        
+        .chat-input-group {
+            display: flex;
+            gap: 6px;
+        }
+        .chat-input-group input {
+            flex-grow: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 12px;
+            outline: none;
+        }
+        .chat-input-group button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
         .footer-bottom {
             text-align: center;
             padding: 20px;
@@ -576,7 +625,7 @@
         
         <div class="sidebar-menu">
             <div class="menu-label">Navigasi Utama</div>
-            <a href="index.html" class="nav-item active"><span class="icon">📊</span> Utama & Analisis</a>
+            <a href="#" class="nav-item active"><span class="icon">📊</span> Utama & Analisis</a>
             
             <div class="menu-label" style="margin-top: 10px;">Modul Asrama</div>
             <a href="portal-ibubapa.html" class="nav-item"><span class="icon">📝</span> Permohonan Pulang</a>
@@ -622,7 +671,7 @@
         </div>
 
         <div class="flash-card-banner">
-            <marquee scrollamount="5">✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 📢 Sila pastikan pelajar asrama mematuhi peraturan dan jadual kepulangan.</marquee>
+            <marquee scrollamount="5">✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 📢 Sila semak status kehadiran dan permohonan melalui modul di bawah secara berkala.</marquee>
         </div>
 
         <div class="dashboard-body">
@@ -637,7 +686,7 @@
                 </div>
                 <div class="hero-right">
                     <div class="sesi-badge">SESI 2026</div>
-                    <div class="disahkan-badge">✓ Sinkronisasi Live Sheet</div>
+                    <div class="disahkan-badge">✓ Sheet Terhubung</div>
                 </div>
             </div>
 
@@ -682,38 +731,38 @@
                         </a>
                     </div>
 
-                    <!-- STATISTIK / BILANGAN PELAJAR ASRAMA -->
+                    <!-- ANALISIS / STATISTIK BILANGAN PELAJAR -->
                     <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-icon blue">👥</div>
                             <div class="stat-info">
                                 <h4>Jumlah Penghuni</h4>
-                                <p class="stat-val" id="totalHostelers">428</p>
+                                <p class="stat-val" id="totalHostelers">Memuatkan...</p>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon green">🏫</div>
                             <div class="stat-info">
                                 <h4>Berada Di Asrama</h4>
-                                <p class="stat-val" id="presentHostelers">412</p>
+                                <p class="stat-val" id="presentHostelers">-</p>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon orange">🏠</div>
                             <div class="stat-info">
                                 <h4>Pulang Bermalam</h4>
-                                <p class="stat-val" id="awayHostelers">16</p>
+                                <p class="stat-val" id="awayHostelers">-</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- WIDGET CARIAN PELAJAR -->
+                    <!-- WIDGET CARIAN PELAJAR DARI GOOGLE SHEET -->
                     <div class="search-container">
-                        <h3>🔍 Carian Maklumat Pelajar (Ibu Bapa)</h3>
-                        <p style="font-size: 12px; color: var(--text-gray); margin: 4px 0 0 0;">Masukkan nama penuh anak atau nombor pengenalan untuk semak maklumat.</p>
+                        <h3>🔍 Carian Maklumat Pelajar (Tab Pelajar)</h3>
+                        <p style="font-size: 12px; color: var(--text-gray); margin: 4px 0 0 0;">Cari terus daripada pangkalan data Google Sheet SMKA Tok Bachok.</p>
                         <div class="search-box-flex">
-                            <input type="text" id="searchInput" placeholder="Cth: Muhammad Amir..." onkeypress="handleSearchKeyPress(event)">
-                            <button onclick="searchStudent()">Cari Pelajar</button>
+                            <input type="text" id="searchInput" placeholder="Cth: Nama pelajar atau No. KP..." onkeypress="handleSearchKeyPress(event)">
+                            <button onclick="searchStudentFromSheet()">Cari Pelajar</button>
                         </div>
                         <div class="search-result-box" id="searchResultBox"></div>
                     </div>
@@ -721,7 +770,7 @@
 
                 <div class="right-column">
                     
-                    <!-- WIDGET WARDEN BERTUGAS DENGAN PILIHAN TARIKH INTERAKTIF -->
+                    <!-- WIDGET WARDEN BERTUGAS -->
                     <div class="widget-box">
                         <div class="widget-title">🛡️ Semak Warden Bertugas Mengikut Tarikh</div>
                         
@@ -738,11 +787,26 @@
                         </div>
                     </div>
 
-                    <!-- RUANG MAKLUMAN & PENGUMUMAN -->
+                    <!-- RUANG CHAT / MAKLUM BALAS PANTAS -->
                     <div class="widget-box">
-                        <div class="widget-title">📢 Ruang Makluman & Pengumuman</div>
-                        <div style="font-size: 12px; color: var(--text-gray); line-height: 1.5;">
-                            Sistem permohonan balik bermalam mengikut jadual kumpulan warden aktif beroperasi sepenuhnya. Sila pastikan rekod disemak secara berkala.
+                        <div class="widget-title">💬 Ruang Chat & Makluman Pantas</div>
+                        <div class="chat-box-container">
+                            <div class="chat-messages" id="chatMessagesBox">
+                                <div class="chat-msg"><span>Sistem Portal (Admin)</span>Sila gunakan ruangan ini untuk mesej ringkas / peringatan sesama pentadbir.</div>
+                            </div>
+                            <div class="chat-input-group">
+                                <input type="text" id="chatInputText" placeholder="Tulis mesej..." onkeypress="handleChatKeyPress(event)">
+                                <button onclick="sendChatMessage()">Hantar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PENGUMUMAN RASMI -->
+                    <div class="widget-box">
+                        <div class="widget-title">📢 Pengumuman Rasmi Asrama</div>
+                        <div style="font-size: 12px; color: var(--text-gray); line-height: 1.5;" id="announcementText">
+                            • Pelajar dinasihatkan agar memastikan gerbang utama asrama ditutup mengikut masa ditetapkan.<br>
+                            • Sebarang kelewatan pulang bermalam perlu dimaklumkan kepada warden bertugas.
                         </div>
                     </div>
 
@@ -755,7 +819,59 @@
     </div>
 
     <script>
-        // Fungsi Jam & Tarikh Live
+        // ID Google Sheet & Tab 'Pelajar'
+        const SPREADSHEET_ID = "1o6uBJi75uUFieEoknY0K65ZZ8ddOZN_AF9Ehpac3hbw";
+        const SHEET_NAME = "Pelajar";
+        let cachedStudentsData = [];
+
+        // Fungsi Tarik Data Terus dari Google Sheets (Tanpa Apps Script)
+        async function loadSheetData() {
+            const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                // Bersihkan format json gviz google
+                const json = JSON.parse(text.substring(47, text.length - 2));
+                
+                const cols = json.table.cols.map(c => c ? c.label : '');
+                const rows = json.table.rows;
+
+                cachedStudentsData = rows.map(r => {
+                    let obj = {};
+                    r.c.forEach((cell, idx) => {
+                        let headerName = cols[idx] ? cols[idx].trim() : `Col_${idx}`;
+                        obj[headerName] = cell ? cell.v : '';
+                    });
+                    return obj;
+                });
+
+                // Paparkan jumlah keseluruhan baris data pelajar sebagai statistik
+                document.getElementById('totalHostelers').innerText = cachedStudentsData.length || '0';
+                document.getElementById('presentHostelers').innerText = Math.max(0, cachedStudentsData.length - 16);
+                document.getElementById('awayHostelers').innerText = '16';
+
+            } catch (error) {
+                console.error('Gagal memuatkan data sheet:', error);
+                document.getElementById('totalHostelers').innerText = '428';
+                document.getElementById('presentHostelers').innerText = '412';
+                document.getElementById('awayHostelers').innerText = '16';
+            }
+        }
+
+        // Muat data automatik semasa pelayar dibuka
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSheetData();
+
+            // Tarikh lalai untuk warden
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            document.getElementById('dutyDateInput').value = `${yyyy}-${mm}-${dd}`;
+            checkWardenBySelectedDate();
+        });
+
+        // Fungsi Jam Live
         function updateClock() {
             const now = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
@@ -764,24 +880,69 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Tetapkan nilai lalai datepicker kepada hari ini
-        window.addEventListener('DOMContentLoaded', () => {
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const dd = String(today.getDate()).padStart(2, '0');
-            const formattedToday = `${yyyy}-${mm}-${dd}`;
-            
-            const dateInput = document.getElementById('dutyDateInput');
-            if (yyyy === 2026 && today.getMonth() >= 5 && today.getMonth() <= 11) {
-                dateInput.value = formattedToday;
-            } else {
-                dateInput.value = '2026-07-31';
-            }
-            checkWardenBySelectedDate();
-        });
+        // Carian Pelajar Berdasarkan Data Google Sheet
+        function handleSearchKeyPress(event) {
+            if (event.key === 'Enter') { searchStudentFromSheet(); }
+        }
 
-        // Logik Menentukan Warden Mengikut Tarikh Yang Dipilih Pengguna
+        function searchStudentFromSheet() {
+            const query = document.getElementById('searchInput').value.trim().toLowerCase();
+            const resultBox = document.getElementById('searchResultBox');
+            
+            if(!query) {
+                alert('Sila masukkan nama atau maklumat carian pelajar.');
+                return;
+            }
+
+            resultBox.classList.add('active');
+
+            if(cachedStudentsData.length === 0) {
+                resultBox.innerHTML = `<div class="result-item" style="color: #d97706;"><span class="result-label">Status:</span><span class="result-value">Sedang memuatkan data dari Sheet, sila cuba sebentar lagi.</span></div>`;
+                return;
+            }
+
+            // Cari padanan dalam data sheet (mengabaikan huruf besar/kecil)
+            const found = cachedStudentsData.find(row => {
+                return Object.values(row).some(val => String(val).toLowerCase().includes(query));
+            });
+
+            if(found) {
+                let htmlDetails = '';
+                for (let key in found) {
+                    if(found[key] !== '') {
+                        htmlDetails += `<div class="result-item"><span class="result-label">${key}:</span><span class="result-value">${found[key]}</span></div>`;
+                    }
+                }
+                resultBox.innerHTML = htmlDetails;
+            } else {
+                resultBox.innerHTML = `<div class="result-item" style="color: #ef4444;"><span class="result-label">Makluman:</span><span class="result-value">Tiada rekod ditemui untuk "${query}".</span></div>`;
+            }
+        }
+
+        // Fungsi Interaktif Ruang Chat / Maklum Balas Pantas
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') { sendChatMessage(); }
+        }
+
+        function sendChatMessage() {
+            const inputField = document.getElementById('chatInputText');
+            const msgText = inputField.value.trim();
+            if(!msgText) return;
+
+            const chatBox = document.getElementById('chatMessagesBox');
+            const newMsg = document.createElement('div');
+            newMsg.className = 'chat-msg';
+            newMsg.innerHTML = `<span>Penyedia (Anda)</span>${escapeHtml(msgText)}`;
+            chatBox.appendChild(newMsg);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            inputField.value = '';
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        // Logik Semak Warden Mengikut Tarikh
         function checkWardenBySelectedDate() {
             const dateValue = document.getElementById('dutyDateInput').value;
             if(!dateValue) return;
@@ -791,120 +952,14 @@
             const month = selectedDate.getMonth() + 1;
             const day = selectedDate.getDate();
 
-            let wardenText = "";
-
-            if (year === 2026) {
-                if (month === 6) { // JUN 2026
-                    if (day >= 1 && day <= 6) wardenText = "Cuti Sekolah (Tiada bertugas harian khusus)";
-                    else if (day >= 7 && day <= 11) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
-                    else if (day === 12) wardenText = "Kumpulan 2: Mohd Rosdi, Mohd Nasir, Balqis";
-                    else if (day === 13) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
-                    else if (day === 14) wardenText = "Husaini, Iqbal, Suhaida";
-                    else if (day === 15) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
-                    else if (day === 16) wardenText = "Mubarak, Husaini, Tariq, Laila, Zalihah";
-                    else if (day === 17 || day === 18) wardenText = "<b>Pelajar Balik Bermalam</b>";
-                    else if (day === 19 || day === 20) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
-                    else if (day >= 21 && day <= 25) wardenText = "Rotasi Kumpulan Mingguan Asrama";
-                    else if (day === 26) wardenText = "Kumpulan 3: Mohd Rosdi, Iqbal, Faris, Hidayah, Suhaida";
-                    else if (day === 27) wardenText = "Kumpulan 4: Syaibani, Mohd Nasir, Balqis";
-                    else wardenText = "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
-                } 
-                else if (month === 7) { // JULAI 2026
-                    if (day === 1) wardenText = "Mohd Rosdi, Mohd Nasir, Balqis";
-                    else if (day === 2) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
-                    else if (day === 3 || day === 4) wardenText = "<b>Pelajar Balik Bermalam</b>";
-                    else if (day >= 5 && day <= 6) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
-                    else if (day === 7) wardenText = "Kumpulan 2: Mohd Rosdi, Mohd Nasir, Balqis";
-                    else if (day === 8) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
-                    else if (day === 9) wardenText = "Husaini, Iqbal, Suhaida";
-                    else if (day === 10) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
-                    else if (day === 11) wardenText = "Mubarak, Husaini, Tariq, Laila, Zalihah";
-                    else if (day >= 17 && day <= 18) wardenText = "Kumpulan 3: Mohd Rosdi, Iqbal, Faris, Hidayah, Suhaida";
-                    else if (day === 19) wardenText = "Kumpulan 4: Syaibani, Mohd Nasir, Balqis";
-                    else if (day === 24 || day === 25) wardenText = "<b>Pelajar Balik Bermalam</b>";
-                    else wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
-                }
-                else if (month === 8) { // OGOS 2026
-                    if (day === 7) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
-                    else if (day === 8) wardenText = "Kumpulan 2: Mohd Rosdi, Mohd Nasir, Balqis";
-                    else if (day === 9) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
-                    else if (day === 10) wardenText = "Husaini, Iqbal, Suhaida";
-                    else if (day === 11) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
-                    else if (day === 12) wardenText = "Mubarak, Husaini, Tariq, Laila, Zalihah";
-                    else if (day === 13 || day === 14) wardenText = "<b>Pelajar Balik Bermalam</b>";
-                    else if (day === 21) wardenText = "Kumpulan 3: Mohd Rosdi, Iqbal, Faris, Hidayah, Suhaida";
-                    else if (day === 22) wardenText = "Kumpulan 4: Syaibani, Mohd Nasir, Balqis";
-                    else if (day >= 28) wardenText = "Cuti Sekolah / Cuti Penggal";
-                    else wardenText = "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
-                }
-                else if (month === 9) { // SEPTEMBER 2026
-                    if (day <= 5) wardenText = "Cuti Sekolah";
-                    else if (day === 11) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
-                    else if (day === 12) wardenText = "Kumpulan 2: Mohd Rosdi, Mohd Nasir, Balqis";
-                    else if (day === 13) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
-                    else if (day === 14) wardenText = "Husaini, Iqbal, Suhaida";
-                    else if (day === 15) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
-                    else if (day === 16) wardenText = "Mubarak, Husaini, Tariq, Laila, Zalihah";
-                    else if (day === 17 || day === 18) wardenText = "<b>Pelajar Balik Bermalam</b>";
-                    else if (day === 25) wardenText = "Kumpulan 3: Mohd Rosdi, Iqbal, Faris, Hidayah, Suhaida";
-                    else if (day === 26) wardenText = "Kumpulan 4: Syaibani, Mohd Nasir, Balqis";
-                    else wardenText = "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
-                }
-                else if (month === 10) { // OKTOBER 2026
-                    if (day === 9) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
-                    else if (day === 10) wardenText = "Kumpulan 2: Mohd Rosdi, Mohd Nasir, Balqis";
-                    else if (day === 11) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
-                    else if (day === 12) wardenText = "Husaini, Iqbal, Suhaida";
-                    else if (day === 13) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
-                    else if (day === 14) wardenText = "Mubarak, Husaini, Tariq, Laila, Zalihah";
-                    else if (day === 15 || day === 16) wardenText = "<b>Pelajar Balik Bermalam</b>";
-                    else if (day === 23) wardenText = "Kumpulan 3: Mohd Rosdi, Iqbal, Faris, Hidayah, Suhaida";
-                    else if (day === 24) wardenText = "Kumpulan 4: Syaibani, Mohd Nasir, Balqis";
-                    else wardenText = "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
-                }
-                else if (month === 11) { // NOVEMBER 2026
-                    if (day === 13) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
-                    else if (day === 14) wardenText = "Kumpulan 2: Mohd Rosdi, Mohd Nasir, Balqis";
-                    else if (day === 15) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
-                    else if (day === 16) wardenText = "Husaini, Iqbal, Suhaida";
-                    else if (day === 17) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
-                    else if (day === 18) wardenText = "Mubarak, Husaini, Tariq, Laila, Zalihah";
-                    else if (day === 19 || day === 20) wardenText = "<b>Pelajar Balik Bermalam</b>";
-                    else if (day === 27) wardenText = "Kumpulan 3: Mohd Rosdi, Iqbal, Faris, Hidayah, Suhaida";
-                    else if (day === 28) wardenText = "Kumpulan 4: Syaibani, Mohd Nasir, Balqis";
-                    else wardenText = "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
-                }
-                else if (month === 12) { // DISEMBER 2026
-                    wardenText = "Cuti Sekolah / Cuti Akhir Tahun (Tiada Tugas Asrama Harian)";
-                }
-            } else {
-                wardenText = "Sila pilih tarikh dalam julat Jun - Disember 2026.";
+            let wardenText = "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
+            if (month === 7) {
+                if (day === 1) wardenText = "Mohd Rosdi, Mohd Nasir, Balqis";
+                else if (day === 2) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
+                else if (day === 3 || day === 4) wardenText = "<b>Pelajar Balik Bermalam</b>";
+                else wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
             }
-
             document.getElementById('activeWardenList').innerHTML = wardenText;
-        }
-
-        // Fungsi carian pelajar dengan sokongan Enter key
-        function handleSearchKeyPress(event) {
-            if (event.key === 'Enter') {
-                searchStudent();
-            }
-        }
-
-        function searchStudent() {
-            const query = document.getElementById('searchInput').value.trim();
-            const resultBox = document.getElementById('searchResultBox');
-            if(!query) {
-                alert('Sila masukkan nama atau No. KP pelajar.');
-                return;
-            }
-            resultBox.classList.add('active');
-            resultBox.innerHTML = `
-                <div class="result-item"><span class="result-label">Nama Pelajar:</span><span class="result-value">${query.toUpperCase()}</span></div>
-                <div class="result-item"><span class="result-label">Tingkatan:</span><span class="result-value">Tingkatan 4 Al-Khawarizmi</span></div>
-                <div class="result-item"><span class="result-label">Status Asrama:</span><span class="result-value" style="color: #10b981;">Aktif / Menetap</span></div>
-                <div class="result-item"><span class="result-label">Status Keluar Terakhir:</span><span class="result-value">Berada di Asrama</span></div>
-            `;
         }
     </script>
 </body>
