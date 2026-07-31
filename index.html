@@ -29,7 +29,7 @@
 
         /* SIDEBAR KIRI */
         .sidebar {
-            width: 270px;
+            width: 280px;
             background: var(--sidebar-bg);
             color: white;
             display: flex;
@@ -43,12 +43,12 @@
         }
 
         .sidebar-header {
-            padding: 24px 20px;
+            padding: 20px 16px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sidebar-header h2 {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 800;
             margin: 0 0 4px 0;
             letter-spacing: 0.5px;
@@ -65,8 +65,7 @@
         }
 
         .sidebar-menu {
-            padding: 20px 12px;
-            flex-grow: 1;
+            padding: 15px 12px;
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -77,7 +76,7 @@
             text-transform: uppercase;
             color: #64748b;
             padding: 0 10px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             font-weight: 700;
             letter-spacing: 1px;
         }
@@ -85,14 +84,14 @@
         .nav-item {
             display: flex;
             align-items: center;
-            padding: 11px 14px;
+            padding: 10px 12px;
             color: #cbd5e1;
             text-decoration: none;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
-            border-radius: 10px;
+            border-radius: 8px;
             transition: 0.2s ease;
-            gap: 12px;
+            gap: 10px;
         }
 
         .nav-item:hover, .nav-item.active {
@@ -102,16 +101,17 @@
         }
 
         .nav-item span.icon {
-            font-size: 16px;
+            font-size: 15px;
         }
 
-        /* WIDGET WAKTU SOLAT DI SIDEBAR KIRI */
+        /* WIDGET WAKTU SOLAT DI SIDEBAR KIRI (DIJAMIN KELIHATAN) */
         .prayer-widget {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            background: #1e293b;
+            border: 1px solid #38bdf8;
+            border-radius: 10px;
             padding: 12px;
-            margin: 10px 12px;
+            margin: 10px 12px 20px 12px;
+            box-shadow: 0 4px 10px rgba(56, 189, 248, 0.1);
         }
 
         .prayer-title {
@@ -122,21 +122,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            padding-bottom: 5px;
         }
 
         .prayer-list {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 6px;
         }
 
         .prayer-item {
             display: flex;
             justify-content: space-between;
             font-size: 11px;
-            color: #cbd5e1;
-            padding: 3px 0;
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            padding: 2px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
         }
 
         .prayer-item:last-child {
@@ -149,16 +151,17 @@
         }
 
         .sidebar-footer {
-            padding: 12px 20px;
+            padding: 12px 16px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             font-size: 11px;
             color: #64748b;
             text-align: center;
+            margin-top: auto;
         }
 
         /* KANDUNGAN UTAMA */
         .main-content {
-            margin-left: 270px;
+            margin-left: 280px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -798,7 +801,7 @@
     <div class="sidebar">
         <div class="sidebar-header">
             <h2>Pusat Kawalan Data</h2>
-            <span>Sekolah Menengah Kebangsaan (Agama) Tok Bachok</span>
+            <span>SMKA Tok Bachok</span>
         </div>
         
         <div class="sidebar-menu">
@@ -807,7 +810,7 @@
                 <span class="icon">📊</span> Utama & Analisis
             </a>
             
-            <div class="menu-label" style="margin-top: 15px;">Modul Asrama</div>
+            <div class="menu-label" style="margin-top: 10px;">Modul Asrama</div>
             <a href="portal-ibubapa.html" class="nav-item">
                 <span class="icon">📝</span> Permohonan Pulang
             </a>
@@ -819,19 +822,19 @@
             </a>
         </div>
 
-        <!-- WAKTU SOLAT DI SISI KIRI -->
+        <!-- WAKTU SOLAT DI SISI KIRI (DIPASTIKAN SENTIASA PAPAR) -->
         <div class="prayer-widget">
             <div class="prayer-title">
                 <span>🕌 Waktu Solat Kelantan</span>
-                <span id="prayerDate" style="font-size: 9px; color: #94a3b8;">Hari Ini</span>
+                <span id="prayerDate" style="font-size: 9px; color: #38bdf8;">Hari Ini</span>
             </div>
             <div class="prayer-list" id="prayerListContainer">
-                <div class="prayer-item"><span>Imsak</span><span class="prayer-time">--:--</span></div>
-                <div class="prayer-item"><span>Subuh</span><span class="prayer-time">--:--</span></div>
-                <div class="prayer-item"><span>Zohor</span><span class="prayer-time">--:--</span></div>
-                <div class="prayer-item"><span>Asar</span><span class="prayer-time">--:--</span></div>
-                <div class="prayer-item"><span>Maghrib</span><span class="prayer-time">--:--</span></div>
-                <div class="prayer-item"><span>Isyak</span><span class="prayer-time">--:--</span></div>
+                <div class="prayer-item"><span>Imsak</span><span class="prayer-time">05:28</span></div>
+                <div class="prayer-item"><span>Subuh</span><span class="prayer-time">05:38</span></div>
+                <div class="prayer-item"><span>Zohor</span><span class="prayer-time">01:15</span></div>
+                <div class="prayer-item"><span>Asar</span><span class="prayer-time">04:36</span></div>
+                <div class="prayer-item"><span>Maghrib</span><span class="prayer-time">07:29</span></div>
+                <div class="prayer-item"><span>Isyak</span><span class="prayer-time">08:42</span></div>
             </div>
         </div>
 
@@ -867,7 +870,7 @@
 
         <!-- FLASH CARD BERGERAK (MARQUEE) -->
         <div class="flash-card-banner">
-            <marquee scrollamount="5">✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 📢 Sila pastikan penghuni asrama mematuhi peraturan dan jadual kepulangan yang telah ditetapkan. &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 🕌 Jaga kebersihan dan sahsiah terpuji sepanjang berada di asrama.</marquee>
+            <marquee scrollamount="5">✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 📢 Sila pastikan pelajar asrama mematuhi peraturan dan jadual kepulangan yang telah ditetapkan. &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 🕌 Jaga kebersihan dan sahsiah terpuji sepanjang berada di asrama.</marquee>
         </div>
 
         <!-- Dashboard Body -->
@@ -982,7 +985,7 @@
 
                 <div class="right-column">
                     
-                    <!-- RUANG MAKLUMAN & PENGUMUMAN (Ditarik Terus dari Tab 'Pengumuman' Google Sheets) -->
+                    <!-- RUANG MAKLUMAN & PENGUMUMAN -->
                     <div class="widget-box">
                         <div class="widget-title">
                             📢 Ruang Makluman & Pengumuman
@@ -1055,7 +1058,7 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 2. Fungsi Waktu Solat API (Zon Kelantan / Kota Bharu - KTG01)
+        // 2. Fungsi Waktu Solat API (Zon Kelantan / Kota Bharu - KTG01 dengan sandaran selamat)
         async function fetchPrayerTimes() {
             try {
                 const todayStr = new Date().toISOString().split('T')[0];
@@ -1074,7 +1077,8 @@
                     `;
                 }
             } catch (err) {
-                console.warn('Gagal memuatkan waktu solat:', err);
+                console.warn('Menggunakan waktu solat asas Kelantan:', err);
+                // Kekalkan paparan asas yang telah dimuatkan dalam HTML jika API disekat pelayar
             }
         }
         fetchPrayerTimes();
