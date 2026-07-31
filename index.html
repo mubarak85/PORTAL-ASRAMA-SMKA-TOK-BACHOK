@@ -826,10 +826,8 @@
 
         // Fungsi Tarik Data KHUSUS dari Sel B2 Tab 'Pengumuman'
         async function loadAnnouncementData() {
-            // Menggunakan parameter range=B2:B2 untuk mengambil isi sel B2 secara spesifik
             const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_ANNOUNCEMENT)}&range=B2:B2`;
             const marqueeElement = document.getElementById('announcementMarquee');
-            
             let defaultText = "✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨";
 
             try {
@@ -907,112 +905,87 @@
                 document.getElementById('femaleHostelers').innerText = femaleCount || '0';
 
             } catch (error) {
-                console.error('Gagal memuatkan data sheet pelajar:', error);
-                document.getElementById('totalHostelers').innerText = '709';
-                document.getElementById('maleHostelers').innerText = '355';
-                document.getElementById('femaleHostelers').innerText = '354';
+                console.error('Gagal memuatkan data pelajar:', error);
+                document.getElementById('totalHostelers').innerText = '0';
+                document.getElementById('maleHostelers').innerText = '0';
+                document.getElementById('femaleHostelers').innerText = '0';
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            loadAnnouncementData();
-            loadSheetData();
-
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const dd = String(today.getDate()).padStart(2, '0');
-            document.getElementById('dutyDateInput').value = `${yyyy}-${mm}-${dd}`;
-            checkWardenBySelectedDate();
-        });
-
-        function updateClock() {
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            document.getElementById('liveClock').innerHTML = '⏱️ ' + now.toLocaleDateString('ms-MY', options);
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // Carian Pelajar Berdasarkan Data Google Sheet
-        function handleSearchKeyPress(event) {
-            if (event.key === 'Enter') { searchStudentFromSheet(); }
-        }
-
+        // Fungsi Cari Pelajar
         function searchStudentFromSheet() {
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
             const resultBox = document.getElementById('searchResultBox');
-            
-            if(!query) {
-                alert('Sila masukkan nama atau maklumat carian pelajar.');
+
+            if (!query) {
+                resultBox.innerHTML = '<span style="color: #c0392b;">Sila masukkan nama atau No. KP untuk mencari.</span>';
+                resultBox.classList.add('active');
                 return;
             }
 
-            resultBox.classList.add('active');
-
-            if(cachedStudentsData.length === 0) {
-                resultBox.innerHTML = `<div class="result-item" style="color: #d97706;"><span class="result-label">Status:</span><span class="result-value">Sedang memuatkan data dari Sheet, sila cuba sebentar lagi.</span></div>`;
-                return;
-            }
-
-            const found = cachedStudentsData.find(row => {
+            let found = cachedStudentsData.find(row => {
                 return Object.values(row).some(val => String(val).toLowerCase().includes(query));
             });
 
-            if(found) {
-                let htmlDetails = '';
+            if (found) {
+                let html = '<div style="font-weight:700; color:#10b981; margin-bottom:8px;">✓ Pelajar Dijumpai:</div>';
                 for (let key in found) {
-                    if(found[key] !== '') {
-                        htmlDetails += `<div class="result-item"><span class="result-label">${key}:</span><span class="result-value">${found[key]}</span></div>`;
+                    if (found[key]) {
+                        html += `<div class="result-item"><span class="result-label">${key}:</span><span class="result-value">${found[key]}</span></div>`;
                     }
                 }
-                resultBox.innerHTML = htmlDetails;
+                resultBox.innerHTML = html;
             } else {
-                resultBox.innerHTML = `<div class="result-item" style="color: #ef4444;"><span class="result-label">Makluman:</span><span class="result-value">Tiada rekod ditemui untuk "${query}".</span></div>`;
+                resultBox.innerHTML = '<span style="color: #c0392b;">Tiada rekod pelajar dijumpai dengan carian tersebut.</span>';
             }
+            resultBox.classList.add('active');
         }
 
-        // Ruang Chat
-        function handleChatKeyPress(event) {
-            if (event.key === 'Enter') { sendChatMessage(); }
+        function handleSearchKeyPress(e) {
+            if (e.key === 'Enter') searchStudentFromSheet();
         }
 
+        // Jam Langsung
+        function updateLiveClock() {
+            const now = new Date();
+            document.getElementById('liveClock').innerHTML = `⏱️ ${now.toLocaleTimeString('ms-MY')}`;
+        }
+        setInterval(updateLiveClock, 1000);
+
+        // Simulasi Semak Warden Bertugas
+        function checkWardenBySelectedDate() {
+            const dateVal = document.getElementById('dutyDateInput').value;
+            const dutyListDiv = document.getElementById('activeWardenList');
+            if(!dateVal) return;
+            
+            // Contoh paparan dinamik mengikut tarikh pilihan
+            dutyListDiv.innerHTML = `Tarikh <b>${dateVal}</b>:<br>• Warden I: Ustaz Ahmad<br>• Warden II: Ustazah Fatimah`;
+        }
+
+        // Fungsi Chat Ringkas
         function sendChatMessage() {
-            const inputField = document.getElementById('chatInputText');
-            const msgText = inputField.value.trim();
-            if(!msgText) return;
+            const input = document.getElementById('chatInputText');
+            const msgBox = document.getElementById('chatMessagesBox');
+            if(!input.value.trim()) return;
 
-            const chatBox = document.getElementById('chatMessagesBox');
             const newMsg = document.createElement('div');
             newMsg.className = 'chat-msg';
-            newMsg.innerHTML = `<span>Penyedia (Anda)</span>${escapeHtml(msgText)}`;
-            chatBox.appendChild(newMsg);
-            chatBox.scrollTop = chatBox.scrollHeight;
-            inputField.value = '';
+            newMsg.innerHTML = `<span>Penyedia Sekolah</span>${input.value}`;
+            msgBox.appendChild(newMsg);
+            input.value = '';
+            msgBox.scrollTop = msgBox.scrollHeight;
         }
 
-        function escapeHtml(text) {
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        function handleChatKeyPress(e) {
+            if(e.key === 'Enter') sendChatMessage();
         }
 
-        // Semak Warden Mengikut Tarikh
-        function checkWardenBySelectedDate() {
-            const dateValue = document.getElementById('dutyDateInput').value;
-            if(!dateValue) return;
-
-            const selectedDate = new Date(dateValue);
-            const month = selectedDate.getMonth() + 1;
-            const day = selectedDate.getDate();
-
-            let wardenText = "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
-            if (month === 7) {
-                if (day === 1) wardenText = "Mohd Rosdi, Mohd Nasir, Balqis";
-                else if (day === 2) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
-                else if (day === 3 || day === 4) wardenText = "<b>Pelajar Balik Bermalam</b>";
-                else wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
-            }
-            document.getElementById('activeWardenList').innerHTML = wardenText;
-        }
+        // Muat turun data apabila laman dibuka
+        window.onload = function() {
+            loadAnnouncementData();
+            loadSheetData();
+            updateLiveClock();
+        };
     </script>
 </body>
 </html>
