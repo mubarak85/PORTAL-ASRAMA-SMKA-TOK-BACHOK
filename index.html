@@ -25,11 +25,11 @@
     <!-- Butang untuk Ibu Bapa mohon keluar/pulang -->
     <a href="portal-ibubapa.html" class="menu-btn">📝 Permohonan Pulang Bermalam</a>
 
-    <!-- Butang baharu untuk Semak Status di Menu Utama -->
+    <!-- Butang Semak Status -->
     <a href="semak-status.html" class="menu-btn status">🔍 Semak Status Permohonan</a>
 
     <!-- Butang untuk Warden kelulusan -->
-    <a href="warden.html" class="menu-btn warden">🔐 Portal Kelulusan Warden</a>
+    <a href="dashboard-warden.html" class="menu-btn warden">🔐 Portal Kelulusan Warden</a>
 
     <div class="footer">
         &copy; 2026 Sistem Asrama Sekolah
@@ -38,3 +38,577 @@
 
 </body>
 </html>
+```[cite: 4]
+
+---
+
+### 2. `portal-ibubapa.html` (Borang Permohonan Ibu Bapa)
+```html
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Asrama - Permohonan Pulang Bermalam</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); margin: 0; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { max-width: 550px; width: 100%; background: #ffffff; padding: 35px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); box-sizing: border-box; }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: #3498db; text-decoration: none; font-weight: 600; font-size: 14px; }
+        .back-btn:hover { color: #2980b9; text-decoration: underline; }
+        h2 { color: #2c3e50; text-align: center; margin-top: 0; margin-bottom: 25px; font-size: 24px; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; }
+        .form-group { margin-bottom: 20px; position: relative; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #34495e; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #dcdde1; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: #fdfdfd; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #3498db; box-shadow: 0 0 5px rgba(52, 152, 219, 0.3); background-color: #fff; }
+        input:readonly { background-color: #eaeded; color: #555; cursor: not-allowed; }
+        button { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 14px; border: none; border-radius: 6px; width: 100%; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); }
+        button:hover { opacity: 0.9; }
+        button:disabled { background: #bdc3c7; box-shadow: none; cursor: not-allowed; }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 6px; font-size: 14px; display: none; }
+        .alert-success { background-color: #e8f8f5; color: #27ae60; border: 1px solid #a3e4d7; }
+        .alert-error { background-color: #ffd2d2; color: #c0392b; border: 1px solid #f5b7b1; }
+        .receipt-box { background: #f9f9f9; border: 1px dashed #27ae60; padding: 15px; border-radius: 6px; margin-top: 15px; text-align: left; font-size: 13px; color: #333; }
+        .print-btn { background: #27ae60; color: white; padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; font-size: 13px; display: inline-block; text-decoration: none; }
+        .print-btn:hover { background: #219653; }
+        
+        .autocomplete-items { position: absolute; border: 1px solid #dcdde1; border-bottom: none; border-top: none; z-index: 99; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; background-color: #fff; border-radius: 0 0 6px 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .autocomplete-items div { padding: 12px; cursor: pointer; border-bottom: 1px solid #dcdde1; font-size: 14px; color: #333; }
+        .autocomplete-items div:hover { background-color: #e8f4f8; color: #2980b9; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="back-btn no-print">&larr; Kembali ke Menu Utama</a>
+    <h2>Permohonan Keluar / Pulang Bermalam</h2>
+    
+    <div id="alertBox" class="alert"></div>
+
+    <form id="leaveForm" class="no-print">
+        <div class="form-group">
+            <label for="searchNama">Cari Nama Pelajar:</label>
+            <input type="text" id="searchNama" autocomplete="off" placeholder="Taip sebahagian nama anak di sini..." required>
+            <div id="autocompleteList" class="autocomplete-items"></div>
+            <small style="color: #7f8c8d; font-size: 12px;">Taip nama dan klik pada senarai yang muncul di bawah.</small>
+        </div>
+
+        <div class="form-group" style="display:none;">
+            <label for="idPelajar">No. ID Pelajar:</label>
+            <input type="text" id="idPelajar" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="namaPelajar">Nama Penuh Pelajar:</label>
+            <input type="text" id="namaPelajar" readonly required placeholder="Dipilih automatik daripada carian">
+        </div>
+        
+        <div class="form-group">
+            <label for="kelas">Maklumat Kelas & Dorm:</label>
+            <input type="text" id="kelas" readonly required placeholder="Dipilih automatik daripada carian">
+        </div>
+
+        <div class="form-group">
+            <label for="sebab">Sebab Keluar / Pulang:</label>
+            <textarea id="sebab" rows="3" required placeholder="Cth: Pulang bermalam cuti hujung minggu"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="tarikhPulang">Tarikh Keluar Asrama:</label>
+            <input type="date" id="tarikhPulang" required>
+        </div>
+        <div class="form-group">
+            <label for="tarikhBalik">Tarikh Kembali ke Asrama:</label>
+            <input type="date" id="tarikhBalik" required>
+        </div>
+        <button type="submit" id="submitBtn" disabled style="background: #bdc3c7;">Hantar Permohonan (Sila Pilih Nama Pelajar Dulu)</button>
+    </form>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzaOiZGzdmTneaayNwvGJfV0vB4Z2ZDSKx8h2A1Kd-GpV7Jw4RTM1U3_lMz_lH8dD00/exec';
+    let studentList = [];
+
+    async function fetchStudents() {
+        try {
+            const res = await fetch(`${scriptURL}?action=getStudents`);
+            studentList = await res.json();
+        } catch(err) {
+            console.error('Gagal memuatkan senarai pelajar:', err);
+        }
+    }
+    fetchStudents();
+
+    const searchInput = document.getElementById('searchNama');
+    const listContainer = document.getElementById('autocompleteList');
+    const submitBtn = document.getElementById('submitBtn');
+
+    searchInput.addEventListener('input', function() {
+        const val = this.value.trim().toLowerCase();
+        listContainer.innerHTML = '';
+        
+        if (!val) {
+            document.getElementById('idPelajar').value = '';
+            document.getElementById('namaPelajar').value = '';
+            document.getElementById('kelas').value = '';
+            submitBtn.disabled = true;
+            submitBtn.style.background = '#bdc3c7';
+            submitBtn.textContent = 'Hantar Permohonan (Sila Pilih Nama Pelajar Dulu)';
+            return;
+        }
+
+        const matches = studentList.filter(s => s.nama && s.nama.toLowerCase().includes(val));
+
+        matches.forEach(student => {
+            const item = document.createElement('div');
+            item.innerHTML = `<b>${student.nama}</b> <span style="color:#7f8c8d; font-size:12px;">(Ting: ${student.tingkatan || '-'} | Kelas: ${student.namaKelas || '-'} | Dorm: ${student.dorm || '-'})</span>`;
+            
+            item.addEventListener('click', function() {
+                searchInput.value = student.nama;
+                document.getElementById('idPelajar').value = student.id || '-';
+                document.getElementById('namaPelajar').value = student.nama;
+                document.getElementById('kelas').value = `Tingkatan: ${student.tingkatan || '-'} | Kelas: ${student.namaKelas || '-'} | Dorm: ${student.dorm || '-'}`;
+                
+                listContainer.innerHTML = '';
+                
+                submitBtn.disabled = false;
+                submitBtn.style.background = 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)';
+                submitBtn.textContent = 'Hantar Permohonan';
+            });
+            listContainer.appendChild(item);
+        });
+    });
+
+    document.addEventListener('click', function (e) {
+        if (e.target !== searchInput) {
+            listContainer.innerHTML = '';
+        }
+    });
+
+    const form = document.getElementById('leaveForm');
+    const alertBox = document.getElementById('alertBox');
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Sedang menghantar...';
+        alertBox.style.display = 'none';
+
+        const randomNum = Math.floor(1000 + Math.random() * 9000);
+        const todayStr = new Date().toISOString().slice(0,10).replace(/-/g,'');
+        const refNo = `AST-${todayStr}-${randomNum}`;
+
+        const idPel = document.getElementById('idPelajar').value;
+        const nama = document.getElementById('namaPelajar').value;
+        const kelasVal = document.getElementById('kelas').value;
+        const sebabVal = document.getElementById('sebab').value;
+        const tKeluar = document.getElementById('tarikhPulang').value;
+        const tBalik = document.getElementById('tarikhBalik').value;
+
+        const formData = {
+            refNo: refNo,
+            idPelajar: idPel,
+            namaPelajar: nama,
+            kelas: kelasVal,
+            sebab: sebabVal,
+            tarikhPulang: tKeluar,
+            tarikhBalik: tBalik
+        };
+
+        fetch(scriptURL, { method: 'POST', body: JSON.stringify(formData) })
+        .then(response => response.json())
+        .then(data => {
+            if(data.result === 'success') {
+                form.style.display = 'none';
+                alertBox.className = 'alert alert-success';
+                alertBox.innerHTML = `
+                    <b>Permohonan Berjaya Dihantar!</b>
+                    <div id="printableReceipt" class="receipt-box">
+                        <p style="margin: 0 0 5px 0; font-weight: bold; text-align: center; color: #2c3e50;">RESIT PERMOHONAN PULANG BERMALAM</p>
+                        <hr style="border: 0; border-top: 1px solid #ddd; margin: 5px 0;">
+                        <b>No. Rujukan:</b> <span style="color: #2980b9;">${refNo}</span><br>
+                        <b>No. ID Pelajar:</b> ${idPel}<br>
+                        <b>Nama Pelajar:</b> ${nama}<br>
+                        <b>Maklumat:</b> ${kelasVal}<br>
+                        <b>Tarikh Keluar:</b> ${tKeluar}<br>
+                        <b>Tarikh Balik:</b> ${tBalik}<br>
+                        <b>Status:</b> Menunggu Kelulusan Warden
+                    </div>
+                    <button class="print-btn no-print" onclick="window.print()">🖨️ Cetak Bukti</button>
+                    <a href="semak-status.html" class="print-btn no-print" style="background:#3498db; margin-left:5px;">🔍 Semak Status</a>
+                `;
+                alertBox.style.display = 'block';
+            } else {
+                showAlert('Ralat sistem: ' + data.message, 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Hantar Permohonan';
+            }
+        })
+        .catch(error => {
+            showAlert('Gagal berhubung dengan pelayan. Sila cuba lagi.', 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Hantar Permohonan';
+        });
+    });
+
+    function showAlert(message, type) {
+        alertBox.textContent = message;
+        alertBox.className = 'alert ' + (type === 'success' ? 'alert-success' : 'alert-error');
+        alertBox.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
+```[cite: 1]
+
+---
+
+### 3. `semak-status.html` (Semakan Status Permohonan)
+```html
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Asrama - Semak Status Permohonan</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); margin: 0; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { max-width: 500px; width: 100%; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); box-sizing: border-box; text-align: left; }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: #3498db; text-decoration: none; font-weight: 600; font-size: 14px; }
+        .back-btn:hover { text-decoration: underline; }
+        h2 { color: #2c3e50; margin-top: 0; margin-bottom: 10px; font-size: 24px; text-align: center; }
+        p { color: #7f8c8d; font-size: 14px; margin-bottom: 25px; text-align: center; }
+        
+        .form-group { margin-bottom: 20px; position: relative; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #34495e; font-size: 14px; }
+        input { width: 100%; padding: 12px; border: 1px solid #dcdde1; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: #fdfdfd; }
+        input:focus { outline: none; border-color: #3498db; box-shadow: 0 0 5px rgba(52, 152, 219, 0.3); background-color: #fff; }
+        
+        .result-box { margin-top: 25px; background: #f9f9f9; border: 1px solid #ddd; padding: 20px; border-radius: 8px; text-align: left; display: none; }
+        .status-badge { padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 13px; display: inline-block; margin-top: 10px; }
+        .status-menunggu { background-color: #f39c12; color: white; }
+        .status-lulus { background-color: #27ae60; color: white; }
+        .status-tolak { background-color: #c0392b; color: white; }
+        .error-msg { color: #c0392b; font-weight: bold; margin-top: 15px; display: none; font-size: 14px; text-align: center; }
+
+        .autocomplete-items { position: absolute; border: 1px solid #dcdde1; border-bottom: none; border-top: none; z-index: 99; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; background-color: #fff; border-radius: 0 0 6px 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .autocomplete-items div { padding: 12px; cursor: pointer; border-bottom: 1px solid #dcdde1; font-size: 14px; color: #333; }
+        .autocomplete-items div:hover { background-color: #e8f4f8; color: #2980b9; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="back-btn">&larr; Menu Utama</a>
+    <h2>Semak Status Permohonan</h2>
+    <p>Taip sebahagian nama anak untuk menyemak status permohonan terkini.</p>
+    
+    <div class="form-group">
+        <label for="searchNama">Cari Nama Pelajar:</label>
+        <input type="text" id="searchNama" autocomplete="off" placeholder="Cth: Ahmad...">
+        <div id="autocompleteList" class="autocomplete-items"></div>
+        <small style="color: #7f8c8d; font-size: 12px;">Taip nama dan klik pada senarai yang muncul.</small>
+    </div>
+
+    <div id="errorMsg" class="error-msg">Tiada rekod permohonan dijumpai untuk nama ini.</div>
+
+    <div id="resultBox" class="result-box">
+        <b>No. Rujukan:</b> <span id="resRef"></span><br>
+        <b>No. ID Pelajar:</b> <span id="resId"></span><br>
+        <b>Nama Pelajar:</b> <span id="resNama"></span><br>
+        <b>Maklumat/Dorm:</b> <span id="resKelas"></span><br>
+        <b>Sebab:</b> <span id="resSebab"></span><br>
+        <b>Tarikh Keluar:</b> <span id="resKeluar"></span><br>
+        <b>Tarikh Balik:</b> <span id="resBalik"></span><br>
+        <div style="text-align: center; margin-top: 15px;">
+            <b>Status Semasa:</b><br>
+            <span id="resStatusBadge" class="status-badge">Menunggu Kelulusan</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzaOiZGzdmTneaayNwvGJfV0vB4Z2ZDSKx8h2A1Kd-GpV7Jw4RTM1U3_lMz_lH8dD00/exec';
+    let applicationList = [];
+
+    async function fetchApplications() {
+        try {
+            const response = await fetch(scriptURL);
+            applicationList = await response.json();
+        } catch (error) {
+            console.error('Gagal memuatkan data permohonan:', error);
+        }
+    }
+    fetchApplications();
+
+    const searchInput = document.getElementById('searchNama');
+    const listContainer = document.getElementById('autocompleteList');
+    const errorMsg = document.getElementById('errorMsg');
+    const resultBox = document.getElementById('resultBox');
+
+    searchInput.addEventListener('input', function() {
+        const val = this.value.trim().toLowerCase();
+        listContainer.innerHTML = '';
+        errorMsg.style.display = 'none';
+        resultBox.style.display = 'none';
+
+        if (!val) return;
+
+        const matches = applicationList.filter(item => item.namaPelajar && item.namaPelajar.toLowerCase().includes(val));
+
+        matches.forEach(found => {
+            const item = document.createElement('div');
+            item.innerHTML = `<b>${found.namaPelajar}</b> <span style="color:#7f8c8d; font-size:12px;">(Status: ${found.status || 'Menunggu'})</span>`;
+            
+            item.addEventListener('click', function() {
+                searchInput.value = found.namaPelajar;
+                listContainer.innerHTML = '';
+
+                document.getElementById('resRef').textContent = found.refNo || '-';
+                document.getElementById('resId').textContent = found.idPelajar || '-';
+                document.getElementById('resNama').textContent = found.namaPelajar || '-';
+                document.getElementById('resKelas').textContent = found.kelas || '-';
+                document.getElementById('resSebab').textContent = found.sebab || '-';
+                document.getElementById('resKeluar').textContent = found.tarikhPulang || '-';
+                document.getElementById('resBalik').textContent = found.tarikhBalik || '-';
+
+                const badge = document.getElementById('resStatusBadge');
+                badge.textContent = found.status || 'Menunggu Kelulusan';
+                badge.className = 'status-badge';
+                if (found.status === 'Diluluskan') badge.classList.add('status-lulus');
+                else if (found.status === 'Ditolak') badge.classList.add('status-tolak');
+                else badge.classList.add('status-menunggu');
+
+                resultBox.style.display = 'block';
+            });
+            listContainer.appendChild(item);
+        });
+
+        if (matches.length === 0 && val.length > 2) {
+            errorMsg.style.display = 'block';
+        }
+    });
+
+    document.addEventListener('click', function (e) {
+        if (e.target !== searchInput) {
+            listContainer.innerHTML = '';
+        }
+    });
+</script>
+
+</body>
+</html>
+```[cite: 3]
+
+---
+
+### 4. `dashboard-warden.html` (Dashboard Warden)
+```html
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Warden - Kelulusan Permohonan Asrama</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: #3498db; text-decoration: none; font-weight: 600; font-size: 14px; }
+        .back-btn:hover { text-decoration: underline; }
+        h2 { color: #2c3e50; margin-top: 0; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #dcdde1; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; }
+        .stat-card h3 { margin: 0; font-size: 14px; color: #7f8c8d; }
+        .stat-card p { margin: 10px 0 0 0; font-size: 22px; font-weight: bold; color: #2c3e50; }
+        
+        .filter-container { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .filter-btn { padding: 8px 15px; border: 1px solid #dcdde1; background: #fff; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; color: #34495e; transition: 0.2s; }
+        .filter-btn.active, .filter-btn:hover { background: #3498db; color: #white; border-color: #3498db; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th, td { border: 1px solid #dcdde1; padding: 12px; text-align: left; }
+        th { background-color: #27ae60; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        
+        .btn-lulus { background-color: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-right: 5px; }
+        .btn-tolak { background-color: #c0392b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-lulus:hover, .btn-tolak:hover { opacity: 0.8; }
+        
+        .status-lulus { color: #27ae60; font-weight: bold; }
+        .status-tolak { color: #c0392b; font-weight: bold; }
+        .status-menunggu { color: #f39c12; font-weight: bold; }
+        .loading { text-align: center; padding: 30px; font-style: italic; color: #7f8c8d; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="back-btn">&larr; Kembali ke Menu Utama</a>
+    <h2>
+        <span>Dashboard Warden (Kelulusan Pulang Bermalam)</span>
+        <button onclick="loadData()" style="padding: 6px 12px; font-size: 13px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">🔄 Muat Semula</button>
+    </h2>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Jumlah Permohonan</h3>
+            <p id="statTotal">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Menunggu Kelulusan</h3>
+            <p id="statMenunggu" style="color: #f39c12;">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Diluluskan</h3>
+            <p id="statLulus" style="color: #27ae60;">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Ditolak</h3>
+            <p id="statTolak" style="color: #c0392b;">0</p>
+        </div>
+    </div>
+
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="filterTable('Semua', this)">Semua Permohonan</button>
+        <button class="filter-btn" onclick="filterTable('Menunggu Kelulusan', this)">Menunggu Kelulusan</button>
+        <button class="filter-btn" onclick="filterTable('Diluluskan', this)">Diluluskan</button>
+        <button class="filter-btn" onclick="filterTable('Ditolak', this)">Ditolak</button>
+    </div>
+    
+    <div id="loading" class="loading">Sedang memuatkan data papan pemuka...</div>
+
+    <table id="dataTable" style="display: none;">
+        <thead>
+            <tr>
+                <th>Tarikh Mohon</th>
+                <th>No. Rujukan</th>
+                <th>ID / Nama Pelajar</th>
+                <th>Maklumat / Dorm</th>
+                <th>Sebab</th>
+                <th>Tarikh Keluar / Balik</th>
+                <th>Status Semasa</th>
+                <th>Tindakan Warden</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzaOiZGzdmTneaayNwvGJfV0vB4Z2ZDSKx8h2A1Kd-GpV7Jw4RTM1U3_lMz_lH8dD00/exec';
+    let allData = [];
+    let currentFilter = 'Semua';
+
+    async function loadData() {
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('dataTable').style.display = 'none';
+
+        try {
+            const response = await fetch(scriptURL);
+            allData = await response.json();
+            
+            updateStats(allData);
+            renderTable(allData);
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('dataTable').style.display = 'table';
+        } catch (error) {
+            document.getElementById('loading').innerHTML = 'Ralat memuatkan data: ' + error.message;
+            document.getElementById('loading').style.color = '#c0392b';
+        }
+    }
+
+    function updateStats(data) {
+        let total = data.length;
+        let menunggu = data.filter(d => !d.status || d.status === 'Menunggu Kelulusan').length;
+        let lulus = data.filter(d => d.status === 'Diluluskan').length;
+        let tolak = data.filter(d => d.status === 'Ditolak').length;
+
+        document.getElementById('statTotal').textContent = total;
+        document.getElementById('statMenunggu').textContent = menunggu;
+        document.getElementById('statLulus').textContent = lulus;
+        document.getElementById('statTolak').textContent = tolak;
+    }
+
+    function renderTable(data) {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+
+        let filteredData = data;
+        if (currentFilter !== 'Semua') {
+            filteredData = data.filter(d => {
+                let status = d.status || 'Menunggu Kelulusan';
+                return status === currentFilter;
+            });
+        }
+
+        if (filteredData.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px; color: #7f8c8d;">Tiada permohonan dijumpai untuk kategori ini.</td></tr>';
+            return;
+        }
+
+        filteredData.forEach(row => {
+            const tr = document.createElement('tr');
+            
+            let statusVal = row.status || 'Menunggu Kelulusan';
+            let statusClass = 'status-menunggu';
+            if (statusVal === 'Diluluskan') statusClass = 'status-lulus';
+            else if (statusVal === 'Ditolak') statusClass = 'status-tolak';
+
+            tr.innerHTML = `
+                <td>${new Date(row.timestamp).toLocaleString('ms-MY')}</td>
+                <td><b>${row.refNo || '-'}</b></td>
+                <td><b>${row.idPelajar || '-'}</b><br>${row.namaPelajar || '-'}</td>
+                <td>${row.kelas || '-'}</td>
+                <td>${row.sebab || '-'}</td>
+                <td><b>Keluar:</b> ${row.tarikhPulang || '-'}<br><b>Balik:</b> ${row.tarikhBalik || '-'}</td>
+                <td><span class="${statusClass}">${statusVal}</span></td>
+                <td>
+                    <button class="btn-lulus" onclick="updateStatus(${row.rowIndex}, 'Diluluskan')">Lulus</button>
+                    <button class="btn-tolak" onclick="updateStatus(${row.rowIndex}, 'Ditolak')">Tolak</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function filterTable(status, btnElement) {
+        currentFilter = status;
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        btnElement.classList.add('active');
+        renderTable(allData);
+    }
+
+    async function updateStatus(rowIndex, newStatus) {
+        if (!confirm(`Adakah anda pasti untuk menukar status permohonan ini kepada "${newStatus}"?`)) return;
+
+        const payload = {
+            action: "updateStatus",
+            rowIndex: rowIndex,
+            status: newStatus
+        };
+
+        try {
+            const response = await fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+
+            if (result.result === 'success') {
+                loadData();
+            } else {
+                alert('Gagal mengemas kini status.');
+            }
+        } catch (error) {
+            alert('Ralat sambungan: ' + error.message);
+        }
+    }
+
+    loadData();
+</script>
+
+</body>
+</html>
+```[cite: 2]
