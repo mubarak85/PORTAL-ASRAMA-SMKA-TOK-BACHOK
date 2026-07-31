@@ -104,7 +104,7 @@
             font-size: 15px;
         }
 
-        /* WIDGET WAKTU SOLAT DI SIDEBAR KIRI (DIJAMIN KELIHATAN) */
+        /* WIDGET WAKTU SOLAT DI SIDEBAR KIRI */
         .prayer-widget {
             background: #1e293b;
             border: 1px solid #38bdf8;
@@ -168,7 +168,6 @@
             box-sizing: border-box;
         }
 
-        /* Top Bar */
         .topbar {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
@@ -236,7 +235,6 @@
             font-weight: 600;
         }
 
-        /* FLASH CARD BERGERAK (MARQUEE) */
         .flash-card-banner {
             background: linear-gradient(90deg, #1e293b, #334155, #1e293b);
             border-bottom: 2px solid var(--primary);
@@ -246,7 +244,6 @@
             font-weight: 700;
             overflow: hidden;
             white-space: nowrap;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .flash-card-banner marquee {
@@ -254,13 +251,11 @@
             color: #38bdf8;
         }
 
-        /* Dashboard Body */
         .dashboard-body {
             padding: 25px 30px;
             flex-grow: 1;
         }
 
-        /* Hero Banner Utama */
         .hero-banner {
             background: linear-gradient(135deg, #312e81 0%, #4f46e5 50%, #6366f1 100%);
             border-radius: 20px;
@@ -271,20 +266,16 @@
             align-items: center;
             box-shadow: 0 12px 30px -10px rgba(79, 70, 229, 0.4);
             margin-bottom: 25px;
-            position: relative;
-            overflow: hidden;
         }
 
         .hero-left {
             display: flex;
             align-items: center;
             gap: 20px;
-            z-index: 2;
         }
 
         .hero-icon {
             background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(5px);
             width: 52px;
             height: 52px;
             border-radius: 14px;
@@ -306,36 +297,23 @@
             font-size: 17px;
             margin: 4px 0 0 0;
             font-weight: 800;
-            letter-spacing: -0.3px;
         }
 
         .hero-right {
             display: flex;
             align-items: center;
             gap: 12px;
-            z-index: 2;
         }
 
-        .sesi-badge {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(5px);
+        .sesi-badge, .disahkan-badge {
             padding: 8px 16px;
             border-radius: 10px;
             font-size: 13px;
             font-weight: 700;
         }
+        .sesi-badge { background: rgba(255, 255, 255, 0.15); }
+        .disahkan-badge { background: rgba(16, 185, 129, 0.25); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
 
-        .disahkan-badge {
-            background: rgba(16, 185, 129, 0.25);
-            color: #34d399;
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            padding: 8px 16px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        /* GRID UTAMA */
         .main-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -343,18 +321,10 @@
         }
 
         @media (max-width: 1100px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
+            .main-grid { grid-template-columns: 1fr; }
         }
 
-        .left-column {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .right-column {
+        .left-column, .right-column {
             display: flex;
             flex-direction: column;
             gap: 25px;
@@ -373,8 +343,7 @@
             padding: 22px;
             text-decoration: none;
             color: var(--text-dark);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -409,42 +378,20 @@
             padding: 4px 8px;
             border-radius: 20px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .module-card h3 {
-            font-size: 15px;
-            font-weight: 700;
-            margin: 0 0 4px 0;
-        }
-
-        .module-card p {
-            font-size: 12px;
-            color: var(--text-gray);
-            margin: 0 0 16px 0;
-            line-height: 1.4;
-        }
-
-        .card-action-link {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
         .card-parent .card-icon-box { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
         .card-parent .card-tag { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
-
         .card-status .card-icon-box { background: rgba(245, 158, 11, 0.1); color: #d97706; }
         .card-status .card-tag { background: rgba(245, 158, 11, 0.1); color: #d97706; }
-
         .card-warden .card-icon-box { background: rgba(16, 185, 129, 0.1); color: #059669; }
         .card-warden .card-tag { background: rgba(16, 185, 129, 0.1); color: #059669; }
 
-        /* WIDGET CARIAN PELAJAR KHAS UNTUK IBU BAPA */
-        .search-container {
+        .module-card h3 { font-size: 15px; font-weight: 700; margin: 0 0 4px 0; }
+        .module-card p { font-size: 12px; color: var(--text-gray); margin: 0 0 16px 0; line-height: 1.4; }
+        .card-action-link { font-size: 12px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+
+        .search-container, .analytics-container, .widget-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
@@ -452,30 +399,10 @@
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
         }
 
-        .search-header {
-            margin-bottom: 15px;
-        }
-
-        .search-header h3 {
-            margin: 0 0 4px 0;
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .search-header p {
-            margin: 0;
-            font-size: 12px;
-            color: var(--text-gray);
-        }
-
         .search-box-flex {
             display: flex;
             gap: 10px;
-            margin-bottom: 15px;
+            margin-top: 15px;
         }
 
         .search-box-flex input {
@@ -485,12 +412,6 @@
             border-radius: 10px;
             font-size: 13px;
             outline: none;
-            transition: 0.2s;
-        }
-
-        .search-box-flex input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
         .search-box-flex button {
@@ -500,13 +421,7 @@
             padding: 10px 20px;
             border-radius: 10px;
             font-weight: 700;
-            font-size: 13px;
             cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .search-box-flex button:hover {
-            background: var(--primary-hover);
         }
 
         .search-result-box {
@@ -515,12 +430,10 @@
             border-radius: 12px;
             padding: 15px;
             font-size: 13px;
+            margin-top: 12px;
             display: none;
         }
-
-        .search-result-box.active {
-            display: block;
-        }
+        .search-result-box.active { display: block; }
 
         .result-item {
             display: flex;
@@ -528,111 +441,11 @@
             padding: 6px 0;
             border-bottom: 1px dashed var(--border-color);
         }
+        .result-item:last-child { border-bottom: none; }
+        .result-label { color: var(--text-gray); font-weight: 600; }
+        .result-value { font-weight: 700; color: var(--text-dark); }
 
-        .result-item:last-child {
-            border-bottom: none;
-        }
-
-        .result-label {
-            color: var(--text-gray);
-            font-weight: 600;
-        }
-
-        .result-value {
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        /* ANALISIS TAB PELAJAR LIVE */
-        .analytics-container {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
-        }
-
-        .analytics-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .analytics-header h3 {
-            margin: 0;
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .analytics-summary-chips {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .chip {
-            background: #f1f5f9;
-            padding: 5px 12px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-gray);
-        }
-
-        .chip span {
-            color: var(--primary);
-        }
-
-        .chip-male { background: rgba(59, 130, 246, 0.1); color: #2563eb; }
-        .chip-female { background: rgba(236, 72, 153, 0.1); color: #db2777; }
-
-        .data-table-wrapper {
-            overflow-x: auto;
-        }
-
-        table.analysis-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        table.analysis-table th, table.analysis-table td {
-            padding: 12px 14px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        table.analysis-table th {
-            background: #f8fafc;
-            color: var(--text-gray);
-            font-weight: 700;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        table.analysis-table tr:hover {
-            background: #f8fafc;
-        }
-
-        /* WIDGET KANAN */
-        .widget-box {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
-        }
-
+        /* WIDGET WARDEN BERTUGAS MENGIKUT TARIKH */
         .widget-title {
             font-size: 14px;
             font-weight: 700;
@@ -645,172 +458,27 @@
             padding-bottom: 10px;
         }
 
-        /* RUANG WARDEN BERTUGAS */
         .warden-duty-box {
             background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
             border: 1px solid #bbf7d0;
             border-radius: 12px;
             padding: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .warden-duty-title {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             color: #166534;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            margin-bottom: 6px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .warden-duty-content {
-            font-size: 13px;
+            font-size: 12px;
             color: #14532d;
             font-weight: 600;
-            line-height: 1.5;
-        }
-
-        .announcement-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .announcement-item {
-            background: #fffbeb;
-            border-left: 4px solid #f59e0b;
-            padding: 10px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-        }
-
-        .announcement-item b {
-            display: block;
-            color: #b45309;
-            margin-bottom: 2px;
-        }
-
-        .announcement-item p {
-            margin: 0;
-            color: #78350f;
-        }
-
-        .chat-box {
-            display: flex;
-            flex-direction: column;
-            height: 250px;
-        }
-
-        .chat-messages {
-            flex-grow: 1;
-            background: #f8fafc;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 10px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .chat-msg {
-            background: white;
-            padding: 8px 10px;
-            border-radius: 8px;
-            font-size: 11px;
-            border: 1px solid #e2e8f0;
-            max-width: 85%;
-        }
-
-        .chat-msg.mine {
-            background: #e0e7ff;
-            align-self: flex-end;
-            border-color: #c7d2fe;
-        }
-
-        .chat-msg .author {
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 2px;
-            display: block;
-        }
-
-        .chat-input-area {
-            display: flex;
-            gap: 6px;
-        }
-
-        .chat-input-area input {
-            flex-grow: 1;
-            padding: 8px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 12px;
-            outline: none;
-        }
-
-        .chat-input-area button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .chat-input-area button:hover {
-            background: var(--primary-hover);
-        }
-
-        .music-player {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            color: white;
-            padding: 15px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .music-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .music-icon {
-            font-size: 22px;
-            animation: pulse-music 2s infinite;
-        }
-
-        @keyframes pulse-music {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .music-details h4 {
-            margin: 0;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .music-details span {
-            font-size: 10px;
-            color: #94a3b8;
-        }
-
-        .music-player audio {
-            height: 32px;
-            width: 140px;
+            line-height: 1.4;
         }
 
         .footer-bottom {
@@ -834,30 +502,20 @@
         
         <div class="sidebar-menu">
             <div class="menu-label">Navigasi Utama</div>
-            <a href="index.html" class="nav-item active">
-                <span class="icon">📊</span> Utama & Analisis
-            </a>
+            <a href="index.html" class="nav-item active"><span class="icon">📊</span> Utama & Analisis</a>
             
             <div class="menu-label" style="margin-top: 10px;">Modul Asrama</div>
-            <a href="portal-ibubapa.html" class="nav-item">
-                <span class="icon">📝</span> Permohonan Pulang
-            </a>
-            <a href="semak-status.html" class="nav-item">
-                <span class="icon">🔍</span> Semak Status
-            </a>
-            <a href="dashboard-warden.html" class="nav-item">
-                <span class="icon">🔐</span> Portal Warden
-            </a>
+            <a href="portal-ibubapa.html" class="nav-item"><span class="icon">📝</span> Permohonan Pulang</a>
+            <a href="semak-status.html" class="nav-item"><span class="icon">🔍</span> Semak Status</a>
+            <a href="dashboard-warden.html" class="nav-item"><span class="icon">🔐</span> Portal Warden</a>
         </div>
 
-        <!-- WAKTU SOLAT DI SISI KIRI (DIPASTIKAN SENTIASA PAPAR) -->
         <div class="prayer-widget">
             <div class="prayer-title">
                 <span>🕌 Waktu Solat Kelantan</span>
-                <span id="prayerDate" style="font-size: 9px; color: #38bdf8;">Hari Ini</span>
+                <span style="font-size: 9px; color: #38bdf8;">Hari Ini</span>
             </div>
-            <div class="prayer-list" id="prayerListContainer">
-                <div class="prayer-item"><span>Imsak</span><span class="prayer-time">05:28</span></div>
+            <div class="prayer-list">
                 <div class="prayer-item"><span>Subuh</span><span class="prayer-time">05:38</span></div>
                 <div class="prayer-item"><span>Zohor</span><span class="prayer-time">01:15</span></div>
                 <div class="prayer-item"><span>Asar</span><span class="prayer-time">04:36</span></div>
@@ -866,26 +524,19 @@
             </div>
         </div>
 
-        <div class="sidebar-footer">
-            &copy; 2026 SMKA Tok Bachok
-        </div>
+        <div class="sidebar-footer">&copy; 2026 SMKA Tok Bachok</div>
     </div>
 
     <!-- KANDUNGAN UTAMA -->
     <div class="main-content">
         
-        <!-- Top Navigation Bar dengan Jam Live -->
         <div class="topbar">
             <div class="topbar-title">
                 <h1>Unit Pengurusan Asrama Harian</h1>
                 <span>SEKOLAH MENENGAH KEBANGSAAN (AGAMA) TOK BACHOK</span>
             </div>
-            
             <div class="topbar-right">
-                <div class="live-clock" id="liveClock">
-                    ⏱️ Memuatkan Masa...
-                </div>
-
+                <div class="live-clock" id="liveClock">⏱️ Memuatkan Masa...</div>
                 <div class="user-profile">
                     <div style="background: #6366f1; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px;">P</div>
                     <div class="user-info">
@@ -896,12 +547,10 @@
             </div>
         </div>
 
-        <!-- FLASH CARD BERGERAK (MARQUEE) -->
         <div class="flash-card-banner">
-            <marquee scrollamount="5">✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 📢 Sila pastikan pelajar asrama mematuhi peraturan dan jadual kepulangan yang telah ditetapkan. &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 🕌 Jaga kebersihan dan sahsiah terpuji sepanjang berada di asrama.</marquee>
+            <marquee scrollamount="5">✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 📢 Sila pastikan pelajar asrama mematuhi peraturan dan jadual kepulangan.</marquee>
         </div>
 
-        <!-- Dashboard Body -->
         <div class="dashboard-body">
             
             <div class="hero-banner">
@@ -921,7 +570,6 @@
             <div class="main-grid">
                 
                 <div class="left-column">
-                    
                     <div class="module-grid">
                         <a href="portal-ibubapa.html" class="module-card card-parent">
                             <div>
@@ -960,114 +608,39 @@
                         </a>
                     </div>
 
-                    <!-- WIDGET CARIAN PELAJAR KHAS UNTUK IBU BAPA -->
+                    <!-- WIDGET CARIAN PELAJAR -->
                     <div class="search-container">
-                        <div class="search-header">
-                            <h3>🔍 Carian Maklumat Pelajar (Ibu Bapa)</h3>
-                            <p>Masukkan nama penuh anak atau nombor pengenalan untuk semak maklumat pendaftaran asrama.</p>
-                        </div>
+                        <h3>🔍 Carian Maklumat Pelajar (Ibu Bapa)</h3>
+                        <p style="font-size: 12px; color: var(--text-gray); margin: 4px 0 0 0;">Masukkan nama penuh anak atau nombor pengenalan untuk semak maklumat.</p>
                         <div class="search-box-flex">
-                            <input type="text" id="searchInput" placeholder="Cth: Muhammad Amir / No. KP...">
+                            <input type="text" id="searchInput" placeholder="Cth: Muhammad Amir...">
                             <button onclick="searchStudent()">Cari Pelajar</button>
                         </div>
-                        <div class="search-result-box" id="searchResultBox">
-                            <!-- Hasil carian akan dipaparkan di sini -->
-                        </div>
+                        <div class="search-result-box" id="searchResultBox"></div>
                     </div>
-
-                    <!-- ANALISIS TAB PELAJAR LIVE -->
-                    <div class="analytics-container">
-                        <div class="analytics-header">
-                            <h3>
-                                📈 Analisis Taburan Pelajar (Live Google Sheets)
-                            </h3>
-                            <div class="analytics-summary-chips">
-                                <div class="chip">Jumlah: <span id="totalStudents">Memuatkan...</span></div>
-                                <div class="chip chip-male">Lelaki: <span id="totalMale">...</span></div>
-                                <div class="chip chip-female">Perempuan: <span id="totalFemale">...</span></div>
-                            </div>
-                        </div>
-
-                        <div class="data-table-wrapper">
-                            <table class="analysis-table">
-                                <thead>
-                                    <tr>
-                                        <th>Tingkatan</th>
-                                        <th>Lelaki</th>
-                                        <th>Perempuan</th>
-                                        <th>Jumlah</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="studentAnalyticsBody">
-                                    <tr>
-                                        <td colspan="4" style="text-align: center; color: var(--text-gray); font-style: italic; padding: 20px;">
-                                            Sedang memuat turun data langsung dari Google Sheets (Tab Pelajar)...
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                 </div>
 
                 <div class="right-column">
                     
-                    <!-- RUANG WARDEN BERTUGAS -->
+                    <!-- WIDGET WARDEN BERTUGAS MENGIKUT TARIKH SEMASA (DINAMIK) -->
                     <div class="widget-box">
                         <div class="widget-title">
-                            🛡️ Warden Bertugas Minggu Ini
+                            🛡️ Warden Bertugas <span id="currentDateBadge" style="font-size: 11px; background: #e0e7ff; color: #4f46e5; padding: 2px 8px; border-radius: 6px; margin-left: auto;">Memuatkan Tarikh...</span>
                         </div>
+                        
                         <div class="warden-duty-box">
-                            <div class="warden-duty-title">
-                                <span>👮‍♂️ Warden Lelaki:</span>
-                            </div>
-                            <div class="warden-duty-content" id="wardenMaleContent">
-                                Ustaz Mohd Zulkifli bin Abdullah
-                            </div>
-                        </div>
-                        <div class="warden-duty-box" style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border-color: #fbcfe8;">
-                            <div class="warden-duty-title" style="color: #9d174d;">
-                                <span>👮‍♀️ Warden Perempuan:</span>
-                            </div>
-                            <div class="warden-duty-content" id="wardenFemaleContent" style="color: #831843;">
-                                Ustazah Siti Mariam binti Hassan
+                            <div class="warden-duty-title">👮‍♂️ Barisan Warden Bertugas:</div>
+                            <div class="warden-duty-content" id="activeWardenList">
+                                Sedang mengemas kini senarai warden mengikut takwim...
                             </div>
                         </div>
                     </div>
 
                     <!-- RUANG MAKLUMAN & PENGUMUMAN -->
                     <div class="widget-box">
-                        <div class="widget-title">
-                            📢 Ruang Makluman & Pengumuman
-                        </div>
-                        <div class="announcement-list" id="announcementListContainer">
-                            <div class="announcement-item">
-                                <b>Memuatkan Makluman...</b>
-                                <p>Sedang menyelaraskan data pengumuman daripada Google Sheets.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="widget-box">
-                        <div class="widget-title">
-                            💬 Ruang Chat Rasmi Asrama
-                        </div>
-                        <div class="chat-box">
-                            <div class="chat-messages" id="chatMessages">
-                                <div class="chat-msg">
-                                    <span class="author">Warden Bertugas</span>
-                                    Sistem permohonan pulang minggu ini dibuka seperti biasa.
-                                </div>
-                                <div class="chat-msg mine">
-                                    <span class="author">Penyedia Sekolah</span>
-                                    Carian maklumat ibu bapa telah disusun di bawah modul asrama.
-                                </div>
-                            </div>
-                            <div class="chat-input-area">
-                                <input type="text" id="chatInput" placeholder="Tulis mesej...">
-                                <button onclick="sendChatMessage()">Hantar</button>
-                            </div>
+                        <div class="widget-title">📢 Ruang Makluman & Pengumuman</div>
+                        <div style="font-size: 12px; color: var(--text-gray); line-height: 1.5;">
+                            Sistem permohonan balik bermalam mengikut jadual kumpulan warden aktif beroperasi sepenuhnya. Sila pastikan rekod disemak secara berkala.
                         </div>
                     </div>
 
@@ -1076,13 +649,11 @@
             </div>
         </div>
 
-        <div class="footer-bottom">
-            &copy; 2026 Unit Pengurusan Asrama SMKA Tok Bachok. Hak Cipta Terpelihara.
-        </div>
+        <div class="footer-bottom">&copy; 2026 Unit Pengurusan Asrama SMKA Tok Bachok. Hak Cipta Terpelihara.</div>
     </div>
 
     <script>
-        // Fungsi Jam Live
+        // Fungsi Jam & Tarikh Live
         function updateClock() {
             const now = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
@@ -1091,12 +662,120 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Contoh fungsi carian pelajar
+        // Logik Automatik Semak Warden Berdasarkan Takwim Jun - Disember 2026
+        function loadWardenByCurrentDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1; // 1-12
+            const day = now.getDate();
+
+            // Format paparan tarikh pada widget
+            const optionsDate = { day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('currentDateBadge').innerText = now.toLocaleDateString('ms-MY', optionsDate);
+
+            let wardenText = "";
+
+            // Logik Tarikh Mengikut Takwim PDF Jun - Disember 2026
+            if (year === 2026) {
+                if (month === 6) { // JUN 2026
+                    if (day >= 1 && day <= 6) wardenText = "Cuti Sekolah (Tiada bertugas harian khusus)";
+                    else if (day >= 7 && day <= 11) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
+                    else if (day === 12) wardenText = "Kumpulan 2: Mohd Rosdi, Mohd Nasir, Balqis";
+                    else if (day === 13) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
+                    else if (day === 14) wardenText = "Husaini, Iqbal, Suhaida";
+                    else if (day === 15) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
+                    else if (day === 16) wardenText = "Mubarak, Husaini, Tariq, Laila, Zalihah";
+                    else if (day === 17 || day === 18) wardenText = "<b>Pelajar Balik Bermalam</b>";
+                    else if (day === 19 || day === 20) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
+                    else if (day >= 21 && day <= 25) wardenText = "Rotasi Kumpulan Mingguan Asrama";
+                    else if (day === 26) wardenText = "Kumpulan 3: Mohd Rosdi, Iqbal, Faris, Hidayah, Suhaida";
+                    else if (day === 27) wardenText = "Kumpulan 4: Syaibani, Mohd Nasir, Balqis";
+                    else wardenText = "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
+                } 
+                else if (month === 7) { // JULAI 2026 (Semasa: 31 Julai)
+                    if (day === 1) wardenText = "Mohd Rosdi, Mohd Nasir, Balqis";
+                    else if (day === 2) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
+                    else if (day === 3 || day === 4) wardenText = "<b>Pelajar Balik Bermalam</b>";
+                    else if (day === 5 || day === 6) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
+                    else if (day === 7) wardenText = "Kumpulan 2: Mohd Rosdi, Mohd Nasir, Balqis";
+                    else if (day === 8) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
+                    else if (day === 9) wardenText = "Husaini, Iqbal, Suhaida";
+                    else if (day === 10) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
+                    else if (day === 11) wardenText = "Mubarak, Husaini, Tariq, Laila, Zalihah";
+                    else if (day === 17 || day === 18) wardenText = "Kumpulan 3: Mohd Rosdi, Iqbal, Faris, Hidayah, Suhaida";
+                    else if (day === 19) wardenText = "Kumpulan 4: Syaibani, Mohd Nasir, Balqis";
+                    else if (day === 24 || day === 25) wardenText = "<b>Pelajar Balik Bermalam</b>";
+                    else wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza (Bertugas Harian Julai)";
+                }
+                else if (month === 8) { // OGOS 2026
+                    if (day === 7) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
+                    else if (day === 8) wardenText = "Kumpulan 2: Mohd Rosdi, Mohd Nasir, Balqis";
+                    else if (day === 9) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
+                    else if (day === 10) wardenText = "Husaini, Iqbal, Suhaida";
+                    else if (day === 11) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
+                    else if (day === 12) wardenText = "Mubarak, Husaini, Tariq, Laila, Zalihah";
+                    else if (day === 13 || day === 14) wardenText = "<b>Pelajar Balik Bermalam</b>";
+                    else if (day === 21) wardenText = "Kumpulan 3: Mohd Rosdi, Iqbal, Faris, Hidayah, Suhaida";
+                    else if (day === 22) wardenText = "Kumpulan 4: Syaibani, Mohd Nasir, Balqis";
+                    else if (day >= 28) wardenText = "Cuti Sekolah / Cuti Penggal";
+                    else wardenText = "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
+                }
+                else if (month === 9) { // SEPTEMBER 2026
+                    if (day <= 5) wardenText = "Cuti Sekolah";
+                    else if (day === 11) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
+                    else if (day === 12) wardenText = "Kumpulan 2: Mohd Rosdi, Mohd Nasir, Balqis";
+                    else if (day === 13) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
+                    else if (day === 14) wardenText = "Husaini, Iqbal, Suhaida";
+                    else if (day === 15) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
+                    else if (day === 16) wardenText = "Mubarak, Husaini, Tariq, Laila, Zalihah";
+                    else if (day === 17 || day === 18) wardenText = "<b>Pelajar Balik Bermalam</b>";
+                    else if (day === 25) wardenText = "Kumpulan 3: Mohd Rosdi, Iqbal, Faris, Hidayah, Suhaida";
+                    else if (day === 26) wardenText = "Kumpulan 4: Syaibani, Mohd Nasir, Balqis";
+                    else wardenText = "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
+                }
+                else if (month === 10) { // OKTOBER 2026
+                    if (day === 9) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
+                    else if (day === 10) wardenText = "Kumpulan 2: Mohd Rosdi, Mohd Nasir, Balqis";
+                    else if (day === 11) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
+                    else if (day === 12) wardenText = "Husaini, Iqbal, Suhaida";
+                    else if (day === 13) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
+                    else if (day === 14) wardenText = "Mubarak, Husaini, Tariq, Laila, Zalihah";
+                    else if (day === 15 || day === 16) wardenText = "<b>Pelajar Balik Bermalam</b>";
+                    else if (day === 23) wardenText = "Kumpulan 3: Mohd Rosdi, Iqbal, Faris, Hidayah, Suhaida";
+                    else if (day === 24) wardenText = "Kumpulan 4: Syaibani, Mohd Nasir, Balqis";
+                    else wardenText = "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
+                }
+                else if (month === 11) { // NOVEMBER 2026
+                    if (day === 13) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
+                    else if (day === 14) wardenText = "Kumpulan 2: Mohd Rosdi, Mohd Nasir, Balqis";
+                    else if (day === 15) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
+                    else if (day === 16) wardenText = "Husaini, Iqbal, Suhaida";
+                    else if (day === 17) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
+                    else if (day === 18) wardenText = "Mubarak, Husaini, Tariq, Laila, Zalihah";
+                    else if (day === 19 || day === 20) wardenText = "<b>Pelajar Balik Bermalam</b>";
+                    else if (day === 27) wardenText = "Kumpulan 3: Mohd Rosdi, Iqbal, Faris, Hidayah, Suhaida";
+                    else if (day === 28) wardenText = "Kumpulan 4: Syaibani, Mohd Nasir, Balqis";
+                    else wardenText = "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
+                }
+                else if (month === 12) { // DISEMBER 2026
+                    wardenText = "Cuti Sekolah / Cuti Akhir Tahun (Tiada Tugas Asrama Harian)";
+                }
+            } else {
+                wardenText = "Mengikut Takrif Kalendar 2026";
+            }
+
+            document.getElementById('activeWardenList').innerHTML = wardenText;
+        }
+
+        // Panggil fungsi muat turun warden semasa skrip dimuatkan
+        loadWardenByCurrentDate();
+
+        // Fungsi carian pelajar
         function searchStudent() {
             const query = document.getElementById('searchInput').value.trim();
             const resultBox = document.getElementById('searchResultBox');
             if(!query) {
-                alert('Sila masukkan nama atau No. KP pelajar terlebih dahulu.');
+                alert('Sila masukkan nama atau No. KP pelajar.');
                 return;
             }
             resultBox.classList.add('active');
@@ -1106,20 +785,6 @@
                 <div class="result-item"><span class="result-label">Status Asrama:</span><span class="result-value" style="color: #10b981;">Aktif / Menetap</span></div>
                 <div class="result-item"><span class="result-label">Status Keluar Terakhir:</span><span class="result-value">Berada di Asrama</span></div>
             `;
-        }
-
-        // Contoh fungsi chat
-        function sendChatMessage() {
-            const input = document.getElementById('chatInput');
-            const msg = input.value.trim();
-            if(!msg) return;
-            const chatMessages = document.getElementById('chatMessages');
-            const newMsg = document.createElement('div');
-            newMsg.className = 'chat-msg mine';
-            newMsg.innerHTML = `<span class="author">Penyedia Sekolah</span>${msg}`;
-            chatMessages.appendChild(newMsg);
-            input.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
     </script>
 </body>
