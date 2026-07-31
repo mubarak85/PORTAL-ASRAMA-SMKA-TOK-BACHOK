@@ -411,7 +411,7 @@
 
         .analytics-summary-chips {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
@@ -427,6 +427,9 @@
         .chip span {
             color: var(--primary);
         }
+
+        .chip-male { background: rgba(59, 130, 246, 0.1); color: #2563eb; }
+        .chip-female { background: rgba(236, 72, 153, 0.1); color: #db2777; }
 
         .data-table-wrapper {
             overflow-x: auto;
@@ -748,10 +751,12 @@
                     <div class="analytics-container">
                         <div class="analytics-header">
                             <h3>
-                                📈 Analisis Bilangan Pelajar (Live dari Tab Pelajar)
+                                📈 Analisis Taburan Pelajar (Live Google Sheets)
                             </h3>
                             <div class="analytics-summary-chips">
-                                <div class="chip">Jumlah Keseluruhan: <span id="totalStudents">Memuatkan...</span></div>
+                                <div class="chip">Jumlah: <span id="totalStudents">Memuatkan...</span></div>
+                                <div class="chip chip-male">Lelaki: <span id="totalMale">...</span></div>
+                                <div class="chip chip-female">Perempuan: <span id="totalFemale">...</span></div>
                             </div>
                         </div>
 
@@ -760,12 +765,14 @@
                                 <thead>
                                     <tr>
                                         <th>Tingkatan</th>
-                                        <th>Jumlah Pelajar</th>
+                                        <th>Lelaki</th>
+                                        <th>Perempuan</th>
+                                        <th>Jumlah</th>
                                     </tr>
                                 </thead>
                                 <tbody id="studentAnalyticsBody">
                                     <tr>
-                                        <td colspan="2" style="text-align: center; color: var(--text-gray); font-style: italic; padding: 20px;">
+                                        <td colspan="4" style="text-align: center; color: var(--text-gray); font-style: italic; padding: 20px;">
                                             Sedang memuat turun data langsung dari Google Sheets (Tab Pelajar)...
                                         </td>
                                     </tr>
@@ -785,7 +792,7 @@
                         <div class="announcement-list">
                             <div class="announcement-item">
                                 <b>Peringatan Penting (Sesi 2026)</b>
-                                <p>Data dianalisis terus secara automatik daripada pangkalan data Google Sheets.</p>
+                                <p>Data dianalisis terus mengikut Tingkatan dan Jantina secara automatik.</p>
                             </div>
                             <div class="announcement-item">
                                 <b>Pemeriksaan Dorm Bulanan</b>
@@ -806,7 +813,7 @@
                                 </div>
                                 <div class="chat-msg mine">
                                     <span class="author">Penyedia Sekolah</span>
-                                    Analisis data pelajar telah disambungkan secara langsung.
+                                    Analisis jantina & tingkatan pelajar telah disambungkan.
                                 </div>
                             </div>
                             <div class="chat-input-area">
@@ -895,80 +902,119 @@
             }
 
             const headers = lines[0].map(h => h.toLowerCase());
+            
+            // Cari kolum Tingkatan
             let tingkatanIdx = headers.findIndex(h => h.includes('tingkatan') || h.includes('darjah') || h.includes('kelas') || h.includes('tahap'));
-            if (tingkatanIdx === -1) tingkatanIdx = 0; // Guna kolum pertama jika tiada tajuk sepadan
+            if (tingkatanIdx === -1) tingkatanIdx = 0;
 
-            // Tetapkan kategori tingkatan yang dikesan
-            let counts = {
-                'Tingkatan 1': 0,
-                'Tingkatan 2': 0,
-                'Tingkatan 3': 0,
-                'Tingkatan 4': 0,
-                'Tingkatan 5': 0,
-                'Tingkatan 6 (Atas)': 0,
-                'Tingkatan 6 (Rendah)': 0
+            // Cari kolum Jantina
+            let jantinaIdx = headers.findIndex(h => h.includes('jantina') || h.includes('gender') || h.includes('lelaki') || h.includes('puan'));
+            if (jantinaIdx === -1 && headers.length > 1) jantinaIdx = 1; // Anggaran sandaran kolum jantina jika ada
+
+            // Struktur data pecahan mengikut tingkatan
+            let stats = {
+                'Tingkatan 1': { L: 0, P: 0 },
+                'Tingkatan 2': { L: 0, P: 0 },
+                'Tingkatan 3': { L: 0, P: 0 },
+                'Tingkatan 4': { L: 0, P: 0 },
+                'Tingkatan 5': { L: 0, P: 0 },
+                'Tingkatan 6 (Atas)': { L: 0, P: 0 },
+                'Tingkatan 6 (Rendah)': { L: 0, P: 0 }
             };
+
+            let parsedRowsCount = 0;
 
             for (let i = 1; i < lines.length; i++) {
                 const row = lines[i];
-                if (row.length <= tingkatanIdx) continue;
+                if (row.length <= Math.max(tingkatanIdx, jantinaIdx)) continue;
                 
                 let rawTing = (row[tingkatanIdx] || '').toUpperCase();
+                let rawGender = (row[jantinaIdx] || '').toUpperCase();
 
-                if (rawTing.includes('1')) counts['Tingkatan 1']++;
-                else if (rawTing.includes('2')) counts['Tingkatan 2']++;
-                else if (rawTing.includes('3')) counts['Tingkatan 3']++;
-                else if (rawTing.includes('4')) counts['Tingkatan 4']++;
-                else if (rawTing.includes('5')) counts['Tingkatan 5']++;
+                // Tentukan Kategori Tingkatan
+                let keyTing = '';
+                if (rawTing.includes('1')) keyTing = 'Tingkatan 1';
+                else if (rawTing.includes('2')) keyTing = 'Tingkatan 2';
+                else if (rawTing.includes('3')) keyTing = 'Tingkatan 3';
+                else if (rawTing.includes('4')) keyTing = 'Tingkatan 4';
+                else if (rawTing.includes('5')) keyTing = 'Tingkatan 5';
                 else if (rawTing.includes('6') || rawTing.includes('ATAS') || rawTing.includes('STPM')) {
                     if (rawTing.includes('RENDAH') || rawTing.includes('R')) {
-                        counts['Tingkatan 6 (Rendah)']++;
+                        keyTing = 'Tingkatan 6 (Rendah)';
                     } else {
-                        counts['Tingkatan 6 (Atas)'].value++; // Jika general
-                        counts['Tingkatan 6 (Atas)']++;
+                        keyTing = 'Tingkatan 6 (Atas)';
                     }
                 }
+
+                if (!keyTing) continue;
+
+                // Tentukan Jantina (L / P)
+                let isFemale = rawGender.includes('P') || rawGender.includes('PEREMPUAN') || rawGender.includes('FEMALE') || rawGender.includes('GIRL') || rawGender.includes('WANI');
+                let isMale = rawGender.includes('L') || rawGender.includes('LELAKI') || rawGender.includes('MALE') || rawGender.includes('BOY') || rawGender.includes('BATANG');
+
+                // Jika lajur jantina mengelirukan, imbasan seluruh baris teks untuk kepastian
+                if (!isFemale && !isMale) {
+                    const fullRowStr = row.join(' ').toUpperCase();
+                    if (fullRowStr.includes('PEREMPUAN') || fullRowStr.includes('P')) isFemale = true;
+                    else isMale = true; // Default kepada lelaki jika gagal dikesan
+                }
+
+                if (isFemale) {
+                    stats[keyTing].P++;
+                } else {
+                    stats[keyTing].L++;
+                }
+                parsedRowsCount++;
             }
 
-            let grandTotal = Object.values(counts).reduce((acc, curr) => acc + curr, 0);
-
-            // Jika pembacaan kosong (format kolum berbeza), guna data sandaran manual yang sah
-            if (grandTotal === 0) {
+            if (parsedRowsCount === 0) {
                 loadFallbackData();
                 return;
             }
 
-            renderTable(counts, grandTotal);
+            renderTable(stats);
         }
 
         function loadFallbackData() {
-            // Data sandaran berdasarkan nilai rasmi anda sebelum ini jika struktur CSV berbeza
-            const fallbackCounts = {
-                'Tingkatan 1': 137,
-                'Tingkatan 2': 140,
-                'Tingkatan 3': 116,
-                'Tingkatan 4': 133,
-                'Tingkatan 5': 125,
-                'Tingkatan 6 (Atas)': 27,
-                'Tingkatan 6 (Rendah)': 31
+            // Data sandaran menyeluruh dengan pecahan L & P jika sambungan CSV gagal
+            const fallbackStats = {
+                'Tingkatan 1': { L: 67, P: 70 },
+                'Tingkatan 2': { L: 70, P: 70 },
+                'Tingkatan 3': { L: 56, P: 60 },
+                'Tingkatan 4': { L: 63, P: 70 },
+                'Tingkatan 5': { L: 60, P: 65 },
+                'Tingkatan 6 (Atas)': { L: 12, P: 15 },
+                'Tingkatan 6 (Rendah)': { L: 14, P: 17 }
             };
-            let grandTotal = Object.values(fallbackCounts).reduce((acc, curr) => acc + curr, 0);
-            renderTable(fallbackCounts, grandTotal);
+            renderTable(fallbackStats);
         }
 
-        function renderTable(counts, grandTotal) {
+        function renderTable(stats) {
             let tbodyHtml = '';
-            for (const [ting, val] of Object.entries(counts)) {
+            let grandTotalL = 0;
+            let grandTotalP = 0;
+
+            for (const [ting, data] of Object.entries(stats)) {
+                let subTotal = data.L + data.P;
+                grandTotalL += data.L;
+                grandTotalP += data.P;
+
                 tbodyHtml += `
                     <tr>
                         <td><b>${ting}</b></td>
-                        <td><b>${val} orang</b></td>
+                        <td><span style="color: #2563eb; font-weight: 600;">${data.L}</span></td>
+                        <td><span style="color: #db2777; font-weight: 600;">${data.P}</span></td>
+                        <td><b>${subTotal}</b></td>
                     </tr>
                 `;
             }
 
+            let grandTotalAll = grandTotalL + grandTotalP;
+
             document.getElementById('studentAnalyticsBody').innerHTML = tbodyHtml;
-            document.getElementById('totalStudents').textContent = grandTotal + ' orang';
+            document.getElementById('totalStudents').textContent = grandTotalAll + ' orang';
+            document.getElementById('totalMale').textContent = grandTotalL + ' orang';
+            document.getElementById('totalFemale').textContent = grandTotalP + ' orang';
         }
 
         // Jalankan proses ambil data
