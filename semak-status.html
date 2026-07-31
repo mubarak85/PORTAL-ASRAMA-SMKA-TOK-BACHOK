@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Asrama - Semak Status Permohonan</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); margin: 0; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { max-width: 500px; width: 100%; background: white; padding: 35px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); box-sizing: border-box; text-align: left; }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: #3498db; text-decoration: none; font-weight: 600; font-size: 14px; }
+        .back-btn:hover { text-decoration: underline; }
+        h2 { color: #2c3e50; margin-top: 0; margin-bottom: 10px; font-size: 24px; text-align: center; }
+        p { color: #7f8c8d; font-size: 14px; margin-bottom: 25px; text-align: center; }
+        
+        .form-group { margin-bottom: 20px; position: relative; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #34495e; font-size: 14px; }
+        input { width: 100%; padding: 12px; border: 1px solid #dcdde1; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: #fdfdfd; }
+        input:focus { outline: none; border-color: #3498db; box-shadow: 0 0 5px rgba(52, 152, 219, 0.3); background-color: #fff; }
+        
+        button { background: linear-gradient(135deg, #f39c12 0%, #d35400 100%); color: white; padding: 12px; border: none; border-radius: 6px; width: 100%; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3); }
+        button:hover { opacity: 0.9; }
+        
+        .result-box { margin-top: 25px; background: #f9f9f9; border: 1px solid #ddd; padding: 20px; border-radius: 8px; text-align: left; display: none; }
+        .status-badge { padding: 6px 12px; border-radius: 4px; font-weight: bold; font-size: 13px; display: inline-block; margin-top: 10px; }
+        .status-menunggu { background-color: #f39c12; color: white; }
+        .status-lulus { background-color: #27ae60; color: white; }
+        .status-tolak { background-color: #c0392b; color: white; }
+        .error-msg { color: #c0392b; font-weight: bold; margin-top: 15px; display: none; font-size: 14px; text-align: center; }
+
+        /* Senarai Autocomplete */
+        .autocomplete-items { position: absolute; border: 1px solid #dcdde1; border-bottom: none; border-top: none; z-index: 99; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; background-color: #fff; border-radius: 0 0 6px 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .autocomplete-items div { padding: 12px; cursor: pointer; border-bottom: 1px solid #dcdde1; font-size: 14px; color: #333; }
+        .autocomplete-items div:hover { background-color: #e8f4f8; color: #2980b9; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="back-btn">&larr; Menu Utama</a>
+    <h2>Semak Status Permohonan</h2>
+    <p>Taip sebahagian nama anak untuk menyemak status permohonan terkini.</p>
+    
+    <div class="form-group">
+        <label for="searchNama">Cari Nama Pelajar:</label>
+        <input type="text" id="searchNama" autocomplete="off" placeholder="Cth: Ahmad...">
+        <div id="autocompleteList" class="autocomplete-items"></div>
+        <small style="color: #7f8c8d; font-size: 12px;">Taip nama dan klik pada senarai yang muncul.</small>
+    </div>
+
+    <div id="errorMsg" class="error-msg">Tiada rekod permohonan dijumpai untuk nama ini.</div>
+
+    <div id="resultBox" class="result-box">
+        <b>No. Rujukan:</b> <span id="resRef"></span><br>
+        <b>No. ID Pelajar:</b> <span id="resId"></span><br>
+        <b>Nama Pelajar:</b> <span id="resNama"></span><br>
+        <b>Maklumat/Dorm:</b> <span id="resKelas"></span><br>
+        <b>Sebab:</b> <span id="resSebab"></span><br>
+        <b>Tarikh Keluar:</b> <span id="resKeluar"></span><br>
+        <b>Tarikh Balik:</b> <span id="resBalik"></span><br>
+        <div style="text-align: center; margin-top: 15px;">
+            <b>Status Semasa:</b><br>
+            <span id="resStatusBadge" class="status-badge">Menunggu Kelulusan</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzaOiZGzdmTneaayNwvGJfV0vB4Z2ZDSKx8h2A1Kd-GpV7Jw4RTM1U3_lMz_lH8dD00/exec';
+    let applicationList = [];
+
+    // Muat turun senarai permohonan dari Google Sheets semasa buka page
+    async function fetchApplications() {
+        try {
+            const response = await fetch(scriptURL);
+            applicationList = await response.json();
+        } catch (error) {
+            console.error('Gagal memuatkan data permohonan:', error);
+        }
+    }
+    fetchApplications();
+
+    const searchInput = document.getElementById('searchNama');
+    const listContainer = document.getElementById('autocompleteList');
+    const errorMsg = document.getElementById('errorMsg');
+    const resultBox = document.getElementById('resultBox');
+
+    searchInput.addEventListener('input', function() {
+        const val = this.value.trim().toLowerCase();
+        listContainer.innerHTML = '';
+        errorMsg.style.display = 'none';
+        resultBox.style.display = 'none';
+
+        if (!val) return;
+
+        // Tapis senarai permohonan mengikut nama pelajar
+        const matches = applicationList.filter(item => item.namaPelajar && item.namaPelajar.toLowerCase().includes(val));
+
+        matches.forEach(found => {
+            const item = document.createElement('div');
+            item.innerHTML = `<b>${found.namaPelajar}</b> <span style="color:#7f8c8d; font-size:12px;">(Status: ${found.status || 'Menunggu'})</span>`;
+            
+            item.addEventListener('click', function() {
+                searchInput.value = found.namaPelajar;
+                listContainer.innerHTML = '';
+
+                // Paparkan maklumat permohonan
+                document.getElementById('resRef').textContent = found.refNo || '-';
+                document.getElementById('resId').textContent = found.idPelajar || '-';
+                document.getElementById('resNama').textContent = found.namaPelajar || '-';
+                document.getElementById('resKelas').textContent = found.kelas || '-';
+                document.getElementById('resSebab').textContent = found.sebab || '-';
+                document.getElementById('resKeluar').textContent = found.tarikhPulang || '-';
+                document.getElementById('resBalik').textContent = found.tarikhBalik || '-';
+
+                const badge = document.getElementById('resStatusBadge');
+                badge.textContent = found.status || 'Menunggu Kelulusan';
+                badge.className = 'status-badge';
+                if (found.status === 'Diluluskan') badge.classList.add('status-lulus');
+                else if (found.status === 'Ditolak') badge.classList.add('status-tolak');
+                else badge.classList.add('status-menunggu');
+
+                resultBox.style.display = 'block';
+            });
+            listContainer.appendChild(item);
+        });
+
+        if (matches.length === 0 && val.length > 2) {
+            errorMsg.style.display = 'block';
+        }
+    });
+
+    // Tutup dropdown jika klik di luar
+    document.addEventListener('click', function (e) {
+        if (e.target !== searchInput) {
+            listContainer.innerHTML = '';
+        }
+    });
+</script>
+
+</body>
+</html>
