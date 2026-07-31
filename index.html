@@ -585,7 +585,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
-            max-height: 200px;
+            max-height: 250px;
             overflow-y: auto;
         }
 
@@ -847,7 +847,7 @@
                         </a>
                     </div>
 
-                    <!-- WIDGET CARIAN PELAJAR KINI DILETAKKAN TEPAT DI BAWAH MODUL ASRAMA -->
+                    <!-- WIDGET CARIAN PELAJAR KHAS UNTUK IBU BAPA -->
                     <div class="search-container">
                         <div class="search-header">
                             <h3>🔍 Carian Maklumat Pelajar (Ibu Bapa)</h3>
@@ -900,18 +900,15 @@
 
                 <div class="right-column">
                     
+                    <!-- RUANG MAKLUMAN & PENGUMUMAN (Ditarik Terus dari Tab 'Pengumuman' Google Sheets) -->
                     <div class="widget-box">
                         <div class="widget-title">
                             📢 Ruang Makluman & Pengumuman
                         </div>
-                        <div class="announcement-list">
+                        <div class="announcement-list" id="announcementListContainer">
                             <div class="announcement-item">
-                                <b>Peringatan Penting (Sesi 2026)</b>
-                                <p>Ibu bapa kini boleh membuat carian maklumat anak secara terus pada sistem.</p>
-                            </div>
-                            <div class="announcement-item">
-                                <b>Pemeriksaan Dorm Bulanan</b>
-                                <p>Spot check kebersihan dorm akan dijalankan oleh warden bertugas pada minggu ini.</p>
+                                <b>Memuatkan Makluman...</b>
+                                <p>Sedang menyelaraskan data pengumuman daripada Google Sheets.</p>
                             </div>
                         </div>
                     </div>
@@ -965,6 +962,7 @@
 
     <script>
         let globalCsvRows = [];
+        const sheetID = '1o6uBJi75uUFieEoknY0K65ZZ8ddOZN_AF9Ehpac3hbw';
 
         // 1. Fungsi Jam Live
         function updateClock() {
@@ -995,8 +993,7 @@
             if(e.key === 'Enter') sendMessage();
         });
 
-        // 3. Fungsi Ambil Data Langsung dari Google Sheets (Tab Pelajar)
-        const sheetID = '1o6uBJi75uUFieEoknY0K65ZZ8ddOZN_AF9Ehpac3hbw';
+        // 3. Fungsi Ambil Data Pelajar (Tab 'Pelajar' dari Google Sheets)
         const sheetCSVUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:csv&sheet=Pelajar`;
 
         async function fetchLiveSheetData() {
@@ -1006,7 +1003,7 @@
                 const csvText = await response.text();
                 processCSVData(csvText);
             } catch (err) {
-                console.warn('Ralat sambungan live, memuatkan data sandaran:', err);
+                console.warn('Ralat sambungan live pelajar, memuatkan data sandaran:', err);
                 loadFallbackData();
             }
         }
@@ -1128,7 +1125,83 @@
             document.getElementById('totalFemale').textContent = grandTotalP + ' orang';
         }
 
-        // 4. Fungsi Carian Pelajar untuk Ibu Bapa
+        // 4. Fungsi Ambil Data Pengumuman (Tab 'Pengumuman' dari Google Sheets)
+        const announcementSheetURL = `https://docs.google.com/spreadsheets/d/${sheetID}/gviz/tq?tqx=out:csv&sheet=Pengumuman`;
+
+        async function fetchAnnouncementsFromSheet() {
+            try {
+                const response = await fetch(announcementSheetURL);
+                if (!response.ok) throw new Error('Gagal memuatkan data pengumuman.');
+                const csvText = await response.text();
+                processAnnouncementCSV(csvText);
+            } catch (err) {
+                console.warn('Ralat sambungan pengumuman, memaparkan makluman lalai:', err);
+                loadFallbackAnnouncements();
+            }
+        }
+
+        function processAnnouncementCSV(csvText) {
+            const lines = csvText.split('\n').map(line => line.split(',').map(cell => cell.replace(/^"|"$/g, '').trim()));
+            const container = document.getElementById('announcementListContainer');
+            
+            if (lines.length <= 1) {
+                loadFallbackAnnouncements();
+                return;
+            }
+
+            const headers = lines[0].map(h => h.toLowerCase());
+            let tajukIdx = headers.findIndex(h => h.includes('tajuk') || h.includes('title'));
+            let kandunganIdx = headers.findIndex(h => h.includes('kandungan') || h.includes('desc') || h.includes('penerangan') || h.includes('surat'));
+            let tarikhIdx = headers.findIndex(h => h.includes('tarikh') || h.includes('date'));
+
+            if (tajukIdx === -1) tajukIdx = 0;
+            if (kandunganIdx === -1) kandunganIdx = 1;
+
+            let htmlContent = '';
+            let countValid = 0;
+
+            for (let i = 1; i < lines.length; i++) {
+                const row = lines[i];
+                if (row.length <= Math.max(tajukIdx, kandunganIdx)) continue;
+
+                const tajuk = row[tajukIdx] || '';
+                const kandungan = row[kandunganIdx] || '';
+                const tarikh = (tarikhIdx !== -1 && row[tarikhIdx]) ? row[tarikhIdx] : '';
+
+                if (tajuk && kandungan) {
+                    htmlContent += `
+                        <div class="announcement-item">
+                            <b>${tajuk}</b>
+                            <p>${kandungan}</p>
+                            ${tarikh ? `<small style="font-size: 9px; color: #94a3b8; display: block; margin-top: 4px;">Tarikh: ${tarikh}</small>` : ''}
+                        </div>
+                    `;
+                    countValid++;
+                }
+            }
+
+            if (countValid === 0) {
+                loadFallbackAnnouncements();
+            } else {
+                container.innerHTML = htmlContent;
+            }
+        }
+
+        function loadFallbackAnnouncements() {
+            const container = document.getElementById('announcementListContainer');
+            container.innerHTML = `
+                <div class="announcement-item">
+                    <b>Peringatan Penting (Sesi 2026)</b>
+                    <p>Ibu bapa kini boleh membuat carian maklumat anak secara terus pada sistem.</p>
+                </div>
+                <div class="announcement-item">
+                    <b>Pemeriksaan Dorm Bulanan</b>
+                    <p>Spot check kebersihan dorm akan dijalankan oleh warden bertugas pada minggu ini.</p>
+                </div>
+            `;
+        }
+
+        // 5. Fungsi Carian Pelajar untuk Ibu Bapa
         function searchStudent() {
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
             const resultBox = document.getElementById('searchResultBox');
@@ -1181,7 +1254,11 @@
             if(e.key === 'Enter') searchStudent();
         });
 
-        fetchLiveSheetData();
+        // Jalankan fungsi memuatkan data apabila laman web dibuka
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchLiveSheetData();
+            fetchAnnouncementsFromSheet();
+        });
     </script>
 </body>
 </html>
