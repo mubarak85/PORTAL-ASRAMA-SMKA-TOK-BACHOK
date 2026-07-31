@@ -69,6 +69,11 @@
         </div>
 
         <div class="form-group">
+            <label for="noTelefonPemohon">No. Telefon Pemohon / Waris (WhatsApp):</label>
+            <input type="tel" id="noTelefonPemohon" required placeholder="Cth: 0123456789 (untuk rujukan warden)">
+        </div>
+
+        <div class="form-group">
             <label for="sebab">Sebab Keluar / Pulang:</label>
             <textarea id="sebab" rows="3" required placeholder="Cth: Pulang bermalam cuti hujung minggu"></textarea>
         </div>
@@ -175,6 +180,7 @@
         const tKeluar = document.getElementById('tarikhPulang').value;
         const tBalik = document.getElementById('tarikhBalik').value;
         const sebabVal = document.getElementById('sebab').value;
+        const noTelPemohon = document.getElementById('noTelefonPemohon').value;
 
         if (tBalik < tKeluar) {
             showAlert('Tarikh kembali tidak boleh lebih awal dari tarikh keluar.', 'error');
@@ -194,6 +200,7 @@
             idPelajar: document.getElementById('idPelajar').value,
             namaPelajar: document.getElementById('namaPelajar').value,
             kelas: document.getElementById('kelas').value,
+            noTelefonPemohon: noTelPemohon,
             sebab: sebabVal,
             tarikhPulang: tKeluar,
             tarikhBalik: tBalik
@@ -206,11 +213,12 @@
                 form.style.display = 'none';
                 alertBox.className = 'alert alert-success';
 
-                // Teks Mesej WhatsApp
+                // Teks Mesej WhatsApp ke Warden (Kini termasuk No Tel Pemohon)
                 const textWhatsApp = `*PERMOHONAN PULANG BERMALAM*\n\n` +
                                      `*No. Rujukan:* ${refNo}\n` +
                                      `*Nama:* ${formData.namaPelajar}\n` +
                                      `*Maklumat:* ${formData.kelas}\n` +
+                                     `*No. Tel Pemohon:* ${noTelPemohon}\n` +
                                      `*Sebab:* ${sebabVal}\n` +
                                      `*Tarikh Keluar:* ${tKeluar}\n` +
                                      `*Tarikh Balik:* ${tBalik}\n` +
@@ -228,6 +236,7 @@
                         <b>No. ID Pelajar:</b> ${formData.idPelajar}<br>
                         <b>Nama Pelajar:</b> ${formData.namaPelajar}<br>
                         <b>Maklumat:</b> ${formData.kelas}<br>
+                        <b>No. Tel Pemohon:</b> ${noTelPemohon}<br>
                         <b>Tarikh Keluar:</b> ${tKeluar}<br>
                         <b>Tarikh Balik:</b> ${tBalik}<br>
                         <b>Status:</b> Menunggu Kelulusan Warden
