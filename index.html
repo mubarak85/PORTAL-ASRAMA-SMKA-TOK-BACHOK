@@ -325,6 +325,46 @@
         .sesi-badge { background: rgba(255, 255, 255, 0.15); }
         .disahkan-badge { background: rgba(16, 185, 129, 0.25); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
 
+        /* ANALISIS / STATISTIK BILANGAN PELAJAR (DI ATAS) */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 1100px) {
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .stat-icon.blue { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
+        .stat-icon.cyan { background: rgba(14, 165, 233, 0.1); color: #0284c7; }
+        .stat-icon.pink { background: rgba(236, 72, 153, 0.1); color: #db2777; }
+
+        .stat-info h4 { font-size: 11px; color: var(--text-gray); margin: 0 0 4px 0; text-transform: uppercase; font-weight: 700; }
+        .stat-info .stat-val { font-size: 24px; font-weight: 800; color: var(--text-dark); margin: 0; }
+
         .main-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -401,41 +441,6 @@
         .module-card h3 { font-size: 15px; font-weight: 700; margin: 0 0 4px 0; }
         .module-card p { font-size: 12px; color: var(--text-gray); margin: 0 0 16px 0; line-height: 1.4; }
         .card-action-link { font-size: 12px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; }
-
-        /* ANALISIS / STATISTIK BILANGAN PELAJAR (KESELURUHAN, LELAKI, PEREMPUAN) */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
-        }
-
-        .stat-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        .stat-icon.blue { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
-        .stat-icon.cyan { background: rgba(14, 165, 233, 0.1); color: #0284c7; }
-        .stat-icon.pink { background: rgba(236, 72, 153, 0.1); color: #db2777; }
-
-        .stat-info h4 { font-size: 11px; color: var(--text-gray); margin: 0 0 2px 0; text-transform: uppercase; font-weight: 700; }
-        .stat-info .stat-val { font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0; }
 
         .search-container, .widget-box {
             background: var(--card-bg);
@@ -676,6 +681,7 @@
 
         <div class="dashboard-body">
             
+            <!-- TAJUK BESAR (HERO BANNER) -->
             <div class="hero-banner">
                 <div class="hero-left">
                     <img src="https://lh3.googleusercontent.com/d/1prVsaI1eZg47A1CG2IIw3wnvYWqXsuPn=s220" alt="Logo SMKA Tok Bachok" class="hero-logo-img">
@@ -687,6 +693,31 @@
                 <div class="hero-right">
                     <div class="sesi-badge">SESI 2026</div>
                     <div class="disahkan-badge">✓ Sheet Terhubung</div>
+                </div>
+            </div>
+
+            <!-- ANALISIS / STATISTIK BILANGAN PELAJAR (DILETAKKAN DI ATAS, DI BAWAH TAJUK BESAR) -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">👥</div>
+                    <div class="stat-info">
+                        <h4>Jumlah Keseluruhan</h4>
+                        <p class="stat-val" id="totalHostelers">Memuatkan...</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon cyan">👦</div>
+                    <div class="stat-info">
+                        <h4>Pelajar Lelaki</h4>
+                        <p class="stat-val" id="maleHostelers">-</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon pink">👧</div>
+                    <div class="stat-info">
+                        <h4>Pelajar Perempuan</h4>
+                        <p class="stat-val" id="femaleHostelers">-</p>
+                    </div>
                 </div>
             </div>
 
@@ -729,31 +760,6 @@
                             </div>
                             <div class="card-action-link">Akses Warden &rarr;</div>
                         </a>
-                    </div>
-
-                    <!-- ANALISIS / STATISTIK BILANGAN PELAJAR (KESELURUHAN, LELAKI, PEREMPUAN) -->
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-icon blue">👥</div>
-                            <div class="stat-info">
-                                <h4>Jumlah Keseluruhan</h4>
-                                <p class="stat-val" id="totalHostelers">Memuatkan...</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon cyan">👦</div>
-                            <div class="stat-info">
-                                <h4>Pelajar Lelaki</h4>
-                                <p class="stat-val" id="maleHostelers">-</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon pink">👧</div>
-                            <div class="stat-info">
-                                <h4>Pelajar Perempuan</h4>
-                                <p class="stat-val" id="femaleHostelers">-</p>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- WIDGET CARIAN PELAJAR DARI GOOGLE SHEET -->
