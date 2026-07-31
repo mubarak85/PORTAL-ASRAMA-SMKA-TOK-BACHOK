@@ -70,7 +70,7 @@
 
         <div class="form-group">
             <label for="noTelefonPemohon">No. Telefon Pemohon / Waris (WhatsApp):</label>
-            <input type="tel" id="noTelefonPemohon" required placeholder="Cth: 0123456789 (untuk rujukan warden)">
+            <input type="tel" id="noTelefonPemohon" required placeholder="Cth: 0123456789 (untuk terima keputusan)">
         </div>
 
         <div class="form-group">
@@ -91,8 +91,6 @@
 
 <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzaOiZGzdmTneaayNwvGJfV0vB4Z2ZDSKx8h2A1Kd-GpV7Jw4RTM1U3_lMz_lH8dD00/exec';
-    
-    // Nombor WhatsApp Warden (60132429642)
     const nomorWardenWhatsApp = '60132429642'; 
 
     let studentList = [];
@@ -174,6 +172,8 @@
     const form = document.getElementById('leaveForm');
     const alertBox = document.getElementById('alertBox');
 
+    form.getElementById('leaveForm').addEventListener = function() {}; // placeholder
+
     form.addEventListener('submit', e => {
         e.preventDefault();
         
@@ -213,16 +213,31 @@
                 form.style.display = 'none';
                 alertBox.className = 'alert alert-success';
 
-                // Teks Mesej WhatsApp ke Warden (Kini termasuk No Tel Pemohon)
-                const textWhatsApp = `*PERMOHONAN PULANG BERMALAM*\n\n` +
+                // Format No Tel Pemohon supaya dibersihkan (tukar 013 kepada 6013 jika perlu untuk pautan WhatsApp waris)
+                let formattedNoTel = noTelPemohon.trim();
+                if (formattedNoTel.startsWith('0')) {
+                    formattedNoTel = '6' + formattedNoTel;
+                }
+
+                // Pautan pantas untuk warden terus WhatsApp kelulusan kepada Pemohon
+                const msgLulus = encodeURIComponent(`Tahniah! Permohonan pulang bermalam bagi pelajar *${formData.namaPelajar}* (No. Rujukan: *${refNo}*) telah *DILULUSKAN* oleh Warden. Sila tunjukkan mesej ini semasa keluar asrama.`);
+                const msgTolak = encodeURIComponent(`Dukacita dimaklumkan, permohonan pulang bermalam bagi pelajar *${formData.namaPelajar}* (No. Rujukan: *${refNo}*) telah *DITOLAK*. Sila berhubung dengan pihak warden untuk maklumat lanjut.`);
+                
+                const linkLulusWaris = `https://wa.me/${formattedNoTel}?text=${msgLulus}`;
+                const linkTolakWaris = `https://wa.me/${formattedNoTel}?text=${msgTolak}`;
+
+                // Teks Mesej WhatsApp ke Warden (Termasuk Link Tindakan Cepat ke Waris)
+                const textWhatsApp = `*PERMOHONAN BARU PULANG BERMALAM*\n\n` +
                                      `*No. Rujukan:* ${refNo}\n` +
                                      `*Nama:* ${formData.namaPelajar}\n` +
                                      `*Maklumat:* ${formData.kelas}\n` +
                                      `*No. Tel Pemohon:* ${noTelPemohon}\n` +
                                      `*Sebab:* ${sebabVal}\n` +
                                      `*Tarikh Keluar:* ${tKeluar}\n` +
-                                     `*Tarikh Balik:* ${tBalik}\n` +
-                                     `*Status:* Menunggu Kelulusan Warden`;
+                                     `*Tarikh Balik:* ${tBalik}\n\n` +
+                                     `⚡ *TINDAKAN PANTAS WARDEN:*\n` +
+                                     `✅ [KLIK UNTUK LULUSKAN & Hantar ke Waris]:\n${linkLulusWaris}\n\n` +
+                                     `❌ [KLIK UNTUK TOLAK & Hantar ke Waris]:\n${linkTolakWaris}`;
                 
                 const encodedText = encodeURIComponent(textWhatsApp);
                 const whatsappLink = `https://wa.me/${nomorWardenWhatsApp}?text=${encodedText}`;
