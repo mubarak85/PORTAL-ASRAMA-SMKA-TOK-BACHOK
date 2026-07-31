@@ -3,147 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Warden</title>
+    <title>Dashboard Kelulusan Asrama</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
-        .container { max-width: 1100px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { color: #2c3e50; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: #3498db; text-decoration: none; font-weight: 600; font-size: 14px; }
+        .back-btn:hover { text-decoration: underline; }
+        h2 { color: #2c3e50; margin-top: 0; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
         
+        /* Kotak Login Kata Laluan */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 999; }
-        .login-box { background: white; padding: 30px; border-radius: 10px; width: 350px; text-align: center; }
-        .login-box input { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #dcdde1; border-radius: 5px; box-sizing: border-box; }
-        .login-box button { background: #27ae60; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .login-box { background: white; padding: 30px; border-radius: 10px; width: 350px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .login-box h3 { margin-top: 0; color: #2c3e50; }
+        .login-box input { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #dcdde1; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
+        .login-box button { background: #27ae60; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .login-box button:hover { background: #219653; }
+        .error-pass { color: #c0392b; font-size: 13px; margin-top: 5px; display: none; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
         th, td { border: 1px solid #dcdde1; padding: 12px; text-align: left; }
         th { background-color: #27ae60; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
         
         .btn-lulus { background-color: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-right: 5px; }
         .btn-tolak { background-color: #c0392b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-lulus:hover, .btn-tolak:hover { opacity: 0.8; }
+        
         .status-lulus { color: #27ae60; font-weight: bold; }
         .status-tolak { color: #c0392b; font-weight: bold; }
         .status-menunggu { color: #f39c12; font-weight: bold; }
+        .loading { text-align: center; padding: 30px; font-style: italic; color: #7f8c8d; font-size: 16px; }
     </style>
 </head>
 <body>
 
-<!-- Login Warden -->
+<!-- Kotak Log Masuk Kata Laluan -->
 <div id="loginOverlay">
     <div class="login-box">
         <h3>🔐 Log Masuk Warden</h3>
-        <input type="password" id="passwordInput" placeholder="Kata laluan (warden123)">
+        <p style="font-size: 13px; color: #7f8c8d;">Sila masukkan kata laluan portal.</p>
+        <input type="password" id="passwordInput" placeholder="Kata laluan...">
         <button onclick="checkPassword()">Log Masuk</button>
-        <p id="errorPass" style="color: red; font-size: 12px; display: none;">Kata laluan salah!</p>
+        <div id="errorPass" class="error-pass">Kata laluan salah! Cuba lagi.</div>
     </div>
 </div>
 
 <div class="container">
+    <a href="index.html" class="back-btn">&larr; Kembali ke Menu Utama</a>
     <h2>
         <span>Dashboard Kelulusan Asrama</span>
-        <button onclick="loadData()" style="padding: 6px 12px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">🔄 Muat Semula</button>
+        <button onclick="loadData()" style="padding: 6px 12px; font-size: 13px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">🔄 Muat Semula</button>
     </h2>
 
-    <table id="dataTable">
+    <div id="loading" class="loading">Sedang memuatkan data papan pemuka...</div>
+
+    <table id="dataTable" style="display: none;">
         <thead>
             <tr>
-                <th>Tarikh Masuk</th>
+                <th>Tarikh Keluar</th>
                 <th>Nama Pelajar</th>
                 <th>Maklumat</th>
                 <th>Sebab</th>
-                <th>Tarikh Keluar</th>
+                <th>Tarikh Balik</th>
                 <th>No. Tel Pemohon</th>
                 <th>Status</th>
                 <th>Tindakan</th>
             </tr>
         </thead>
         <tbody id="tableBody">
-            <tr><td colspan="8" style="text-align: center;">Memuatkan data...</td></tr>
         </tbody>
     </table>
 </div>
 
 <script>
+    // Tetapkan kata laluan warden anda di sini
     const WARDEN_PASSWORD = "warden123"; 
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzaOiZGzdmTneaayNwvGJfV0vB4Z2ZDSKx8h2A1Kd-GpV7Jw4RTM1U3_lMz_lH8dD00/exec';
     let allData = [];
 
     function checkPassword() {
-        if (document.getElementById('passwordInput').value === WARDEN_PASSWORD) {
+        const inputVal = document.getElementById('passwordInput').value;
+        const errDiv = document.getElementById('errorPass');
+
+        if (inputVal === WARDEN_PASSWORD) {
             document.getElementById('loginOverlay').style.display = 'none';
-            loadData();
+            loadData(); 
         } else {
-            document.getElementById('errorPass').style.display = 'block';
+            errDiv.style.display = 'block';
         }
     }
 
+    document.getElementById('passwordInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            checkPassword();
+        }
+    });
+
     async function loadData() {
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('dataTable').style.display = 'none';
+
         try {
             const response = await fetch(scriptURL);
             allData = await response.json();
+            
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
 
             if (allData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Tiada data.</td></tr>';
-                return;
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: #7f8c8d;">Tiada permohonan dijumpai.</td></tr>';
+            } else {
+                allData.forEach(row => {
+                    const tr = document.createElement('tr');
+                    
+                    let statusVal = row.status || 'Menunggu Kelulusan';
+                    let statusClass = 'status-menunggu';
+                    if (statusVal === 'Diluluskan') statusClass = 'status-lulus';
+                    else if (statusVal === 'Ditolak') statusClass = 'status-tolak';
+
+                    tr.innerHTML = `
+                        <td>${row.tarikhPulang || '-'}</td>
+                        <td><b>${row.namaPelajar || '-'}</b><br><small style="color: #666;">ID: ${row.idPelajar || '-'}</small></td>
+                        <td>${row.kelas || '-'}</td>
+                        <td>${row.sebab || '-'}</td>
+                        <td>${row.tarikhBalik || '-'}</td>
+                        <td><b>${row.noTelefonPemohon || '-'}</b></td>
+                        <td><span class="${statusClass}">${statusVal}</span></td>
+                        <td>
+                            <button class="btn-lulus" onclick='updateStatus(${row.rowIndex}, "Diluluskan", ${JSON.stringify(row)})'>Lulus</button>
+                            <button class="btn-tolak" onclick='updateStatus(${row.rowIndex}, "Ditolak", ${JSON.stringify(row)})'>Tolak</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
             }
 
-            allData.forEach(row => {
-                const tr = document.createElement('tr');
-                let statusVal = row.Status || 'Menunggu Kelulusan';
-                let statusClass = statusVal === 'Diluluskan' ? 'status-lulus' : (statusVal === 'Ditolak' ? 'status-tolak' : 'status-menunggu');
-
-                // Memastikan ia membaca lajur 'noTelefonPemohon' daripada Google Sheets anda
-                let telPemohon = row.noTelefonPemohon || '-';
-
-                tr.innerHTML = `
-                    <td>${row['Tarikh Masuk'] || '-'}</td>
-                    <td><b>${row['Nama Pelajar'] || '-'}</b></td>
-                    <td>${row.Maklumat || '-'}</td>
-                    <td>${row.Sebab || '-'}</td>
-                    <td>${row['Tarikh Keluar'] || '-'}</td>
-                    <td><b>${telPemohon}</b></td>
-                    <td><span class="${statusClass}">${statusVal}</span></td>
-                    <td>
-                        <button class="btn-lulus" onclick='updateStatus(${row.rowIndex}, "Diluluskan", ${JSON.stringify(row)})'>Lulus</button>
-                        <button class="btn-tolak" onclick='updateStatus(${row.rowIndex}, "Ditolak", ${JSON.stringify(row)})'>Tolak</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('dataTable').style.display = 'table';
         } catch (error) {
-            alert('Ralat memuatkan data: ' + error.message);
+            document.getElementById('loading').innerHTML = 'Ralat memuatkan data: ' + error.message;
+            document.getElementById('loading').style.color = '#c0392b';
         }
     }
 
     async function updateStatus(rowIndex, newStatus, rowData) {
-        if (!confirm(`Pasti untuk tukar status kepada "${newStatus}"?`)) return;
+        if (!confirm(`Adakah anda pasti untuk menukar status permohonan ini kepada "${newStatus}"?`)) return;
+
+        const payload = {
+            action: "updateStatus",
+            rowIndex: rowIndex,
+            status: newStatus
+        };
 
         try {
             const response = await fetch(scriptURL, {
                 method: 'POST',
-                body: JSON.stringify({ action: "updateStatus", rowIndex: rowIndex, status: newStatus })
+                body: JSON.stringify(payload)
             });
             const result = await response.json();
 
             if (result.result === 'success') {
                 // Buka WhatsApp automatik jika nombor telefon wujud
-                let noTel = rowData.noTelefonPemohon;
-                if (noTel) {
-                    let cleanPhone = noTel.replace(/[^0-9]/g, '');
-                    if (cleanPhone.startsWith('0')) cleanPhone = '6' + cleanPhone;
+                if (rowData.noTelefonPemohon) {
+                    let cleanPhone = rowData.noTelefonPemohon.replace(/[^0-9]/g, '');
+                    if (cleanPhone.startsWith('0')) {
+                        cleanPhone = '6' + cleanPhone; 
+                    }
 
-                    let statusText = newStatus === 'Diluluskan' ? 'TELAH DILULUSKAN ✅' : 'TELAH DITOLAK ❌';
-                    let msg = `*STATUS PERMOHONAN ASRAMA*\n\nNama Pelajar: *${rowData['Nama Pelajar'] || '-'}*\nStatus: *${statusText}*`;
+                    const statusPilihanText = newStatus === 'Diluluskan' ? 'TELAH DILULUSKAN ✅' : 'TELAH DITOLAK ❌';
                     
-                    window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+                    const textWhatsAppWaris = `*STATUS PERMOHONAN PULANG BERMALAM*\n\n` +
+                                             `Nama Pelajar: *${rowData.namaPelajar || '-'}*\n` +
+                                             `Status Terkini: *${statusPilihanText}*\n\n` +
+                                             `Sila semak portal warden untuk sebarang pertanyaan.`;
+
+                    const encodedMsg = encodeURIComponent(textWhatsAppWaris);
+                    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMsg}`;
+
+                    window.open(whatsappUrl, '_blank');
                 }
+
                 loadData();
             } else {
-                alert('Gagal mengemas kini.');
+                alert('Gagal mengemas kini status.');
             }
         } catch (error) {
-            alert('Ralat: ' + error.message);
+            alert('Ralat sambungan: ' + error.message);
         }
     }
 </script>
