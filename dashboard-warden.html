@@ -101,6 +101,7 @@
                 <th>Maklumat / Dorm</th>
                 <th>Sebab</th>
                 <th>Tarikh Keluar / Balik</th>
+                <th>No. Tel Pemohon</th>
                 <th>Status Semasa</th>
                 <th>Tindakan Warden</th>
             </tr>
@@ -120,13 +121,12 @@
 
         if (inputVal === WARDEN_PASSWORD) {
             document.getElementById('loginOverlay').style.display = 'none';
-            loadData(); // Mula muat data selepas lepas kata laluan
+            loadData(); 
         } else {
             errDiv.style.display = 'block';
         }
     }
 
-    // Biar pengguna tekan 'Enter' untuk log masuk
     document.getElementById('passwordInput').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             checkPassword();
@@ -181,7 +181,7 @@
         }
 
         if (filteredData.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px; color: #7f8c8d;">Tiada permohonan dijumpai untuk kategori ini.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 20px; color: #7f8c8d;">Tiada permohonan dijumpai untuk kategori ini.</td></tr>';
             return;
         }
 
@@ -200,10 +200,11 @@
                 <td>${row.kelas || '-'}</td>
                 <td>${row.sebab || '-'}</td>
                 <td><b>Keluar:</b> ${row.tarikhPulang || '-'}<br><b>Balik:</b> ${row.tarikhBalik || '-'}</td>
+                <td>${row.noTelefonPemohon || '-'}</td>
                 <td><span class="${statusClass}">${statusVal}</span></td>
                 <td>
-                    <button class="btn-lulus" onclick="updateStatus(${row.rowIndex}, 'Diluluskan')">Lulus</button>
-                    <button class="btn-tolak" onclick="updateStatus(${row.rowIndex}, 'Ditolak')">Tolak</button>
+                    <button class="btn-lulus" onclick='updateStatus(${row.rowIndex}, "Diluluskan", ${JSON.stringify(row)})'>Lulus</button>
+                    <button class="btn-tolak" onclick='updateStatus(${row.rowIndex}, "Ditolak", ${JSON.stringify(row)})'>Tolak</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -217,7 +218,7 @@
         renderTable(allData);
     }
 
-    async function updateStatus(rowIndex, newStatus) {
+    async function updateStatus(rowIndex, newStatus, rowData) {
         if (!confirm(`Adakah anda pasti untuk menukar status permohonan ini kepada "${newStatus}"?`)) return;
 
         const payload = {
@@ -234,6 +235,28 @@
             const result = await response.json();
 
             if (result.result === 'success') {
+                // Semak jika ada nombor telefon pemohon untuk hantar WhatsApp automatik
+                if (rowData.noTelefonPemohon) {
+                    let cleanPhone = rowData.noTelefonPemohon.replace(/[^0-9]/g, '');
+                    if (cleanPhone.startsWith('0')) {
+                        cleanPhone = '6' + cleanPhone; // Format nombor Malaysia ke kod antarabangsa (60)
+                    }
+
+                    const statusPilihanText = newStatus === 'Diluluskan' ? 'TELAH DILULUSKAN ✅' : 'TELAH DITOLAK ❌';
+                    
+                    const textWhatsAppWaris = `*STATUS PERMOHONAN PULANG BERMALAM*\n\n` +
+                                             `No. Rujukan: *${rowData.refNo || '-'}*\n` +
+                                             `Nama Pelajar: *${rowData.namaPelajar || '-'}*\n` +
+                                             `Status Terkini: *${statusPilihanText}*\n\n` +
+                                             `Sila semak portal atau hubungi warden untuk sebarang pertanyaan.`;
+
+                    const encodedMsg = encodeURIComponent(textWhatsAppWaris);
+                    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMsg}`;
+
+                    // Buka tab WhatsApp Web/App secara automatik untuk hantar mesej ke waris
+                    window.open(whatsappUrl, '_blank');
+                }
+
                 loadData();
             } else {
                 alert('Gagal mengemas kini status.');
