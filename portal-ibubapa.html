@@ -22,13 +22,19 @@
         .alert-success { background-color: #e8f8f5; color: #27ae60; border: 1px solid #a3e4d7; }
         .alert-error { background-color: #ffd2d2; color: #c0392b; border: 1px solid #f5b7b1; }
         .receipt-box { background: #f9f9f9; border: 1px dashed #27ae60; padding: 15px; border-radius: 6px; margin-top: 15px; text-align: left; font-size: 13px; color: #333; }
-        .print-btn { background: #27ae60; color: white; padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; font-size: 13px; display: inline-block; text-decoration: none; }
-        .print-btn:hover { background: #219653; }
+        .action-btn { background: #27ae60; color: white; padding: 10px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; display: inline-block; text-decoration: none; text-align: center; flex: 1; }
+        .action-btn:hover { opacity: 0.9; }
         
         /* Senarai Autocomplete */
         .autocomplete-items { position: absolute; border: 1px solid #dcdde1; border-bottom: none; border-top: none; z-index: 99; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; background-color: #fff; border-radius: 0 0 6px 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .autocomplete-items div { padding: 12px; cursor: pointer; border-bottom: 1px solid #dcdde1; font-size: 14px; color: #333; }
         .autocomplete-items div:hover { background-color: #e8f4f8; color: #2980b9; font-weight: bold; }
+
+        @media print {
+            .no-print { display: none; }
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; padding: 0; max-width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -42,9 +48,9 @@
     <form id="leaveForm" class="no-print">
         <div class="form-group">
             <label for="searchNama">Cari Nama Pelajar:</label>
-            <input type="text" id="searchNama" autocomplete="off" placeholder="Taip sebahagian nama anak di sini..." required>
+            <input type="text" id="searchNama" autocomplete="off" placeholder="Sedang memuat turun senarai pelajar..." disabled required>
             <div id="autocompleteList" class="autocomplete-items"></div>
-            <small style="color: #7f8c8d; font-size: 12px;">Taip nama dan klik pada senarai yang muncul di bawah.</small>
+            <small id="searchHelp" style="color: #7f8c8d; font-size: 12px;">Sila tunggu sebentar, sedang memuat data...</small>
         </div>
 
         <div class="form-group" style="display:none;">
@@ -80,28 +86,39 @@
 
 <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzaOiZGzdmTneaayNwvGJfV0vB4Z2ZDSKx8h2A1Kd-GpV7Jw4RTM1U3_lMz_lH8dD00/exec';
+    
+    // Nombor WhatsApp Warden (60132429642)
+    const nomorWardenWhatsApp = '60132429642'; 
+
     let studentList = [];
 
-    // Muat turun senarai pelajar dari tab 'Pelajar' semasa buka page
+    const searchInput = document.getElementById('searchNama');
+    const searchHelp = document.getElementById('searchHelp');
+    const listContainer = document.getElementById('autocompleteList');
+    const submitBtn = document.getElementById('submitBtn');
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    document.getElementById('tarikhPulang').min = todayStr;
+
     async function fetchStudents() {
         try {
             const res = await fetch(`${scriptURL}?action=getStudents`);
             studentList = await res.json();
+            searchInput.disabled = false;
+            searchInput.placeholder = "Taip sebahagian nama pelajar di sini...";
+            searchHelp.textContent = "Taip nama dan klik pada senarai yang muncul di bawah.";
         } catch(err) {
             console.error('Gagal memuatkan senarai pelajar:', err);
+            searchHelp.textContent = "Gagal memuat senarai pelajar. Sila segar semula (refresh) halaman.";
+            searchHelp.style.color = "#c0392b";
         }
     }
     fetchStudents();
-
-    const searchInput = document.getElementById('searchNama');
-    const listContainer = document.getElementById('autocompleteList');
-    const submitBtn = document.getElementById('submitBtn');
 
     searchInput.addEventListener('input', function() {
         const val = this.value.trim().toLowerCase();
         listContainer.innerHTML = '';
         
-        // Reset pilihan jika kotak dipadam
         if (!val) {
             document.getElementById('idPelajar').value = '';
             document.getElementById('namaPelajar').value = '';
@@ -112,7 +129,6 @@
             return;
         }
 
-        // Tapisan senarai nama mengikut carian
         const matches = studentList.filter(s => s.nama && s.nama.toLowerCase().includes(val));
 
         matches.forEach(student => {
@@ -127,7 +143,6 @@
                 
                 listContainer.innerHTML = '';
                 
-                // Aktifkan butang hantar
                 submitBtn.disabled = false;
                 submitBtn.style.background = 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)';
                 submitBtn.textContent = 'Hantar Permohonan';
@@ -136,7 +151,15 @@
         });
     });
 
-    // Tutup senarai jika klik di luar
+    document.getElementById('tarikhPulang').addEventListener('change', function() {
+        const tKeluar = this.value;
+        const tarikhBalikInput = document.getElementById('tarikhBalik');
+        tarikhBalikInput.min = tKeluar;
+        if (tarikhBalikInput.value && tarikhBalikInput.value < tKeluar) {
+            tarikhBalikInput.value = '';
+        }
+    });
+
     document.addEventListener('click', function (e) {
         if (e.target !== searchInput) {
             listContainer.innerHTML = '';
@@ -148,26 +171,29 @@
 
     form.addEventListener('submit', e => {
         e.preventDefault();
+        
+        const tKeluar = document.getElementById('tarikhPulang').value;
+        const tBalik = document.getElementById('tarikhBalik').value;
+        const sebabVal = document.getElementById('sebab').value;
+
+        if (tBalik < tKeluar) {
+            showAlert('Tarikh kembali tidak boleh lebih awal dari tarikh keluar.', 'error');
+            return;
+        }
+
         submitBtn.disabled = true;
         submitBtn.innerHTML = 'Sedang menghantar...';
         alertBox.style.display = 'none';
 
         const randomNum = Math.floor(1000 + Math.random() * 9000);
-        const todayStr = new Date().toISOString().slice(0,10).replace(/-/g,'');
-        const refNo = `AST-${todayStr}-${randomNum}`;
-
-        const idPel = document.getElementById('idPelajar').value;
-        const nama = document.getElementById('namaPelajar').value;
-        const kelasVal = document.getElementById('kelas').value;
-        const sebabVal = document.getElementById('sebab').value;
-        const tKeluar = document.getElementById('tarikhPulang').value;
-        const tBalik = document.getElementById('tarikhBalik').value;
+        const dateStringId = new Date().toISOString().slice(0,10).replace(/-/g,'');
+        const refNo = `AST-${dateStringId}-${randomNum}`;
 
         const formData = {
             refNo: refNo,
-            idPelajar: idPel,
-            namaPelajar: nama,
-            kelas: kelasVal,
+            idPelajar: document.getElementById('idPelajar').value,
+            namaPelajar: document.getElementById('namaPelajar').value,
+            kelas: document.getElementById('kelas').value,
             sebab: sebabVal,
             tarikhPulang: tKeluar,
             tarikhBalik: tBalik
@@ -179,21 +205,40 @@
             if(data.result === 'success') {
                 form.style.display = 'none';
                 alertBox.className = 'alert alert-success';
+
+                // Teks Mesej WhatsApp
+                const textWhatsApp = `*PERMOHONAN PULANG BERMALAM*\n\n` +
+                                     `*No. Rujukan:* ${refNo}\n` +
+                                     `*Nama:* ${formData.namaPelajar}\n` +
+                                     `*Maklumat:* ${formData.kelas}\n` +
+                                     `*Sebab:* ${sebabVal}\n` +
+                                     `*Tarikh Keluar:* ${tKeluar}\n` +
+                                     `*Tarikh Balik:* ${tBalik}\n` +
+                                     `*Status:* Menunggu Kelulusan Warden`;
+                
+                const encodedText = encodeURIComponent(textWhatsApp);
+                const whatsappLink = `https://wa.me/${nomorWardenWhatsApp}?text=${encodedText}`;
+
                 alertBox.innerHTML = `
                     <b>Permohonan Berjaya Dihantar!</b>
                     <div id="printableReceipt" class="receipt-box">
                         <p style="margin: 0 0 5px 0; font-weight: bold; text-align: center; color: #2c3e50;">RESIT PERMOHONAN PULANG BERMALAM</p>
                         <hr style="border: 0; border-top: 1px solid #ddd; margin: 5px 0;">
                         <b>No. Rujukan:</b> <span style="color: #2980b9;">${refNo}</span><br>
-                        <b>No. ID Pelajar:</b> ${idPel}<br>
-                        <b>Nama Pelajar:</b> ${nama}<br>
-                        <b>Maklumat:</b> ${kelasVal}<br>
+                        <b>No. ID Pelajar:</b> ${formData.idPelajar}<br>
+                        <b>Nama Pelajar:</b> ${formData.namaPelajar}<br>
+                        <b>Maklumat:</b> ${formData.kelas}<br>
                         <b>Tarikh Keluar:</b> ${tKeluar}<br>
                         <b>Tarikh Balik:</b> ${tBalik}<br>
                         <b>Status:</b> Menunggu Kelulusan Warden
                     </div>
-                    <button class="print-btn no-print" onclick="window.print()">🖨️ Cetak Bukti</button>
-                    <a href="semak-status.html" class="print-btn no-print" style="background:#3498db; margin-left:5px;">🔍 Semak Status</a>
+                    <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;" class="no-print">
+                        <div style="display: flex; gap: 8px;">
+                            <a href="${whatsappLink}" target="_blank" class="action-btn" style="background: #25D366; text-align: center;">💬 Hantar ke WhatsApp Warden</a>
+                            <button class="action-btn" onclick="window.print()" style="background: #27ae60;">🖨️ Cetak Bukti</button>
+                        </div>
+                        <a href="semak-status.html" class="action-btn" style="background:#3498db; text-align: center;">🔍 Semak Status</a>
+                    </div>
                 `;
                 alertBox.style.display = 'block';
             } else {
