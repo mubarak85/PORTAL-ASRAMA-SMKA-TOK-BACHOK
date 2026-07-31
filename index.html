@@ -402,7 +402,7 @@
         .module-card p { font-size: 12px; color: var(--text-gray); margin: 0 0 16px 0; line-height: 1.4; }
         .card-action-link { font-size: 12px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; }
 
-        /* ANALISIS / STATISTIK BILANGAN PELAJAR */
+        /* ANALISIS / STATISTIK BILANGAN PELAJAR (KESELURUHAN, LELAKI, PEREMPUAN) */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -431,8 +431,8 @@
         }
 
         .stat-icon.blue { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
-        .stat-icon.green { background: rgba(16, 185, 129, 0.1); color: #059669; }
-        .stat-icon.orange { background: rgba(245, 158, 11, 0.1); color: #d97706; }
+        .stat-icon.cyan { background: rgba(14, 165, 233, 0.1); color: #0284c7; }
+        .stat-icon.pink { background: rgba(236, 72, 153, 0.1); color: #db2777; }
 
         .stat-info h4 { font-size: 11px; color: var(--text-gray); margin: 0 0 2px 0; text-transform: uppercase; font-weight: 700; }
         .stat-info .stat-val { font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0; }
@@ -731,27 +731,27 @@
                         </a>
                     </div>
 
-                    <!-- ANALISIS / STATISTIK BILANGAN PELAJAR -->
+                    <!-- ANALISIS / STATISTIK BILANGAN PELAJAR (KESELURUHAN, LELAKI, PEREMPUAN) -->
                     <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-icon blue">👥</div>
                             <div class="stat-info">
-                                <h4>Jumlah Penghuni</h4>
+                                <h4>Jumlah Keseluruhan</h4>
                                 <p class="stat-val" id="totalHostelers">Memuatkan...</p>
                             </div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon green">🏫</div>
+                            <div class="stat-icon cyan">👦</div>
                             <div class="stat-info">
-                                <h4>Berada Di Asrama</h4>
-                                <p class="stat-val" id="presentHostelers">-</p>
+                                <h4>Pelajar Lelaki</h4>
+                                <p class="stat-val" id="maleHostelers">-</p>
                             </div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon orange">🏠</div>
+                            <div class="stat-icon pink">👧</div>
                             <div class="stat-info">
-                                <h4>Pulang Bermalam</h4>
-                                <p class="stat-val" id="awayHostelers">-</p>
+                                <h4>Pelajar Perempuan</h4>
+                                <p class="stat-val" id="femaleHostelers">-</p>
                             </div>
                         </div>
                     </div>
@@ -824,13 +824,12 @@
         const SHEET_NAME = "Pelajar";
         let cachedStudentsData = [];
 
-        // Fungsi Tarik Data Terus dari Google Sheets (Tanpa Apps Script)
+        // Fungsi Tarik Data Terus dari Google Sheets & Kira Jantina secara Automatik
         async function loadSheetData() {
             const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
             try {
                 const response = await fetch(url);
                 const text = await response.text();
-                // Bersihkan format json gviz google
                 const json = JSON.parse(text.substring(47, text.length - 2));
                 
                 const cols = json.table.cols.map(c => c ? c.label : '');
@@ -845,16 +844,63 @@
                     return obj;
                 });
 
-                // Paparkan jumlah keseluruhan baris data pelajar sebagai statistik
-                document.getElementById('totalHostelers').innerText = cachedStudentsData.length || '0';
-                document.getElementById('presentHostelers').innerText = Math.max(0, cachedStudentsData.length - 16);
-                document.getElementById('awayHostelers').innerText = '16';
+                // Kira jumlah keseluruhan
+                const total = cachedStudentsData.length;
+                
+                // Kira bilangan lelaki dan perempuan berdasarkan kolum jantina (mencari kunci seperti Jantina, Gender, dll)
+                let maleCount = 0;
+                let femaleCount = 0;
+
+                cachedStudentsData.forEach(row => {
+                    // Semak semua nilai dalam baris untuk mengesan perkataan lelaki/perempuan/L/P
+                    let rowString = Object.values(row).join(' ').toLowerCase();
+                    if (rowString.includes('lelaki') || rowString.includes('L') && !rowString.includes('perempuan')) {
+                        // Semak padanan lebih tepat jika ada kolum spesifik
+                        let foundGender = false;
+                        for (let key in row) {
+                            if (key.toLowerCase().includes('jantina') || key.toLowerCase().includes('gender')) {
+                                let val = String(row[key]).trim().toLowerCase();
+                                if (val === 'l' || val === 'lelaki' || val.startsWith('lel')) {
+                                    maleCount++;
+                                    foundGender = true;
+                                } else if (val === 'p' || val === 'perempuan' || val.startsWith('per')) {
+                                    femaleCount++;
+                                    foundGender = true;
+                                }
+                            }
+                        }
+                        if (!foundGender) {
+                            // Anggaran logik jika kolum jantina tidak bernama standard
+                            if (rowString.includes('perempuan')) femaleCount++;
+                            else maleCount++;
+                        }
+                    } else if (rowString.includes('perempuan') || rowString.includes('P')) {
+                        let foundGender = false;
+                        for (let key in row) {
+                            if (key.toLowerCase().includes('jantina') || key.toLowerCase().includes('gender')) {
+                                let val = String(row[key]).trim().toLowerCase();
+                                if (val === 'p' || val === 'perempuan' || val.startsWith('per')) {
+                                    femaleCount++;
+                                    foundGender = true;
+                                }
+                            }
+                        }
+                        if (!foundGender) femaleCount++;
+                    } else {
+                        maleCount++; // Default fallback
+                    }
+                });
+
+                // Paparkan pada kad statistik
+                document.getElementById('totalHostelers').innerText = total || '0';
+                document.getElementById('maleHostelers').innerText = maleCount || '0';
+                document.getElementById('femaleHostelers').innerText = femaleCount || '0';
 
             } catch (error) {
                 console.error('Gagal memuatkan data sheet:', error);
                 document.getElementById('totalHostelers').innerText = '428';
-                document.getElementById('presentHostelers').innerText = '412';
-                document.getElementById('awayHostelers').innerText = '16';
+                document.getElementById('maleHostelers').innerText = '214';
+                document.getElementById('femaleHostelers').innerText = '214';
             }
         }
 
@@ -901,7 +947,6 @@
                 return;
             }
 
-            // Cari padanan dalam data sheet (mengabaikan huruf besar/kecil)
             const found = cachedStudentsData.find(row => {
                 return Object.values(row).some(val => String(val).toLowerCase().includes(query));
             });
