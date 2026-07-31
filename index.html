@@ -3,252 +3,466 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Rasmi Sistem Pengurusan Asrama</title>
-    <!-- Google Fonts untuk tipografi profesional -->
+    <title>Pusat Kawalan Data - Sekolah Menengah Kebangsaan (Agama) Tok Bachok</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1e3a8a;
-            --primary-light: #3b82f6;
-            --accent: #f59e0b;
-            --success: #10b981;
-            --dark: #0f172a;
-            --gray: #64748b;
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #312e81 100%);
+            --sidebar-bg: #1e1b4b;
+            --sidebar-active: #312e81;
+            --primary: #4f46e5;
+            --bg-main: #f8fafc;
+            --text-dark: #0f172a;
+            --text-gray: #64748b;
+            --border-color: #e2e8f0;
         }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg-gradient);
+            background: var(--bg-main);
             margin: 0;
-            padding: 0;
+            display: flex;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #334155;
-            overflow-x: hidden;
-            position: relative;
+            color: var(--text-dark);
         }
 
-        /* Latar belakang bombastik bentuk geometri bercahaya */
-        body::before, body::after {
-            content: '';
-            position: absolute;
-            width: 450px;
-            height: 450px;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: 0;
-            opacity: 0.15;
-        }
-        body::before {
-            background: #3b82f6;
-            top: -100px;
-            left: -100px;
-        }
-        body::after {
-            background: #f59e0b;
-            bottom: -100px;
-            right: -100px;
-        }
-
-        .portal-wrapper {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 520px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .card-container {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            padding: 45px 35px;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .crest-logo {
-            width: 75px;
-            height: 75px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        /* SIDEBAR KIRI */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
             color: white;
-            border-radius: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 34px;
-            margin: 0 auto 20px auto;
-            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
-            transform: rotate(-5deg);
-            transition: 0.3s;
-        }
-
-        .crest-logo:hover {
-            transform: rotate(0deg) scale(1.05);
-        }
-
-        .badge-official {
-            display: inline-block;
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--primary-light);
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            padding: 6px 14px;
-            border-radius: 30px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-        }
-
-        h1 {
-            color: var(--dark);
-            font-size: 26px;
-            font-weight: 800;
-            margin: 0 0 10px 0;
-            letter-spacing: -0.5px;
-        }
-
-        p.subtitle {
-            color: var(--gray);
-            font-size: 14px;
-            margin-bottom: 35px;
-            line-height: 1.5;
-        }
-
-        .menu-grid {
             display: flex;
             flex-direction: column;
-            gap: 16px;
-        }
-
-        .menu-btn {
-            display: flex;
-            align-items: center;
-            padding: 16px 20px;
-            background: #ffffff;
-            color: var(--dark);
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: 700;
-            border-radius: 14px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
             box-sizing: border-box;
-            text-align: left;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .menu-btn .icon-box {
-            width: 42px;
-            height: 42px;
-            border-radius: 10px;
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 15px;
+            font-weight: 800;
+            margin: 0 0 4px 0;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+        }
+
+        .sidebar-header span {
+            font-size: 10px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            line-height: 1.3;
+            display: block;
+        }
+
+        .sidebar-menu {
+            padding: 20px 12px;
+            flex-grow: 1;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 20px;
-            margin-right: 15px;
-            flex-shrink: 0;
-            transition: 0.3s;
+            flex-direction: column;
+            gap: 6px;
         }
 
-        .menu-btn .text-content {
+        .menu-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #64748b;
+            padding: 0 10px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 14px;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: 0.2s ease;
+            gap: 12px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--sidebar-active);
+            color: white;
+        }
+
+        .nav-item span.icon {
+            font-size: 16px;
+        }
+
+        .sidebar-footer {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 11px;
+            color: #64748b;
+            text-align: center;
+        }
+
+        /* KANDUNGAN UTAMA */
+        .main-content {
+            margin-left: 280px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        /* Top Bar */
+        .topbar {
+            background: white;
+            padding: 15px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .topbar-title h1 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .topbar-title span {
+            font-size: 11px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f8fafc;
+            padding: 6px 14px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .user-profile img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-info div {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .user-info small {
+            font-size: 10px;
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        /* Dashboard Body */
+        .dashboard-body {
+            padding: 30px 35px;
             flex-grow: 1;
         }
 
-        .menu-btn .text-content small {
-            display: block;
-            font-weight: 400;
-            color: var(--gray);
-            font-size: 12px;
-            margin-top: 2px;
+        /* Hero Banner Utama */
+        .hero-banner {
+            background: linear-gradient(135deg, #312e81 0%, #4f46e5 100%);
+            border-radius: 16px;
+            padding: 25px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.3);
+            margin-bottom: 25px;
         }
 
-        /* Variasi Warna Butang yang Eksklusif */
-        .btn-parent .icon-box { background: rgba(59, 130, 246, 0.12); color: #2563eb; }
-        .btn-status .icon-box { background: rgba(245, 158, 11, 0.12); color: #d97706; }
-        .btn-warden .icon-box { background: rgba(16, 185, 129, 0.12); color: #059669; }
-
-        .menu-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08);
-            border-color: transparent;
+        .hero-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
-        .btn-parent:hover { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); color: #1d4ed8; }
-        .btn-status:hover { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); color: #b45309; }
-        .btn-warden:hover { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); color: #047857; }
+        .hero-icon {
+            background: rgba(255, 255, 255, 0.15);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
 
-        .footer-info {
-            margin-top: 30px;
-            font-size: 12px;
+        .hero-text small {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             color: rgba(255, 255, 255, 0.7);
-            text-align: center;
-            font-weight: 500;
-            letter-spacing: 0.3px;
+            font-weight: 600;
         }
 
-        .footer-info span {
-            color: var(--accent);
+        .hero-text h2 {
+            font-size: 18px;
+            margin: 4px 0 0 0;
             font-weight: 700;
+        }
+
+        .hero-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .sesi-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .disahkan-badge {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* Kotak Pilihan Modul Utama (Menu Grid) */
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .module-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            text-decoration: none;
+            color: var(--text-dark);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .module-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08);
+            border-color: var(--primary);
+        }
+
+        .card-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .card-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+        }
+
+        .card-tag {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .module-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+            color: var(--text-dark);
+        }
+
+        .module-card p {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin: 0 0 20px 0;
+            line-height: 1.4;
+        }
+
+        .card-action-link {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Warna tema kad modul berbeza */
+        .card-parent .card-icon-box { background: rgba(79, 70, 229, 0.1); color: var(--primary); }
+        .card-parent .card-tag { background: rgba(79, 70, 229, 0.1); color: var(--primary); }
+
+        .card-status .card-icon-box { background: rgba(245, 158, 11, 0.1); color: #d97706; }
+        .card-status .card-tag { background: rgba(245, 158, 11, 0.1); color: #d97706; }
+
+        .card-warden .card-icon-box { background: rgba(16, 185, 129, 0.1); color: #059669; }
+        .card-warden .card-tag { background: rgba(16, 185, 129, 0.1); color: #059669; }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: var(--text-gray);
+            border-top: 1px solid var(--border-color);
+            margin-top: 40px;
         }
     </style>
 </head>
 <body>
 
-<div class="portal-wrapper">
-    <div class="card-container">
-        <!-- Logo / Ikon Istimewa -->
-        <div class="crest-logo">🏛️</div>
+    <!-- SIDEBAR KIRI -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Pusat Kawalan Data</h2>
+            <span>Sekolah Menengah Kebangsaan (Agama) Tok Bachok</span>
+        </div>
         
-        <div class="badge-official">Portal Rasmi Asrama</div>
-        <h1>Sistem Pengurusan Asrama</h1>
-        <p class="subtitle">Sila pilih modul akses perkhidmatan digital di bawah untuk meneruskan urusan anda.</p>
-
-        <div class="menu-grid">
-            <!-- Permohonan Ibu Bapa -->
-            <a href="portal-ibubapa.html" class="menu-btn btn-parent">
-                <div class="icon-box">📝</div>
-                <div class="text-content">
-                    Permohonan Pulang Bermalam
-                    <small>Borang rasmi keluar masuk pelajar asrama</small>
-                </div>
+        <div class="sidebar-menu">
+            <div class="menu-label">Navigasi Utama</div>
+            <a href="index.html" class="nav-item active">
+                <span class="icon">🏠</span> Utama / Dashboard
             </a>
-
-            <!-- Semak Status -->
-            <a href="semak-status.html" class="menu-btn btn-status">
-                <div class="icon-box">🔍</div>
-                <div class="text-content">
-                    Semakan Status Permohonan
-                    <small>Kemas kini kelulusan secara langsung</small>
-                </div>
+            
+            <div class="menu-label" style="margin-top: 15px;">Modul Asrama</div>
+            <a href="portal-ibubapa.html" class="nav-item">
+                <span class="icon">📝</span> Permohonan Pulang
             </a>
-
-            <!-- Portal Warden -->
-            <a href="dashboard-warden.html" class="menu-btn btn-warden">
-                <div class="icon-box">🔐</div>
-                <div class="text-content">
-                    Papan Pemuka Warden
-                    <small>Modul kawalan keselamatan & kelulusan</small>
-                </div>
+            <a href="semak-status.html" class="nav-item">
+                <span class="icon">🔍</span> Semak Status
             </a>
+            <a href="dashboard-warden.html" class="nav-item">
+                <span class="icon">🔐</span> Portal Warden
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            &copy; 2026 KPM • Suka & Amanah
         </div>
     </div>
 
-    <div class="footer-info">
-        Hak Cipta Terpelihara &copy; 2026 <span>Sistem Asrama Sekolah</span><br>
-        Inisiatif Pendigitalan Pengurusan Asrama Pintar
+    <!-- KANDUNGAN UTAMA -->
+    <div class="main-content">
+        
+        <!-- Top Navigation Bar -->
+        <div class="topbar">
+            <div class="topbar-title">
+                <h1>Unit Pengurusan Asrama Harian</h1>
+                <span>SEKOLAH MENENGAH KEBANGSAAN (AGAMA) TOK BACHOK</span>
+            </div>
+            
+            <div class="user-profile">
+                <div style="background: #4f46e5; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 13px;">P</div>
+                <div class="user-info">
+                    <div>Penyedia Sekolah</div>
+                    <small>🟢 Online Aktif</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bahagian Kandungan Dashboard -->
+        <div class="dashboard-body">
+            
+            <!-- Banner Utama Sekolah -->
+            <div class="hero-banner">
+                <div class="hero-left">
+                    <div class="hero-icon">🏫</div>
+                    <div class="hero-text">
+                        <small>Pusat Kawalan Data Sekolah</small>
+                        <h2>SEKOLAH MENENGAH KEBANGSAAN (AGAMA) TOK BACHOK</h2>
+                    </div>
+                </div>
+                <div class="hero-right">
+                    <div class="sesi-badge">SESI 2026</div>
+                    <div class="disahkan-badge">✓ Disahkan</div>
+                </div>
+            </div>
+
+            <!-- Kad Pilihan Sistem (Modul Akses Pantas) -->
+            <div class="module-grid">
+                
+                <!-- Kad 1: Permohonan Ibu Bapa -->
+                <a href="portal-ibubapa.html" class="module-card card-parent">
+                    <div>
+                        <div class="card-header-flex">
+                            <div class="card-icon-box">📝</div>
+                            <span class="card-tag">Modul Rasmi</span>
+                        </div>
+                        <h3>Permohonan Pulang Bermalam</h3>
+                        <p>Borang digital rasmi ibu bapa untuk memohon kebenaran keluar/pulang bermalam pelajar asrama.</p>
+                    </div>
+                    <div class="card-action-link">Buka Borang &rarr;</div>
+                </a>
+
+                <!-- Kad 2: Semak Status -->
+                <a href="semak-status.html" class="module-card card-status">
+                    <div>
+                        <div class="card-header-flex">
+                            <div class="card-icon-box">🔍</div>
+                            <span class="card-tag">Semakan</span>
+                        </div>
+                        <h3>Semak Status Permohonan</h3>
+                        <p>Pantau status kelulusan permohonan balik bermalam anak anda secara langsung dan masa sebenar.</p>
+                    </div>
+                    <div class="card-action-link">Buat Semakan &rarr;</div>
+                </a>
+
+                <!-- Kad 3: Portal Warden -->
+                <a href="dashboard-warden.html" class="module-card card-warden">
+                    <div>
+                        <div class="card-header-flex">
+                            <div class="card-icon-box">🔐</div>
+                            <span class="card-tag">Keselamatan</span>
+                        </div>
+                        <h3>Papan Pemuka Warden</h3>
+                        <p>Portal kawalan khusus warden untuk meluluskan atau menolak permohonan keluar pelajar asrama.</p>
+                    </div>
+                    <div class="card-action-link">Akses Portal Warden &rarr;</div>
+                </a>
+
+            </div>
+
+            <div class="footer-bottom">
+                &copy; 2026 Unit Pengurusan Asrama Harian (UPAH) KPM. Hak Cipta Terpelihara.
+            </div>
+
+        </div>
     </div>
-</div>
 
 </body>
 </html>
