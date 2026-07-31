@@ -402,7 +402,42 @@
         .module-card p { font-size: 12px; color: var(--text-gray); margin: 0 0 16px 0; line-height: 1.4; }
         .card-action-link { font-size: 12px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; }
 
-        .search-container, .analytics-container, .widget-box {
+        /* ANALISIS / STATISTIK BILANGAN PELAJAR */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .stat-icon.blue { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
+        .stat-icon.green { background: rgba(16, 185, 129, 0.1); color: #059669; }
+        .stat-icon.orange { background: rgba(245, 158, 11, 0.1); color: #d97706; }
+
+        .stat-info h4 { font-size: 11px; color: var(--text-gray); margin: 0 0 2px 0; text-transform: uppercase; font-weight: 700; }
+        .stat-info .stat-val { font-size: 20px; font-weight: 800; color: var(--text-dark); margin: 0; }
+
+        .search-container, .widget-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
@@ -594,7 +629,6 @@
             
             <div class="hero-banner">
                 <div class="hero-left">
-                    <!-- Logo Saiz Diselaraskan -->
                     <img src="https://lh3.googleusercontent.com/d/1prVsaI1eZg47A1CG2IIw3wnvYWqXsuPn=s220" alt="Logo SMKA Tok Bachok" class="hero-logo-img">
                     <div class="hero-text">
                         <small>Pusat Kawalan Data & Statistik Asrama</small>
@@ -648,12 +682,37 @@
                         </a>
                     </div>
 
+                    <!-- STATISTIK / BILANGAN PELAJAR ASRAMA -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon blue">👥</div>
+                            <div class="stat-info">
+                                <h4>Jumlah Penghuni</h4>
+                                <p class="stat-val" id="totalHostelers">428</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">🏫</div>
+                            <div class="stat-info">
+                                <h4>Berada Di Asrama</h4>
+                                <p class="stat-val" id="presentHostelers">412</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon orange">🏠</div>
+                            <div class="stat-info">
+                                <h4>Pulang Bermalam</h4>
+                                <p class="stat-val" id="awayHostelers">16</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- WIDGET CARIAN PELAJAR -->
                     <div class="search-container">
                         <h3>🔍 Carian Maklumat Pelajar (Ibu Bapa)</h3>
                         <p style="font-size: 12px; color: var(--text-gray); margin: 4px 0 0 0;">Masukkan nama penuh anak atau nombor pengenalan untuk semak maklumat.</p>
                         <div class="search-box-flex">
-                            <input type="text" id="searchInput" placeholder="Cth: Muhammad Amir...">
+                            <input type="text" id="searchInput" placeholder="Cth: Muhammad Amir..." onkeypress="handleSearchKeyPress(event)">
                             <button onclick="searchStudent()">Cari Pelajar</button>
                         </div>
                         <div class="search-result-box" id="searchResultBox"></div>
@@ -825,7 +884,13 @@
             document.getElementById('activeWardenList').innerHTML = wardenText;
         }
 
-        // Fungsi carian pelajar
+        // Fungsi carian pelajar dengan sokongan Enter key
+        function handleSearchKeyPress(event) {
+            if (event.key === 'Enter') {
+                searchStudent();
+            }
+        }
+
         function searchStudent() {
             const query = document.getElementById('searchInput').value.trim();
             const resultBox = document.getElementById('searchResultBox');
