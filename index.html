@@ -29,7 +29,7 @@
 
         /* SIDEBAR KIRI */
         .sidebar {
-            width: 280px;
+            width: 300px;
             background: var(--sidebar-bg);
             color: white;
             display: flex;
@@ -122,7 +122,7 @@
             border: 1px solid #38bdf8;
             border-radius: 10px;
             padding: 12px;
-            margin: 10px 12px 20px 12px;
+            margin: 10px 12px 15px 12px;
             box-shadow: 0 4px 10px rgba(56, 189, 248, 0.1);
         }
 
@@ -162,6 +162,82 @@
             color: #ffffff;
         }
 
+        /* WIDGET CARIAN DI SIDEBAR KIRI */
+        .sidebar-search-box {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px;
+            margin: 0 12px 20px 12px;
+        }
+
+        .sidebar-search-box h3 {
+            font-size: 11px;
+            font-weight: 700;
+            color: #38bdf8;
+            margin: 0 0 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sidebar-search-box p {
+            font-size: 10px;
+            color: #94a3b8;
+            margin: 0 0 10px 0;
+            line-height: 1.3;
+        }
+
+        .sidebar-search-flex {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .sidebar-search-flex input {
+            padding: 8px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #0f172a;
+            color: #ffffff;
+            border-radius: 6px;
+            font-size: 11px;
+            outline: none;
+        }
+
+        .sidebar-search-flex button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .sidebar-search-result {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 8px;
+            font-size: 11px;
+            margin-top: 8px;
+            display: none;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .sidebar-search-result.active { display: block; }
+
+        .sidebar-result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+        .sidebar-result-item:last-child { border-bottom: none; }
+        .sidebar-result-label { color: #94a3b8; font-weight: 600; }
+        .sidebar-result-value { font-weight: 700; color: #ffffff; }
+
         .sidebar-footer {
             padding: 12px 16px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -173,7 +249,7 @@
 
         /* KANDUNGAN UTAMA */
         .main-content {
-            margin-left: 280px;
+            margin-left: 300px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -442,59 +518,13 @@
         .module-card p { font-size: 12px; color: var(--text-gray); margin: 0 0 16px 0; line-height: 1.4; }
         .card-action-link { font-size: 12px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 6px; }
 
-        .search-container, .widget-box {
+        .widget-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
         }
-
-        .search-box-flex {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .search-box-flex input {
-            flex-grow: 1;
-            padding: 10px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 13px;
-            outline: none;
-        }
-
-        .search-box-flex button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .search-result-box {
-            background: #f8fafc;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 15px;
-            font-size: 13px;
-            margin-top: 12px;
-            display: none;
-        }
-        .search-result-box.active { display: block; }
-
-        .result-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px dashed var(--border-color);
-        }
-        .result-item:last-child { border-bottom: none; }
-        .result-label { color: var(--text-gray); font-weight: 600; }
-        .result-value { font-weight: 700; color: var(--text-dark); }
 
         /* WIDGET WARDEN BERTUGAS */
         .widget-title {
@@ -652,6 +682,17 @@
             </div>
         </div>
 
+        <!-- CARIAN MAKLUMAT PELAJAR (DILETAKKAN DI BAHAGIAN KIRI SIDEBAR) -->
+        <div class="sidebar-search-box">
+            <h3>🔍 Carian Pelajar</h3>
+            <p>Cari data daripada Google Sheet (Tab Pelajar).</p>
+            <div class="sidebar-search-flex">
+                <input type="text" id="sidebarSearchInput" placeholder="Nama / No. KP..." onkeypress="handleSidebarSearchKeyPress(event)">
+                <button onclick="searchStudentFromSidebarSheet()">Cari</button>
+            </div>
+            <div class="sidebar-search-result" id="sidebarSearchResultBox"></div>
+        </div>
+
         <div class="sidebar-footer">&copy; 2026 SMKA Tok Bachok</div>
     </div>
 
@@ -696,7 +737,7 @@
                 </div>
             </div>
 
-            <!-- ANALISIS / STATISTIK BILANGAN PELAJAR (DILETAKKAN DI ATAS, DI BAWAH TAJUK BESAR) -->
+            <!-- ANALISIS / STATISTIK BILANGAN PELAJAR -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon blue">👥</div>
@@ -762,15 +803,18 @@
                         </a>
                     </div>
 
-                    <!-- WIDGET CARIAN PELAJAR DARI GOOGLE SHEET -->
-                    <div class="search-container">
-                        <h3>🔍 Carian Maklumat Pelajar (Tab Pelajar)</h3>
-                        <p style="font-size: 12px; color: var(--text-gray); margin: 4px 0 0 0;">Cari terus daripada pangkalan data Google Sheet SMKA Tok Bachok.</p>
-                        <div class="search-box-flex">
-                            <input type="text" id="searchInput" placeholder="Cth: Nama pelajar atau No. KP..." onkeypress="handleSearchKeyPress(event)">
-                            <button onclick="searchStudentFromSheet()">Cari Pelajar</button>
+                    <!-- RUANG CHAT / MAKLUM BALAS PANTAS -->
+                    <div class="widget-box">
+                        <div class="widget-title">💬 Ruang Chat & Makluman Pantas</div>
+                        <div class="chat-box-container">
+                            <div class="chat-messages" id="chatMessagesBox">
+                                <div class="chat-msg"><span>Sistem Portal (Admin)</span>Sila gunakan ruangan ini untuk mesej ringkas / peringatan sesama pentadbir.</div>
+                            </div>
+                            <div class="chat-input-group">
+                                <input type="text" id="chatInputText" placeholder="Tulis mesej..." onkeypress="handleChatKeyPress(event)">
+                                <button onclick="sendChatMessage()">Hantar</button>
+                            </div>
                         </div>
-                        <div class="search-result-box" id="searchResultBox"></div>
                     </div>
                 </div>
 
@@ -793,21 +837,7 @@
                         </div>
                     </div>
 
-                    <!-- RUANG CHAT / MAKLUM BALAS PANTAS -->
-                    <div class="widget-box">
-                        <div class="widget-title">💬 Ruang Chat & Makluman Pantas</div>
-                        <div class="chat-box-container">
-                            <div class="chat-messages" id="chatMessagesBox">
-                                <div class="chat-msg"><span>Sistem Portal (Admin)</span>Sila gunakan ruangan ini untuk mesej ringkas / peringatan sesama pentadbir.</div>
-                            </div>
-                            <div class="chat-input-group">
-                                <input type="text" id="chatInputText" placeholder="Tulis mesej..." onkeypress="handleChatKeyPress(event)">
-                                <button onclick="sendChatMessage()">Hantar</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PENGUMUMAN RASMI -->
+                    <!-- 📢 PENGUMUMAN RASMI ASRAMA (DILETAKKAN DI BAWAH WARDEN BERTUGAS) -->
                     <div class="widget-box">
                         <div class="widget-title">📢 Pengumuman Rasmi Asrama</div>
                         <div style="font-size: 12px; color: var(--text-gray); line-height: 1.5;" id="announcementText">
@@ -856,11 +886,8 @@
                 let maleCount = 0;
                 let femaleCount = 0;
 
-                // Semak kolum jantina dengan lebih tepat
                 cachedStudentsData.forEach(row => {
                     let genderVal = '';
-                    
-                    // Cari kolum yang sepadan dengan kata kunci jantina / gender
                     for (let key in row) {
                         let lowerKey = key.toLowerCase();
                         if (lowerKey.includes('jantina') || lowerKey.includes('gender')) {
@@ -869,7 +896,6 @@
                         }
                     }
 
-                    // Jika kolum jantina tidak dijumpai by name, cuba cari nilai di dalam keseluruhan baris
                     if (!genderVal) {
                         let rowString = Object.values(row).join(' ').toLowerCase();
                         if (rowString.includes('perempuan') || rowString.includes(' p ')) {
@@ -878,7 +904,6 @@
                             maleCount++;
                         }
                     } else {
-                        // Tapis mengikut huruf atau perkataan
                         if (genderVal.startsWith('p') || genderVal.includes('perempuan')) {
                             femaleCount++;
                         } else {
@@ -887,7 +912,6 @@
                     }
                 });
 
-                // Paparkan pada kad statistik
                 document.getElementById('totalHostelers').innerText = total || '0';
                 document.getElementById('maleHostelers').innerText = maleCount || '0';
                 document.getElementById('femaleHostelers').innerText = femaleCount || '0';
@@ -900,11 +924,9 @@
             }
         }
 
-        // Muat data automatik semasa pelayar dibuka
         window.addEventListener('DOMContentLoaded', () => {
             loadSheetData();
 
-            // Tarikh lalai untuk warden
             const today = new Date();
             const yyyy = today.getFullYear();
             const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -913,7 +935,6 @@
             checkWardenBySelectedDate();
         });
 
-        // Fungsi Jam Live
         function updateClock() {
             const now = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
@@ -922,14 +943,14 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Carian Pelajar Berdasarkan Data Google Sheet
-        function handleSearchKeyPress(event) {
-            if (event.key === 'Enter') { searchStudentFromSheet(); }
+        // Carian Pelajar dari Sidebar
+        function handleSidebarSearchKeyPress(event) {
+            if (event.key === 'Enter') { searchStudentFromSidebarSheet(); }
         }
 
-        function searchStudentFromSheet() {
-            const query = document.getElementById('searchInput').value.trim().toLowerCase();
-            const resultBox = document.getElementById('searchResultBox');
+        function searchStudentFromSidebarSheet() {
+            const query = document.getElementById('sidebarSearchInput').value.trim().toLowerCase();
+            const resultBox = document.getElementById('sidebarSearchResultBox');
             
             if(!query) {
                 alert('Sila masukkan nama atau maklumat carian pelajar.');
@@ -939,7 +960,7 @@
             resultBox.classList.add('active');
 
             if(cachedStudentsData.length === 0) {
-                resultBox.innerHTML = `<div class="result-item" style="color: #d97706;"><span class="result-label">Status:</span><span class="result-value">Sedang memuatkan data dari Sheet, sila cuba sebentar lagi.</span></div>`;
+                resultBox.innerHTML = `<div class="sidebar-result-item" style="color: #f59e0b;"><span class="sidebar-result-label">Status:</span><span class="sidebar-result-value">Memuatkan data, sila cuba sebentar lagi.</span></div>`;
                 return;
             }
 
@@ -951,16 +972,16 @@
                 let htmlDetails = '';
                 for (let key in found) {
                     if(found[key] !== '') {
-                        htmlDetails += `<div class="result-item"><span class="result-label">${key}:</span><span class="result-value">${found[key]}</span></div>`;
+                        htmlDetails += `<div class="sidebar-result-item"><span class="sidebar-result-label">${key}:</span><span class="sidebar-result-value">${found[key]}</span></div>`;
                     }
                 }
                 resultBox.innerHTML = htmlDetails;
             } else {
-                resultBox.innerHTML = `<div class="result-item" style="color: #ef4444;"><span class="result-label">Makluman:</span><span class="result-value">Tiada rekod ditemui untuk "${query}".</span></div>`;
+                resultBox.innerHTML = `<div class="sidebar-result-item" style="color: #f87171;"><span class="sidebar-result-label">Makluman:</span><span class="sidebar-result-value">Tiada rekod.</span></div>`;
             }
         }
 
-        // Fungsi Interaktif Ruang Chat / Maklum Balas Pantas
+        // Ruang Chat
         function handleChatKeyPress(event) {
             if (event.key === 'Enter') { sendChatMessage(); }
         }
@@ -983,13 +1004,12 @@
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
-        // Logik Semak Warden Mengikut Tarikh
+        // Semak Warden Mengikut Tarikh
         function checkWardenBySelectedDate() {
             const dateValue = document.getElementById('dutyDateInput').value;
             if(!dateValue) return;
 
             const selectedDate = new Date(dateValue);
-            const year = selectedDate.getFullYear();
             const month = selectedDate.getMonth() + 1;
             const day = selectedDate.getDate();
 
