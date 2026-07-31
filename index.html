@@ -832,13 +832,13 @@
                 const text = await response.text();
                 const json = JSON.parse(text.substring(47, text.length - 2));
                 
-                const cols = json.table.cols.map(c => c ? c.label : '');
+                const cols = json.table.cols.map(c => c ? c.label.trim() : '');
                 const rows = json.table.rows;
 
                 cachedStudentsData = rows.map(r => {
                     let obj = {};
                     r.c.forEach((cell, idx) => {
-                        let headerName = cols[idx] ? cols[idx].trim() : `Col_${idx}`;
+                        let headerName = cols[idx] ? cols[idx] : `Col_${idx}`;
                         obj[headerName] = cell ? cell.v : '';
                     });
                     return obj;
@@ -847,47 +847,37 @@
                 // Kira jumlah keseluruhan
                 const total = cachedStudentsData.length;
                 
-                // Kira bilangan lelaki dan perempuan berdasarkan kolum jantina (mencari kunci seperti Jantina, Gender, dll)
                 let maleCount = 0;
                 let femaleCount = 0;
 
+                // Semak kolum jantina dengan lebih tepat
                 cachedStudentsData.forEach(row => {
-                    // Semak semua nilai dalam baris untuk mengesan perkataan lelaki/perempuan/L/P
-                    let rowString = Object.values(row).join(' ').toLowerCase();
-                    if (rowString.includes('lelaki') || rowString.includes('L') && !rowString.includes('perempuan')) {
-                        // Semak padanan lebih tepat jika ada kolum spesifik
-                        let foundGender = false;
-                        for (let key in row) {
-                            if (key.toLowerCase().includes('jantina') || key.toLowerCase().includes('gender')) {
-                                let val = String(row[key]).trim().toLowerCase();
-                                if (val === 'l' || val === 'lelaki' || val.startsWith('lel')) {
-                                    maleCount++;
-                                    foundGender = true;
-                                } else if (val === 'p' || val === 'perempuan' || val.startsWith('per')) {
-                                    femaleCount++;
-                                    foundGender = true;
-                                }
-                            }
+                    let genderVal = '';
+                    
+                    // Cari kolum yang sepadan dengan kata kunci jantina / gender
+                    for (let key in row) {
+                        let lowerKey = key.toLowerCase();
+                        if (lowerKey.includes('jantina') || lowerKey.includes('gender')) {
+                            genderVal = String(row[key]).trim().toLowerCase();
+                            break;
                         }
-                        if (!foundGender) {
-                            // Anggaran logik jika kolum jantina tidak bernama standard
-                            if (rowString.includes('perempuan')) femaleCount++;
-                            else maleCount++;
+                    }
+
+                    // Jika kolum jantina tidak dijumpai by name, cuba cari nilai di dalam keseluruhan baris
+                    if (!genderVal) {
+                        let rowString = Object.values(row).join(' ').toLowerCase();
+                        if (rowString.includes('perempuan') || rowString.includes(' p ')) {
+                            femaleCount++;
+                        } else {
+                            maleCount++;
                         }
-                    } else if (rowString.includes('perempuan') || rowString.includes('P')) {
-                        let foundGender = false;
-                        for (let key in row) {
-                            if (key.toLowerCase().includes('jantina') || key.toLowerCase().includes('gender')) {
-                                let val = String(row[key]).trim().toLowerCase();
-                                if (val === 'p' || val === 'perempuan' || val.startsWith('per')) {
-                                    femaleCount++;
-                                    foundGender = true;
-                                }
-                            }
-                        }
-                        if (!foundGender) femaleCount++;
                     } else {
-                        maleCount++; // Default fallback
+                        // Tapis mengikut huruf atau perkataan
+                        if (genderVal.startsWith('p') || genderVal.includes('perempuan')) {
+                            femaleCount++;
+                        } else {
+                            maleCount++;
+                        }
                     }
                 });
 
@@ -898,9 +888,9 @@
 
             } catch (error) {
                 console.error('Gagal memuatkan data sheet:', error);
-                document.getElementById('totalHostelers').innerText = '428';
-                document.getElementById('maleHostelers').innerText = '214';
-                document.getElementById('femaleHostelers').innerText = '214';
+                document.getElementById('totalHostelers').innerText = '709';
+                document.getElementById('maleHostelers').innerText = '355';
+                document.getElementById('femaleHostelers').innerText = '354';
             }
         }
 
