@@ -445,7 +445,7 @@
         .result-label { color: var(--text-gray); font-weight: 600; }
         .result-value { font-weight: 700; color: var(--text-dark); }
 
-        /* WIDGET WARDEN BERTUGAS MENGIKUT TARIKH */
+        /* WIDGET WARDEN BERTUGAS MENGIKUT TARIKH PILIHAN */
         .widget-title {
             font-size: 14px;
             font-weight: 700;
@@ -458,12 +458,37 @@
             padding-bottom: 10px;
         }
 
+        .date-picker-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .date-picker-group label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-gray);
+            text-transform: uppercase;
+        }
+
+        .date-picker-group input[type="date"] {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            background: #f8fafc;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
         .warden-duty-box {
             background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
             border: 1px solid #bbf7d0;
             border-radius: 12px;
             padding: 15px;
-            margin-bottom: 12px;
         }
 
         .warden-duty-title {
@@ -622,16 +647,19 @@
 
                 <div class="right-column">
                     
-                    <!-- WIDGET WARDEN BERTUGAS MENGIKUT TARIKH SEMASA (DINAMIK) -->
+                    <!-- WIDGET WARDEN BERTUGAS DENGAN PILIHAN TARIKH INTERAKTIF -->
                     <div class="widget-box">
-                        <div class="widget-title">
-                            🛡️ Warden Bertugas <span id="currentDateBadge" style="font-size: 11px; background: #e0e7ff; color: #4f46e5; padding: 2px 8px; border-radius: 6px; margin-left: auto;">Memuatkan Tarikh...</span>
-                        </div>
+                        <div class="widget-title">🛡️ Semak Warden Bertugas Mengikut Tarikh</div>
                         
+                        <div class="date-picker-group">
+                            <label for="dutyDateInput">Pilih Tarikh Semakan:</label>
+                            <input type="date" id="dutyDateInput" min="2026-06-01" max="2026-12-31" onchange="checkWardenBySelectedDate()">
+                        </div>
+
                         <div class="warden-duty-box">
                             <div class="warden-duty-title">👮‍♂️ Barisan Warden Bertugas:</div>
                             <div class="warden-duty-content" id="activeWardenList">
-                                Sedang mengemas kini senarai warden mengikut takwim...
+                                Sila pilih tarikh di atas untuk memaparkan nama warden.
                             </div>
                         </div>
                     </div>
@@ -662,20 +690,35 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Logik Automatik Semak Warden Berdasarkan Takwim Jun - Disember 2026
-        function loadWardenByCurrentDate() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = now.getMonth() + 1; // 1-12
-            const day = now.getDate();
+        // Tetapkan nilai lalai datepicker kepada hari ini (jika dalam julat Jun - Dis 2026, jika tidak tetapkan 1 Jun 2026)
+        window.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate).padStart(2, '0');
+            const formattedToday = `${yyyy}-${mm}-${dd}`;
+            
+            const dateInput = document.getElementById('dutyDateInput');
+            if (yyyy === 2026 && today.getMonth() >= 5 && today.getMonth() <= 11) {
+                dateInput.value = formattedToday;
+            } else {
+                dateInput.value = '2026-07-31'; // Nilai default semasa
+            }
+            checkWardenBySelectedDate();
+        });
 
-            // Format paparan tarikh pada widget
-            const optionsDate = { day: 'numeric', month: 'long', year: 'numeric' };
-            document.getElementById('currentDateBadge').innerText = now.toLocaleDateString('ms-MY', optionsDate);
+        // Logik Menentukan Warden Mengikut Tarikh Yang Dipilih Pengguna
+        function checkWardenBySelectedDate() {
+            const dateValue = document.getElementById('dutyDateInput').value;
+            if(!dateValue) return;
+
+            const selectedDate = new Date(dateValue);
+            const year = selectedDate.getFullYear();
+            const month = selectedDate.getMonth() + 1;
+            const day = selectedDate.getDate();
 
             let wardenText = "";
 
-            // Logik Tarikh Mengikut Takwim PDF Jun - Disember 2026
             if (year === 2026) {
                 if (month === 6) { // JUN 2026
                     if (day >= 1 && day <= 6) wardenText = "Cuti Sekolah (Tiada bertugas harian khusus)";
@@ -692,20 +735,20 @@
                     else if (day === 27) wardenText = "Kumpulan 4: Syaibani, Mohd Nasir, Balqis";
                     else wardenText = "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
                 } 
-                else if (month === 7) { // JULAI 2026 (Semasa: 31 Julai)
+                else if (month === 7) { // JULAI 2026
                     if (day === 1) wardenText = "Mohd Rosdi, Mohd Nasir, Balqis";
                     else if (day === 2) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
                     else if (day === 3 || day === 4) wardenText = "<b>Pelajar Balik Bermalam</b>";
-                    else if (day === 5 || day === 6) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
+                    else if (day >= 5 && day <= 6) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
                     else if (day === 7) wardenText = "Kumpulan 2: Mohd Rosdi, Mohd Nasir, Balqis";
                     else if (day === 8) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
                     else if (day === 9) wardenText = "Husaini, Iqbal, Suhaida";
                     else if (day === 10) wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
                     else if (day === 11) wardenText = "Mubarak, Husaini, Tariq, Laila, Zalihah";
-                    else if (day === 17 || day === 18) wardenText = "Kumpulan 3: Mohd Rosdi, Iqbal, Faris, Hidayah, Suhaida";
+                    else if (day >= 17 && day <= 18) wardenText = "Kumpulan 3: Mohd Rosdi, Iqbal, Faris, Hidayah, Suhaida";
                     else if (day === 19) wardenText = "Kumpulan 4: Syaibani, Mohd Nasir, Balqis";
                     else if (day === 24 || day === 25) wardenText = "<b>Pelajar Balik Bermalam</b>";
-                    else wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza (Bertugas Harian Julai)";
+                    else wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
                 }
                 else if (month === 8) { // OGOS 2026
                     if (day === 7) wardenText = "Kumpulan 1: Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
@@ -761,14 +804,11 @@
                     wardenText = "Cuti Sekolah / Cuti Akhir Tahun (Tiada Tugas Asrama Harian)";
                 }
             } else {
-                wardenText = "Mengikut Takrif Kalendar 2026";
+                wardenText = "Sila pilih tarikh dalam julat Jun - Disember 2026.";
             }
 
             document.getElementById('activeWardenList').innerHTML = wardenText;
         }
-
-        // Panggil fungsi muat turun warden semasa skrip dimuatkan
-        loadWardenByCurrentDate();
 
         // Fungsi carian pelajar
         function searchStudent() {
