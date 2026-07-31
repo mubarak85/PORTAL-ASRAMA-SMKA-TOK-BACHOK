@@ -675,9 +675,9 @@
             </div>
         </div>
 
-        <!-- FLASH CARD BERGERAK MEMUATKAN PENGUMUMAN RASMI ASRAMA -->
+        <!-- FLASH CARD BERGERAK TERHUBUNG DENGAN TAB PENGUMUMAN GOOGLE SHEET -->
         <div class="flash-card-banner">
-            <marquee scrollamount="5">✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 📢 PENGUMUMAN RASMI: Pelajar dinasihatkan agar memastikan gerbang utama asrama ditutup mengikut masa ditetapkan. &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Sebarang kelewatan pulang bermalam perlu dimaklumkan kepada warden bertugas.</marquee>
+            <marquee scrollamount="5" id="announcementMarquee">✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Memuatkan pengumuman dari Google Sheet...</marquee>
         </div>
 
         <div class="dashboard-body">
@@ -697,7 +697,7 @@
                 </div>
             </div>
 
-            <!-- ANALISIS / STATISTIK BILANGAN PELAJAR (UTAMA & ANALISIS) -->
+            <!-- ANALISIS / STATISTIK BILANGAN PELAJAR -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon blue">👥</div>
@@ -818,14 +818,52 @@
     </div>
 
     <script>
-        // ID Google Sheet & Tab 'Pelajar'
+        // ID Google Sheet & Nama Tab
         const SPREADSHEET_ID = "1o6uBJi75uUFieEoknY0K65ZZ8ddOZN_AF9Ehpac3hbw";
-        const SHEET_NAME = "Pelajar";
+        const SHEET_STUDENT = "Pelajar";
+        const SHEET_ANNOUNCEMENT = "Pengumuman";
         let cachedStudentsData = [];
 
-        // Fungsi Tarik Data Terus dari Google Sheets & Kira Jantina secara Automatik
+        // Fungsi Tarik Data Pengumuman dari Tab 'Pengumuman'
+        async function loadAnnouncementData() {
+            const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_ANNOUNCEMENT)}`;
+            const marqueeElement = document.getElementById('announcementMarquee');
+            
+            let defaultText = "✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 📢 PENGUMUMAN RASMI: Sila pastikan semua pelajar mematuhi peraturan asrama yang telah ditetapkan.";
+
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                const json = JSON.parse(text.substring(47, text.length - 2));
+                const rows = json.table.rows;
+
+                if (rows && rows.length > 0) {
+                    let announcements = [];
+                    rows.forEach(r => {
+                        if (r.c && r.c[0] && r.c[0].v) {
+                            announcements.push(r.c[0].v);
+                        }
+                    });
+
+                    if (announcements.length > 0) {
+                        let dynamicAnnounceHtml = "✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨";
+                        announcements.forEach(item => {
+                            dynamicAnnounceHtml += ` &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 📢 ${item}`;
+                        });
+                        marqueeElement.innerHTML = dynamicAnnounceHtml;
+                        return;
+                    }
+                }
+                marqueeElement.innerHTML = defaultText;
+            } catch (error) {
+                console.error('Gagal memuatkan tab Pengumuman:', error);
+                marqueeElement.innerHTML = defaultText;
+            }
+        }
+
+        // Fungsi Tarik Data Pelajar & Kira Jantina
         async function loadSheetData() {
-            const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+            const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_STUDENT)}`;
             try {
                 const response = await fetch(url);
                 const text = await response.text();
@@ -843,9 +881,7 @@
                     return obj;
                 });
 
-                // Kira jumlah keseluruhan
                 const total = cachedStudentsData.length;
-                
                 let maleCount = 0;
                 let femaleCount = 0;
 
@@ -880,7 +916,7 @@
                 document.getElementById('femaleHostelers').innerText = femaleCount || '0';
 
             } catch (error) {
-                console.error('Gagal memuatkan data sheet:', error);
+                console.error('Gagal memuatkan data sheet pelajar:', error);
                 document.getElementById('totalHostelers').innerText = '709';
                 document.getElementById('maleHostelers').innerText = '355';
                 document.getElementById('femaleHostelers').innerText = '354';
@@ -888,6 +924,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            loadAnnouncementData();
             loadSheetData();
 
             const today = new Date();
