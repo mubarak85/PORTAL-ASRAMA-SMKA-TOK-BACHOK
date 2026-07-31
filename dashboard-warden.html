@@ -76,7 +76,6 @@
 </div>
 
 <script>
-    // Tetapkan kata laluan warden anda di sini
     const WARDEN_PASSWORD = "warden123"; 
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzaOiZGzdmTneaayNwvGJfV0vB4Z2ZDSKx8h2A1Kd-GpV7Jw4RTM1U3_lMz_lH8dD00/exec';
     let allData = [];
@@ -163,24 +162,25 @@
             const result = await response.json();
 
             if (result.result === 'success') {
-                // Buka WhatsApp automatik jika nombor telefon wujud
                 if (rowData.noTelefonPemohon) {
-                    let cleanPhone = rowData.noTelefonPemohon.replace(/[^0-9]/g, '');
+                    let cleanPhone = String(rowData.noTelefonPemohon).replace(/[^0-9]/g, '');
                     if (cleanPhone.startsWith('0')) {
                         cleanPhone = '6' + cleanPhone; 
                     }
 
-                    const statusPilihanText = newStatus === 'Diluluskan' ? 'TELAH DILULUSKAN ✅' : 'TELAH DITOLAK ❌';
-                    
-                    const textWhatsAppWaris = `*STATUS PERMOHONAN PULANG BERMALAM*\n\n` +
-                                             `Nama Pelajar: *${rowData.namaPelajar || '-'}*\n` +
-                                             `Status Terkini: *${statusPilihanText}*\n\n` +
-                                             `Sila semak portal warden untuk sebarang pertanyaan.`;
+                    if (cleanPhone.length > 5) {
+                        const statusPilihanText = newStatus === 'Diluluskan' ? 'TELAH DILULUSKAN ✅' : 'TELAH DITOLAK ❌';
+                        
+                        const textWhatsAppWaris = `*STATUS PERMOHONAN PULANG BERMALAM*\n\n` +
+                                                 `Nama Pelajar: *${rowData.namaPelajar || '-'}*\n` +
+                                                 `Status Terkini: *${statusPilihanText}*\n\n` +
+                                                 `Sila semak portal warden untuk sebarang pertanyaan.`;
 
-                    const encodedMsg = encodeURIComponent(textWhatsAppWaris);
-                    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMsg}`;
+                        const encodedMsg = encodeURIComponent(textWhatsAppWaris);
+                        const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMsg}`;
 
-                    window.open(whatsappUrl, '_blank');
+                        window.open(whatsappUrl, '_blank');
+                    }
                 }
 
                 loadData();
