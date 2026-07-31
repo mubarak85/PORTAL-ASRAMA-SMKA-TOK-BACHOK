@@ -45,17 +45,29 @@
         .sidebar-header {
             padding: 20px 16px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .sidebar-header h2 {
+        .sidebar-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 50%;
+            background: white;
+            padding: 2px;
+        }
+
+        .sidebar-header-text h2 {
             font-size: 13px;
             font-weight: 800;
-            margin: 0 0 4px 0;
+            margin: 0 0 2px 0;
             letter-spacing: 0.5px;
             color: #ffffff;
         }
 
-        .sidebar-header span {
+        .sidebar-header-text span {
             font-size: 10px;
             color: #94a3b8;
             text-transform: uppercase;
@@ -521,8 +533,12 @@
     <!-- SIDEBAR KIRI -->
     <div class="sidebar">
         <div class="sidebar-header">
-            <h2>Pusat Kawalan Data</h2>
-            <span>SMKA Tok Bachok</span>
+            <!-- Logo Sekolah Dimasukkan Di Sini -->
+            <img src="Untitled-design.jpg" alt="Logo SMKA Tok Bachok" class="sidebar-logo">
+            <div class="sidebar-header-text">
+                <h2>Pusat Kawalan Data</h2>
+                <span>SMKA Tok Bachok</span>
+            </div>
         </div>
         
         <div class="sidebar-menu">
@@ -690,19 +706,19 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Tetapkan nilai lalai datepicker kepada hari ini (jika dalam julat Jun - Dis 2026, jika tidak tetapkan 1 Jun 2026)
+        // Tetapkan nilai lalai datepicker kepada hari ini
         window.addEventListener('DOMContentLoaded', () => {
             const today = new Date();
             const yyyy = today.getFullYear();
             const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const dd = String(today.getDate).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
             const formattedToday = `${yyyy}-${mm}-${dd}`;
             
             const dateInput = document.getElementById('dutyDateInput');
             if (yyyy === 2026 && today.getMonth() >= 5 && today.getMonth() <= 11) {
                 dateInput.value = formattedToday;
             } else {
-                dateInput.value = '2026-07-31'; // Nilai default semasa
+                dateInput.value = '2026-07-31';
             }
             checkWardenBySelectedDate();
         });
