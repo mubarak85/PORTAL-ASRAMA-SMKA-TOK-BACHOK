@@ -675,9 +675,9 @@
             </div>
         </div>
 
-        <!-- FLASH CARD BERGERAK TERHUBUNG DENGAN TAB PENGUMUMAN GOOGLE SHEET -->
+        <!-- FLASH CARD BERGERAK (DIAMBIL DARI KOLUM B2 TAB PENGUMUMAN) -->
         <div class="flash-card-banner">
-            <marquee scrollamount="5" id="announcementMarquee">✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Memuatkan pengumuman dari Google Sheet...</marquee>
+            <marquee scrollamount="5" id="announcementMarquee">✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Memuatkan pengumuman dari kolum B2 Google Sheet...</marquee>
         </div>
 
         <div class="dashboard-body">
@@ -824,11 +824,10 @@
         const SHEET_ANNOUNCEMENT = "Pengumuman";
         let cachedStudentsData = [];
 
-        // Fungsi Tarik Data Pengumuman dari Tab 'Pengumuman'
+        // Fungsi Tarik Data Pengumuman Khas dari Kolum B2 Tab 'Pengumuman'
         async function loadAnnouncementData() {
             const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_ANNOUNCEMENT)}`;
             const marqueeElement = document.getElementById('announcementMarquee');
-            
             let defaultText = "✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 📢 PENGUMUMAN RASMI: Sila pastikan semua pelajar mematuhi peraturan asrama yang telah ditetapkan.";
 
             try {
@@ -837,26 +836,17 @@
                 const json = JSON.parse(text.substring(47, text.length - 2));
                 const rows = json.table.rows;
 
-                if (rows && rows.length > 0) {
-                    let announcements = [];
-                    rows.forEach(r => {
-                        if (r.c && r.c[0] && r.c[0].v) {
-                            announcements.push(r.c[0].v);
-                        }
-                    });
-
-                    if (announcements.length > 0) {
-                        let dynamicAnnounceHtml = "✨ SELAMAT DATANG KE PORTAL ASRAMA SMKA TOK BACHOK ✨";
-                        announcements.forEach(item => {
-                            dynamicAnnounceHtml += ` &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; 📢 ${item}`;
-                        });
-                        marqueeElement.innerHTML = dynamicAnnounceHtml;
+                if (rows && rows.length > 1) {
+                    const row2 = rows[1]; 
+                    if (row2.c && row2.c[1] && row2.c[1].v) {
+                        const announcementText = row2.c[1].v;
+                        marqueeElement.innerHTML = `✨ PENGUMUMAN RASMI: ${announcementText} ✨`;
                         return;
                     }
                 }
                 marqueeElement.innerHTML = defaultText;
             } catch (error) {
-                console.error('Gagal memuatkan tab Pengumuman:', error);
+                console.error('Gagal memuatkan kolum B2 dari tab Pengumuman:', error);
                 marqueeElement.innerHTML = defaultText;
             }
         }
@@ -911,117 +901,157 @@
                     }
                 });
 
-                document.getElementById('totalHostelers').innerText = total || '0';
-                document.getElementById('maleHostelers').innerText = maleCount || '0';
-                document.getElementById('femaleHostelers').innerText = femaleCount || '0';
+                document.getElementById('totalHostelers').innerText = total;
+                document.getElementById('maleHostelers').innerText = maleCount;
+                document.getElementById('femaleHostelers').innerText = femaleCount;
 
             } catch (error) {
-                console.error('Gagal memuatkan data sheet pelajar:', error);
-                document.getElementById('totalHostelers').innerText = '709';
-                document.getElementById('maleHostelers').innerText = '355';
-                document.getElementById('femaleHostelers').innerText = '354';
+                console.error('Gagal memuatkan data pelajar:', error);
+                document.getElementById('totalHostelers').innerText = 'Ralat Sambungan';
+                document.getElementById('maleHostelers').innerText = '-';
+                document.getElementById('femaleHostelers').innerText = '-';
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            loadAnnouncementData();
-            loadSheetData();
-
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0');
-            const dd = String(today.getDate()).padStart(2, '0');
-            document.getElementById('dutyDateInput').value = `${yyyy}-${mm}-${dd}`;
-            checkWardenBySelectedDate();
-        });
-
-        function updateClock() {
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            document.getElementById('liveClock').innerHTML = '⏱️ ' + now.toLocaleDateString('ms-MY', options);
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        // Carian Pelajar Berdasarkan Data Google Sheet
-        function handleSearchKeyPress(event) {
-            if (event.key === 'Enter') { searchStudentFromSheet(); }
-        }
-
+        // Fungsi Carian Pelajar
         function searchStudentFromSheet() {
             const query = document.getElementById('searchInput').value.trim().toLowerCase();
             const resultBox = document.getElementById('searchResultBox');
             
-            if(!query) {
-                alert('Sila masukkan nama atau maklumat carian pelajar.');
+            if (!query) {
+                resultBox.innerHTML = '<span style="color: red; font-size: 12px;">Sila masukkan nama atau No. KP untuk carian.</span>';
+                resultBox.classList.add('active');
                 return;
             }
 
-            resultBox.classList.add('active');
-
-            if(cachedStudentsData.length === 0) {
-                resultBox.innerHTML = `<div class="result-item" style="color: #d97706;"><span class="result-label">Status:</span><span class="result-value">Sedang memuatkan data dari Sheet, sila cuba sebentar lagi.</span></div>`;
+            if (cachedStudentsData.length === 0) {
+                resultBox.innerHTML = '<span style="color: orange; font-size: 12px;">Data pelajar sedang dimuatkan atau kosong. Sila cuba sebentar lagi.</span>';
+                resultBox.classList.add('active');
                 return;
             }
 
-            const found = cachedStudentsData.find(row => {
-                return Object.values(row).some(val => String(val).toLowerCase().includes(query));
+            let found = cachedStudentsData.find(row => {
+                let rowStr = Object.values(row).join(' ').toLowerCase();
+                return rowStr.includes(query);
             });
 
-            if(found) {
-                let htmlDetails = '';
+            if (found) {
+                let html = '';
                 for (let key in found) {
-                    if(found[key] !== '') {
-                        htmlDetails += `<div class="result-item"><span class="result-label">${key}:</span><span class="result-value">${found[key]}</span></div>`;
+                    if (found[key]) {
+                        html += `<div class="result-item"><span class="result-label">${key}</span><span class="result-value">${found[key]}</span></div>`;
                     }
                 }
-                resultBox.innerHTML = htmlDetails;
+                resultBox.innerHTML = html;
+                resultBox.classList.add('active');
             } else {
-                resultBox.innerHTML = `<div class="result-item" style="color: #ef4444;"><span class="result-label">Makluman:</span><span class="result-value">Tiada rekod ditemui untuk "${query}".</span></div>`;
+                resultBox.innerHTML = '<span style="color: red; font-size: 12px;">❌ Tiada maklumat pelajar ditemui untuk carian tersebut.</span>';
+                resultBox.classList.add('active');
             }
         }
 
-        // Ruang Chat
-        function handleChatKeyPress(event) {
-            if (event.key === 'Enter') { sendChatMessage(); }
+        function handleSearchKeyPress(e) {
+            if (e.key === 'Enter') {
+                searchStudentFromSheet();
+            }
         }
 
+        // Fungsi Semak Warden Bertugas Mengikut Takwim Sebenar (Jun - Dis 2026)
+        function checkWardenBySelectedDate() {
+            const dateVal = document.getElementById('dutyDateInput').value;
+            const dutyContent = document.getElementById('activeWardenList');
+            
+            if (!dateVal) {
+                dutyContent.innerText = "Sila pilih tarikh di atas untuk memaparkan nama warden.";
+                return;
+            }
+
+            const selectedDate = new Date(dateVal);
+            const baselineDate = new Date("2026-06-01"); // Rujukan awal Jun 2026
+            
+            if (selectedDate < baselineDate) {
+                dutyContent.innerHTML = `⚠️ Tarikh di luar julat jadual Jun - Disember 2026.`;
+                return;
+            }
+
+            // Kira perbezaan hari untuk menentukan kitaran minggu (Kumpulan 1 hingga 4)
+            const diffTime = Math.abs(selectedDate - baselineDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const weekNumber = Math.floor(diffDays / 7) % 4;
+
+            // Senarai Kumpulan Warden Berdasarkan Dokumen PDF
+            const groups = [
+                {
+                    name: "KUMPULAN 1",
+                    members: "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah"
+                },
+                {
+                    name: "KUMPULAN 2",
+                    members: "Mohd Rosdi, Mohd Nasir, Balqis"
+                },
+                {
+                    name: "KUMPULAN 3",
+                    members: "Ahmad Syaibani, Mohd Faris, Nurul Hidayah"
+                },
+                {
+                    name: "KUMPULAN 4",
+                    members: "Husaini, Iqbal, Suhaida"
+                }
+            ];
+
+            const activeGroup = groups[weekNumber];
+
+            dutyContent.innerHTML = `📅 Tarikh: <strong>${dateVal}</strong><br>📌 <strong>${activeGroup.name}</strong><br>👮‍♂️ Barisan Warden: ${activeGroup.members}`;
+        }
+
+        // Jam Langsung
+        function updateLiveClock() {
+            const now = new Date();
+            const options = { timeZone: 'Asia/Kuala_Lumpur', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            const timeStr = now.toLocaleTimeString('ms-MY', options);
+            const dateStr = now.toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' });
+            document.getElementById('liveClock').innerText = `⏱️ ${dateStr}, ${timeStr}`;
+        }
+
+        // Ruang Chat Pentadbir Ringkas
         function sendChatMessage() {
-            const inputField = document.getElementById('chatInputText');
-            const msgText = inputField.value.trim();
-            if(!msgText) return;
+            const input = document.getElementById('chatInputText');
+            const msg = input.value.trim();
+            if (!msg) return;
 
             const chatBox = document.getElementById('chatMessagesBox');
-            const newMsg = document.createElement('div');
-            newMsg.className = 'chat-msg';
-            newMsg.innerHTML = `<span>Penyedia (Anda)</span>${escapeHtml(msgText)}`;
-            chatBox.appendChild(newMsg);
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'chat-msg';
+            msgDiv.innerHTML = `<span>Penyedia Sekolah (Anda)</span>${escapeHtml(msg)}`;
+            chatBox.appendChild(msgDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
-            inputField.value = '';
+            input.value = '';
+        }
+
+        function handleChatKeyPress(e) {
+            if (e.key === 'Enter') {
+                sendChatMessage();
+            }
         }
 
         function escapeHtml(text) {
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
-        // Semak Warden Mengikut Tarikh
-        function checkWardenBySelectedDate() {
-            const dateValue = document.getElementById('dutyDateInput').value;
-            if(!dateValue) return;
-
-            const selectedDate = new Date(dateValue);
-            const month = selectedDate.getMonth() + 1;
-            const day = selectedDate.getDate();
-
-            let wardenText = "Mohd Tariq, Ahmad Mubarak, Laila, Zalihah";
-            if (month === 7) {
-                if (day === 1) wardenText = "Mohd Rosdi, Mohd Nasir, Balqis";
-                else if (day === 2) wardenText = "Ahmad Syaibani, Mohd Faris, Nurul Hidayah";
-                else if (day === 3 || day === 4) wardenText = "<b>Pelajar Balik Bermalam</b>";
-                else wardenText = "Wan Norhisyam, Mohd Asri, Munirah, Rosemiza";
+        // Permulaan Skrip Selepas Muat Turun Halaman
+        window.onload = function() {
+            loadAnnouncementData();
+            loadSheetData();
+            setInterval(updateLiveClock, 1000);
+            updateLiveClock();
+            
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('dutyDateInput');
+            if(dateInput) {
+                dateInput.value = today;
+                checkWardenBySelectedDate();
             }
-            document.getElementById('activeWardenList').innerHTML = wardenText;
-        }
+        };
     </script>
 </body>
 </html>
