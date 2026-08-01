@@ -47,7 +47,10 @@
 </div>
 
 <script>
-    // Fungsi format tarikh (Contoh: 2026-07-30T... kepada 30-07-2026)
+    // Gantikan URL di bawah dengan URL Web App Apps Script anda yang sebenar
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby.../exec';
+
+    // Fungsi format tarikh asal
     function formatTarikh(dateString) {
         if (!dateString) return '-';
         let date = new Date(dateString);
@@ -60,10 +63,10 @@
         return `${hari}-${bulan}-${tahun}`;
     }
 
-    // Fungsi Papar Jadual Warden Mengikut Tarikh Semasa (Takwim 2026)
+    // Fungsi Papar Jadual Warden Mengikut Takwim 2026
     function paparkanWardenBertugas() {
         const tarikhHariIni = new Date();
-        const bulan = tarikhHariIni.getMonth() + 1; // 1 - 12
+        const bulan = tarikhHariIni.getMonth() + 1;
         const hari = tarikhHariIni.getDate();
 
         const jadualWarden = {
@@ -98,148 +101,16 @@
             "8-28": "• CUTI SEKOLAH[cite: 1]",
             "8-29": "• CUTI SEKOLAH[cite: 1]",
             "8-30": "• CUTI SEKOLAH[cite: 1]",
-            "8-31": "• CUTI SEKOLAH[cite: 1]",
-
-            // SEPTEMBER 2026
-            "9-1": "• CUTI SEKOLAH[cite: 1]",
-            "9-2": "• CUTI SEKOLAH[cite: 1]",
-            "9-3": "• CUTI SEKOLAH[cite: 1]",
-            "9-4": "• CUTI SEKOLAH[cite: 1]",
-            "9-5": "• CUTI SEKOLAH[cite: 1]",
-            "9-6": "• MOHD TARIQ[cite: 1]<br>• AHMAD MUBARAK[cite: 1]<br>• LAILA[cite: 1]<br>• ZALIHAH[cite: 1]",
-            "9-7": "• MOHD ROSDI[cite: 1]<br>• MOHD NASIR[cite: 1]<br>• BALQIS[cite: 1]",
-            "9-8": "• AHMAD SYAIBANI[cite: 1]<br>• MOHD FARIS[cite: 1]<br>• NURUL HIDAYAH[cite: 1]",
-            "9-9": "• HUSAINI[cite: 1]<br>• IQBAL[cite: 1]<br>• SUHAIDA[cite: 1]",
-            "9-10": "• WAN NORHISYAM[cite: 1]<br>• MOHD ASRI[cite: 1]<br>• MUNIRAH[cite: 1]<br>• ROSEMIZA[cite: 1]",
-            "9-11": "• MUBARAK[cite: 1]<br>• HUSAINI[cite: 1]<br>• TARIQ[cite: 1]<br>• LAILA[cite: 1]<br>• ZALIHAH[cite: 1]",
-            "9-12": "• WAN NORHISYAM[cite: 1]<br>• MOHD ASRI[cite: 1]<br>• MUNIRAH[cite: 1]<br>• ROSEMIZA[cite: 1]",
-            "9-13": "• MOHD TARIQ[cite: 1]<br>• AHMAD MUBARAK[cite: 1]<br>• LAILA[cite: 1]<br>• ZALIHAH[cite: 1]",
-            "9-14": "• MOHD ROSDI[cite: 1]<br>• MOHD NASIR[cite: 1]<br>• BALQIS[cite: 1]",
-            "9-15": "• AHMAD SYAIBANI[cite: 1]<br>• MOHD FARIS[cite: 1]<br>• NURUL HIDAYAH[cite: 1]",
-            "9-16": "• HUSAINI[cite: 1]<br>• IQBAL[cite: 1]<br>• SUHAIDA[cite: 1]",
-            "9-17": "• ROSEMIZA[cite: 1]",
-            "9-18": "• BALIK BERMALAM[cite: 1]",
-            "9-19": "• BALIK BERMALAM[cite: 1]",
-            "9-20": "• MOHD TARIQ[cite: 1]<br>• AHMAD MUBARAK[cite: 1]<br>• LAILA[cite: 1]<br>• ZALIHAH[cite: 1]",
-            "9-21": "• MOHD ROSDI[cite: 1]<br>• MOHD NASIR[cite: 1]<br>• BALQIS[cite: 1]",
-            "9-22": "• AHMAD SYAIBANI[cite: 1]<br>• MOHD FARIS[cite: 1]<br>• NURUL HIDAYAH[cite: 1]",
-            "9-23": "• HUSAINI[cite: 1]<br>• IQBAL[cite: 1]<br>• SUHAIDA[cite: 1]",
-            "9-24": "• WAN NORHISYAM[cite: 1]<br>• MOHD ASRI[cite: 1]<br>• MUNIRAH[cite: 1]<br>• ROSEMIZA[cite: 1]",
-            "9-25": "• MOHD ROSDI[cite: 1]<br>• IQBAL[cite: 1]<br>• FARIS[cite: 1]<br>• HIDAYAH[cite: 1]<br>• SUHAIDA[cite: 1]",
-            "9-26": "• SYAIBANI[cite: 1]<br>• MOHD NASIR[cite: 1]<br>• BALQIS[cite: 1]",
-            "9-27": "• MOHD TARIQ[cite: 1]<br>• AHMAD MUBARAK[cite: 1]<br>• LAILA[cite: 1]<br>• ZALIHAH[cite: 1]",
-            "9-28": "• MOHD ROSDI[cite: 1]<br>• MOHD NASIR[cite: 1]<br>• BALQIS[cite: 1]",
-            "9-29": "• AHMAD SYAIBANI[cite: 1]<br>• MOHD FARIS[cite: 1]<br>• NURUL HIDAYAH[cite: 1]",
-            "9-30": "• HUSAINI[cite: 1]<br>• IQBAL[cite: 1]<br>• SUHAIDA[cite: 1]",
-
-            // OKTOBER 2026
-            "10-1": "• WAN NORHISYAM[cite: 1]<br>• MOHD ASRI[cite: 1]<br>• MUNIRAH[cite: 1]<br>• ROSEMIZA[cite: 1]",
-            "10-2": "• BALIK BERMALAM[cite: 1]",
-            "10-3": "• BALIK BERMALAM[cite: 1]",
-            "10-4": "• MOHD TARIQ[cite: 1]<br>• AHMAD MUBARAK[cite: 1]<br>• LAILA[cite: 1]<br>• ZALIHAH[cite: 1]",
-            "10-5": "• MOHD ROSDI[cite: 1]<br>• MOHD NASIR[cite: 1]<br>• BALQIS[cite: 1]",
-            "10-6": "• AHMAD SYAIBANI[cite: 1]<br>• MOHD FARIS[cite: 1]<br>• NURUL HIDAYAH[cite: 1]",
-            "10-7": "• HUSAINI[cite: 1]<br>• IQBAL[cite: 1]<br>• SUHAIDA[cite: 1]",
-            "10-8": "• WAN NORHISYAM[cite: 1]<br>• MOHD ASRI[cite: 1]<br>• MUNIRAH[cite: 1]<br>• ROSEMIZA[cite: 1]",
-            "10-9": "• MUBARAK[cite: 1]<br>• HUSAINI[cite: 1]<br>• TARIQ[cite: 1]<br>• LAILA[cite: 1]<br>• ZALIHAH[cite: 1]",
-            "10-10": "• WAN NORHISYAM[cite: 1]<br>• MOHD ASRI[cite: 1]<br>• MUNIRAH[cite: 1]<br>• ROSEMIZA[cite: 1]",
-            "10-11": "• MOHD TARIQ[cite: 1]<br>• AHMAD MUBARAK[cite: 1]<br>• LAILA[cite: 1]<br>• ZALIHAH[cite: 1]",
-            "10-12": "• MOHD ROSDI[cite: 1]<br>• MOHD NASIR[cite: 1]<br>• BALQIS[cite: 1]",
-            "10-13": "• AHMAD SYAIBANI[cite: 1]<br>• MOHD FARIS[cite: 1]<br>• NURUL HIDAYAH[cite: 1]",
-            "10-14": "• HUSAINI[cite: 1]<br>• IQBAL[cite: 1]<br>• SUHAIDA[cite: 1]",
-            "10-15": "• WAN NORHISYAM[cite: 1]<br>• MOHD ASRI[cite: 1]<br>• MUNIRAH[cite: 1]<br>• ROSEMIZA[cite: 1]",
-            "10-16": "• BALIK BERMALAM[cite: 1]",
-            "10-17": "• BALIK BERMALAM[cite: 1]",
-            "10-18": "• MOHD TARIQ[cite: 1]<br>• AHMAD MUBARAK[cite: 1]<br>• LAILA[cite: 1]<br>• ZALIHAH[cite: 1]",
-            "10-19": "• MOHD ROSDI[cite: 1]<br>• MOHD NASIR[cite: 1]<br>• BALQIS[cite: 1]",
-            "10-20": "• AHMAD SYAIBANI[cite: 1]<br>• MOHD FARIS[cite: 1]<br>• NURUL HIDAYAH[cite: 1]",
-            "10-21": "• HUSAINI[cite: 1]<br>• IQBAL[cite: 1]<br>• SUHAIDA[cite: 1]",
-            "10-22": "• WAN NORHISYAM[cite: 1]<br>• MOHD ASRI[cite: 1]<br>• MUNIRAH[cite: 1]<br>• ROSEMIZA[cite: 1]",
-            "10-23": "• MOHD ROSDI[cite: 1]<br>• IQBAL[cite: 1]<br>• FARIS[cite: 1]<br>• HIDAYAH[cite: 1]<br>• SUHAIDA[cite: 1]",
-            "10-24": "• SYAIBANI[cite: 1]<br>• MOHD NASIR[cite: 1]<br>• BALQIS[cite: 1]",
-            "10-25": "• MOHD TARIQ[cite: 1]<br>• AHMAD MUBARAK[cite: 1]<br>• LAILA[cite: 1]<br>• ZALIHAH[cite: 1]",
-            "10-26": "• MOHD ROSDI[cite: 1]<br>• MOHD NASIR[cite: 1]<br>• BALQIS[cite: 1]",
-            "10-27": "• AHMAD SYAIBANI[cite: 1]<br>• MOHD FARIS[cite: 1]<br>• NURUL HIDAYAH[cite: 1]",
-            "10-28": "• HUSAINI[cite: 1]<br>• IQBAL[cite: 1]<br>• SUHAIDA[cite: 1]",
-            "10-29": "• WAN NORHISYAM[cite: 1]<br>• MOHD ASRI[cite: 1]<br>• MUNIRAH[cite: 1]<br>• ROSEMIZA[cite: 1]",
-            "10-30": "• BALIK BERMALAM[cite: 1]",
-            "10-31": "• BALIK BERMALAM[cite: 1]",
-
-            // NOVEMBER 2026
-            "11-1": "• WAN NORHISYAM[cite: 1]<br>• MOHD ASRI[cite: 1]<br>• MUNIRAH[cite: 1]",
-            "11-2": "• CUTI SEKOLAH[cite: 1]",
-            "11-3": "• CUTI SEKOLAH[cite: 1]",
-            "11-4": "• CUTI SEKOLAH[cite: 1]",
-            "11-5": "• CUTI SEKOLAH[cite: 1]",
-            "11-6": "• CUTI SEKOLAH[cite: 1]",
-            "11-7": "• CUTI SEKOLAH[cite: 1]",
-            "11-8": "• CUTI SEKOLAH[cite: 1]",
-            "11-9": "• CUTI SEKOLAH[cite: 1]",
-            "11-10": "• PELAJAR MENDAFTAR MASUK[cite: 1]",
-            "11-11": "• HUSAINI[cite: 1]<br>• IQBAL[cite: 1]<br>• SUHAIDA[cite: 1]",
-            "11-12": "• ROSEMIZA[cite: 1]",
-            "11-13": "• MUBARAK[cite: 1]<br>• HUSAINI[cite: 1]<br>• TARIQ[cite: 1]<br>• LAILA[cite: 1]<br>• ZALIHAH[cite: 1]",
-            "11-14": "• WAN NORHISYAM[cite: 1]<br>• MOHD ASRI[cite: 1]<br>• MUNIRAH[cite: 1]<br>• ROSEMIZA[cite: 1]",
-            "11-15": "• MOHD TARIQ[cite: 1]<br>• AHMAD MUBARAK[cite: 1]<br>• LAILA[cite: 1]<br>• ZALIHAH[cite: 1]",
-            "11-16": "• MOHD ROSDI[cite: 1]<br>• MOHD NASIR[cite: 1]<br>• BALQIS[cite: 1]",
-            "11-17": "• AHMAD SYAIBANI[cite: 1]<br>• MOHD FARIS[cite: 1]<br>• NURUL HIDAYAH[cite: 1]",
-            "11-18": "• HUSAINI[cite: 1]<br>• IQBAL[cite: 1]<br>• SUHAIDA[cite: 1]",
-            "11-19": "• WAN NORHISYAM[cite: 1]<br>• MOHD ASRI[cite: 1]<br>• MUNIRAH[cite: 1]<br>• ROSEMIZA[cite: 1]",
-            "11-20": "• BALIK BERMALAM[cite: 1]",
-            "11-21": "• BALIK BERMALAM[cite: 1]",
-            "11-22": "• MOHD TARIQ[cite: 1]<br>• AHMAD MUBARAK[cite: 1]<br>• LAILA[cite: 1]<br>• ZALIHAH[cite: 1]",
-            "11-23": "• MOHD ROSDI[cite: 1]<br>• MOHD NASIR[cite: 1]<br>• BALQIS[cite: 1]",
-            "11-24": "• AHMAD SYAIBANI[cite: 1]<br>• MOHD FARIS[cite: 1]<br>• NURUL HIDAYAH[cite: 1]",
-            "11-25": "• HUSAINI[cite: 1]<br>• IQBAL[cite: 1]<br>• SUHAIDA[cite: 1]",
-            "11-26": "• WAN NORHISYAM[cite: 1]<br>• MOHD ASRI[cite: 1]<br>• MUNIRAH[cite: 1]<br>• ROSEMIZA[cite: 1]",
-            "11-27": "• MOHD ROSDI[cite: 1]<br>• IQBAL[cite: 1]<br>• FARIS[cite: 1]<br>• HIDAYAH[cite: 1]<br>• SUHAIDA[cite: 1]",
-            "11-28": "• SYAIBANI[cite: 1]<br>• MOHD NASIR[cite: 1]<br>• BALQIS[cite: 1]",
-            "11-29": "• MOHD TARIQ[cite: 1]<br>• AHMAD MUBARAK[cite: 1]<br>• LAILA[cite: 1]<br>• ZALIHAH[cite: 1]",
-            "11-30": "• MOHD ROSDI[cite: 1]<br>• MOHD NASIR[cite: 1]<br>• BALQIS[cite: 1]",
-
-            // DISEMBER 2026
-            "12-1": "• AHMAD SYAIBANI[cite: 1]<br>• MOHD FARIS[cite: 1]<br>• NURUL HIDAYAH[cite: 1]",
-            "12-2": "• HUSAINI[cite: 1]<br>• IQBAL[cite: 1]<br>• SUHAIDA[cite: 1]",
-            "12-3": "• WAN NORHISYAM[cite: 1]<br>• MOHD ASRI[cite: 1]<br>• MUNIRAH[cite: 1]<br>• ROSEMIZA[cite: 1]",
-            "12-4": "• CUTI SEKOLAH[cite: 1]",
-            "12-5": "• CUTI SEKOLAH[cite: 1]",
-            "12-6": "• CUTI SEKOLAH[cite: 1]",
-            "12-7": "• CUTI SEKOLAH[cite: 1]",
-            "12-8": "• CUTI SEKOLAH[cite: 1]",
-            "12-9": "• CUTI SEKOLAH[cite: 1]",
-            "12-10": "• CUTI SEKOLAH[cite: 1]",
-            "12-11": "• CUTI SEKOLAH[cite: 1]",
-            "12-12": "• CUTI SEKOLAH[cite: 1]",
-            "12-13": "• CUTI SEKOLAH[cite: 1]",
-            "12-14": "• CUTI SEKOLAH[cite: 1]",
-            "12-15": "• CUTI SEKOLAH[cite: 1]",
-            "12-16": "• CUTI SEKOLAH[cite: 1]",
-            "12-17": "• CUTI SEKOLAH[cite: 1]",
-            "12-18": "• CUTI SEKOLAH[cite: 1]",
-            "12-19": "• CUTI SEKOLAH[cite: 1]",
-            "12-20": "• CUTI SEKOLAH[cite: 1]",
-            "12-21": "• CUTI SEKOLAH[cite: 1]",
-            "12-22": "• CUTI SEKOLAH[cite: 1]",
-            "12-23": "• CUTI SEKOLAH[cite: 1]",
-            "12-24": "• CUTI SEKOLAH[cite: 1]",
-            "12-25": "• CUTI SEKOLAH[cite: 1]",
-            "12-26": "• CUTI SEKOLAH[cite: 1]",
-            "12-27": "• CUTI SEKOLAH[cite: 1]",
-            "12-28": "• CUTI SEKOLAH[cite: 1]",
-            "12-29": "• CUTI SEKOLAH[cite: 1]",
-            "12-30": "• CUTI SEKOLAH[cite: 1]",
-            "12-31": "• CUTI SEKOLAH[cite: 1]"
+            "8-31": "• CUTI SEKOLAH[cite: 1]"
         };
 
         const kunciHariIni = bulan + "-" + hari;
-        let senaraiWarden = jadualWarden[kunciHariIni] || "• Tiada maklumat warden (Cuti / Tiada Jadual)";
+        let senaraiWarden = jadualWarden[kunciHariIni] || "• Tiada maklumat warden (Rujuk takwim bulanan)";
         document.getElementById('paparanWarden').innerHTML = senaraiWarden;
     }
 
-    // Fungsi muat data permohonan dari Google Sheet (Gantikan URL Web App anda)
+    // Fungsi muat data asal dari Google Sheet
     function loadSheetData() {
-        const WEB_APP_URL = 'MASUKKAN_URL_WEB_APP_ANDA_DI_SINI';
-
         fetch(WEB_APP_URL)
             .then(response => response.json())
             .then(data => {
@@ -260,7 +131,6 @@
                             <td class="border p-2">${item.noTelefonPemohon || '-'}</td>
                             <td class="border p-2 font-semibold ${item.status === 'Diluluskan' ? 'text-green-600' : (item.status === 'Ditolak' ? 'text-red-600' : 'text-orange-500')}">${item.status}</td>
                             <td class="border p-2 text-center">
-                                <!-- Butang Tindakan Warden -->
                                 <button onclick="updateStatus(${item.rowIndex}, 'Diluluskan')" class="bg-green-600 text-white px-2 py-1 rounded text-sm mb-1">Lulus</button>
                                 <button onclick="updateStatus(${item.rowIndex}, 'Ditolak')" class="bg-red-700 text-white px-2 py-1 rounded text-sm">Tolak</button>
                             </td>
@@ -275,10 +145,8 @@
             });
     }
 
-    // Fungsi kemas kini status oleh warden
+    // Fungsi kemas kini status asal
     function updateStatus(rowIndex, status) {
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzaOiZGzdmTneaayNwvGJfV0vB4Z2ZDSKx8h2A1Kd-GpV7Jw4RTM1U3_lMz_lH8dD00/exec';
-        
         fetch(WEB_APP_URL, {
             method: 'POST',
             body: JSON.stringify({ action: 'updateStatus', rowIndex: rowIndex, status: status })
@@ -286,7 +154,7 @@
         .then(response => response.json())
         .then(res => {
             if (res.result === 'success') {
-                loadSheetData(); // Muat semula jadual selepas kemas kini
+                loadSheetData();
             } else {
                 alert('Gagal mengemas kini status.');
             }
@@ -294,7 +162,6 @@
         .catch(err => console.error('Ralat:', err));
     }
 
-    // Jalankan fungsi apabila laman web dibuka
     window.onload = function() {
         paparkanWardenBertugas();
         loadSheetData();
