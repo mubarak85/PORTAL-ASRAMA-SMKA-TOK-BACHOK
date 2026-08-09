@@ -73,7 +73,7 @@
             <input type="tel" id="noTelefonPemohon" required placeholder="Cth: 0123456789 (untuk rujukan warden)">
         </div>
 
-        <!-- MEDAN BAHARU: KOD PORTAL IBU BAPA -->
+        <!-- MEDAN KOD PORTAL IBU BAPA -->
         <div class="form-group">
             <label for="portalCode">Kod Portal Ibu Bapa (Diberikan oleh Warden):</label>
             <input type="password" id="portalCode" required placeholder="Masukkan kod keselamatan portal">
@@ -105,7 +105,7 @@
     // URL Portal Warden
     const portalWardenURL = 'https://mubarak85.github.io/PORTAL-ASRAMA-SMKA-TOK-BACHOK/dashboard-warden.html'; 
 
-    // TETAPAN KOD PORTAL IBU BAPA (Sila tukar nilai di dalam tanda petikan ini jika perlu)
+    // KOD KESELAMATAN PORTAL IBU BAPA (Boleh ditukar mengikut kesesuaian)
     const VALID_PORTAL_CODE = 'ASRAMASMKA2026'; 
 
     let studentList = [];
@@ -196,7 +196,7 @@
         const sebabVal = document.getElementById('sebab').value;
         const noTelPemohon = document.getElementById('noTelefonPemohon').value;
 
-        // Semakan Kesahan Kod Portal
+        // Semakan Kesahan Kod Portal Ibu Bapa
         if (enteredCode !== VALID_PORTAL_CODE) {
             showAlert('Kod Portal Ibu Bapa tidak sah! Sila semak semula kod yang diberikan oleh warden.', 'error');
             return;
