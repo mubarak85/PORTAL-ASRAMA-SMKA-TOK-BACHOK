@@ -99,6 +99,11 @@
             border-radius: 10px;
             transition: 0.2s ease;
             gap: 12px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
         }
 
         .nav-item:hover, .nav-item.active {
@@ -215,6 +220,16 @@
             gap: 25px;
         }
 
+        /* VIEW CONTAINER SYSTEM (PENGURUSAN PAPARAN) */
+        .view-section {
+            display: none;
+        }
+        .view-section.active-view {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
         /* STATS CARDS ATAS */
         .stats-top-grid {
             display: grid;
@@ -305,6 +320,9 @@
             min-height: 150px;
             box-shadow: 0 10px 20px -5px rgba(0,0,0,0.15);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            border: none;
+            text-align: left;
         }
 
         .action-card:hover {
@@ -489,6 +507,29 @@
             line-height: 1.4;
         }
 
+        /* STYLING TAMBAHAN UNTUK DASHBOARD WARDEN */
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 999; }
+        .login-box { background: white; padding: 30px; border-radius: 10px; width: 350px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .login-box h3 { margin-top: 0; color: #2c3e50; }
+        .login-box input { width: 100%; padding: 10px; margin: 15px 0; border: 1px solid #dcdde1; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
+        .login-box button { background: #27ae60; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .login-box button:hover { background: #219653; }
+        .error-pass { color: #c0392b; font-size: 13px; margin-top: 5px; display: none; }
+
+        .warden-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+        .warden-table th, .warden-table td { border: 1px solid #dcdde1; padding: 12px; text-align: left; }
+        .warden-table th { background-color: #27ae60; color: white; }
+        .warden-table tr:nth-child(even) { background-color: #f9f9f9; }
+        
+        .btn-lulus { background-color: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-right: 5px; }
+        .btn-tolak { background-color: #c0392b; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-lulus:hover, .btn-tolak:hover { opacity: 0.8; }
+        
+        .status-lulus { color: #27ae60; font-weight: bold; }
+        .status-tolak { color: #c0392b; font-weight: bold; }
+        .status-menunggu { color: #f39c12; font-weight: bold; }
+        .loading { text-align: center; padding: 30px; font-style: italic; color: #7f8c8d; font-size: 16px; }
+
         .footer-bottom {
             text-align: center;
             padding: 20px;
@@ -502,6 +543,17 @@
 </head>
 <body>
 
+    <!-- Kotak Log Masuk Kata Laluan Warden -->
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h3>🔐 Log Masuk Warden</h3>
+            <p style="font-size: 13px; color: #7f8c8d;">Sila masukkan kata laluan portal.</p>
+            <input type="password" id="passwordInput" placeholder="Kata laluan...">
+            <button onclick="checkPassword()">Log Masuk</button>
+            <div id="errorPass" class="error-pass">Kata laluan salah! Cuba lagi.</div>
+        </div>
+    </div>
+
     <!-- SIDEBAR KIRI -->
     <div class="sidebar">
         <div class="sidebar-header">
@@ -513,7 +565,8 @@
         </div>
         
         <div class="sidebar-menu">
-            <a href="#" class="nav-item active"><span class="icon">🏠</span> Dashboard</a>
+            <button class="nav-item active" onclick="switchView('dashboardView', this)"><span class="icon">🏠</span> Dashboard Utama</button>
+            <button class="nav-item" onclick="openWardenDashboard()"><span class="icon">✅</span> Dashboard Kelulusan</button>
             <a href="#" class="nav-item"><span class="icon">📷</span> Scan Kehadiran</a>
             <a href="#" class="nav-item"><span class="icon">🚪</span> Scan Keluar / Masuk</a>
             <a href="#" class="nav-item"><span class="icon">🏠</span> Pemeriksaan Dorm</a>
@@ -522,7 +575,6 @@
             <a href="#" class="nav-item"><span class="icon">⚠️</span> Aduan Kerosakan</a>
             <a href="#" class="nav-item"><span class="icon">🔔</span> Pengumuman</a>
             <a href="#" class="nav-item"><span class="icon">⚙️</span> Tetapan</a>
-            <a href="#" class="nav-item"><span class="icon">🚪</span> Keluar</a>
         </div>
 
         <div class="sidebar-time-box">
@@ -561,244 +613,211 @@
 
         <div class="dashboard-body">
             
-            <!-- STATS CARDS ATAS (4 KOTAK) -->
-            <div class="stats-top-grid">
-                <div class="stat-box">
-                    <div class="stat-box-header">
-                        <div class="stat-box-icon blue">👥</div>
-                        <div class="stat-box-title">
-                            <h4>Jumlah Pelajar</h4>
-                            <p class="stat-main-val">688 <span style="font-size: 13px; font-weight: 600; color: var(--text-gray);">orang</span></p>
+            <!-- VIEW 1: DASHBOARD UTAMA -->
+            <div id="dashboardView" class="view-section active-view">
+                <!-- STATS CARDS ATAS (4 KOTAK) -->
+                <div class="stats-top-grid">
+                    <div class="stat-box">
+                        <div class="stat-box-header">
+                            <div class="stat-box-icon blue">👥</div>
+                            <div class="stat-box-title">
+                                <h4>Jumlah Pelajar</h4>
+                                <p class="stat-main-val">688 <span style="font-size: 13px; font-weight: 600; color: var(--text-gray);">orang</span></p>
+                            </div>
+                        </div>
+                        <div class="stat-box-sub">
+                            Lelaki: 343 | Perempuan: 345
                         </div>
                     </div>
-                    <div class="stat-box-sub">
-                        Lelaki: 343 | Perempuan: 345
+
+                    <div class="stat-box">
+                        <div class="stat-box-header">
+                            <div class="stat-box-icon green">✅</div>
+                            <div class="stat-box-title">
+                                <h4>Hadir Hari Ini</h4>
+                                <p class="stat-main-val">620 <span style="font-size: 13px; font-weight: 600; color: var(--text-gray);">orang</span></p>
+                            </div>
+                        </div>
+                        <div class="stat-box-sub" style="color: #10b981; font-weight: 700;">
+                            90.1% daripada jumlah pelajar
+                        </div>
+                    </div>
+
+                    <div class="stat-box">
+                        <div class="stat-box-header">
+                            <div class="stat-box-icon yellow">🏃</div>
+                            <div class="stat-box-title">
+                                <h4>Keluar Hari Ini</h4>
+                                <p class="stat-main-val">42 <span style="font-size: 13px; font-weight: 600; color: var(--text-gray);">orang</span></p>
+                            </div>
+                        </div>
+                        <div class="stat-box-sub">
+                            Lelaki: 25 | Perempuan: 17
+                        </div>
+                    </div>
+
+                    <div class="stat-box">
+                        <div class="stat-box-header">
+                            <div class="stat-box-icon red">❌</div>
+                            <div class="stat-box-title">
+                                <h4>Tidak Hadir</h4>
+                                <p class="stat-main-val">68 <span style="font-size: 13px; font-weight: 600; color: var(--text-gray);">orang</span></p>
+                            </div>
+                        </div>
+                        <div class="stat-box-sub" style="color: #ef4444; font-weight: 700;">
+                            9.9% daripada jumlah pelajar
+                        </div>
                     </div>
                 </div>
 
-                <div class="stat-box">
-                    <div class="stat-box-header">
-                        <div class="stat-box-icon green">✅</div>
-                        <div class="stat-box-title">
-                            <h4>Hadir Hari Ini</h4>
-                            <p class="stat-main-val">620 <span style="font-size: 13px; font-weight: 600; color: var(--text-gray);">orang</span></p>
+                <!-- 4 MODUL UTAMA (BANNER KOTAK BERWARNA) -->
+                <div class="action-modules-grid">
+                    <button class="action-card dark-blue" onclick="openWardenDashboard()" style="cursor: pointer;">
+                        <div class="action-card-icon">✅</div>
+                        <div>
+                            <h3>KELULUSAN ASRAMA</h3>
+                            <p>Semak dan luluskan permohonan pulang pelajar</p>
+                        </div>
+                    </button>
+
+                    <a href="#" class="action-card teal">
+                        <div class="action-card-icon">🚪</div>
+                        <div>
+                            <h3>SCAN KELUAR / MASUK</h3>
+                            <p>Imbas kad untuk rekod keluar atau masuk asrama</p>
+                        </div>
+                    </a>
+
+                    <a href="#" class="action-card purple">
+                        <div class="action-card-icon">🏠</div>
+                        <div>
+                            <h3>PEMERIKSAAN DORM</h3>
+                            <p>Rekod markah keceriaan dorm</p>
+                        </div>
+                    </a>
+
+                    <a href="#" class="action-card orange">
+                        <div class="action-card-icon">📊</div>
+                        <div>
+                            <h3>LAPORAN & ANALITIK</h3>
+                            <p>Laporan, carta dan analisis data</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- BAHAGIAN TENGAH (RANKING & GRAF) -->
+                <div class="middle-grid">
+                    <!-- RANKING DORM TERKINI -->
+                    <div class="content-card">
+                        <div class="card-header-flex">
+                            <h3>RANKING DORM TERKINI</h3>
+                            <a href="#">Lihat semua</a>
+                        </div>
+                        <div class="ranking-tables-container">
+                            <div class="ranking-col">
+                                <h4>ASPURA (LELAKI)</h4>
+                                <div class="ranking-item">
+                                    <div class="rank-name-flex"><div class="rank-badge rank-1">1</div> Dorm 17</div>
+                                    <span style="color: #10b981;">98.20%</span>
+                                </div>
+                                <div class="ranking-item">
+                                    <div class="rank-name-flex"><div class="rank-badge rank-2">2</div> Dorm 11</div>
+                                    <span>95.10%</span>
+                                </div>
+                                <div class="ranking-item">
+                                    <div class="rank-name-flex"><div class="rank-badge rank-3">3</div> Dorm 3</div>
+                                    <span>92.30%</span>
+                                </div>
+                            </div>
+
+                            <div class="ranking-col">
+                                <h4>ASPURI (PEREMPUAN)</h4>
+                                <div class="ranking-item">
+                                    <div class="rank-name-flex"><div class="rank-badge rank-1">1</div> Dorm 21</div>
+                                    <span style="color: #10b981;">97.80%</span>
+                                </div>
+                                <div class="ranking-item">
+                                    <div class="rank-name-flex"><div class="rank-badge rank-2">2</div> Dorm 6</div>
+                                    <span>94.60%</span>
+                                </div>
+                                <div class="ranking-item">
+                                    <div class="rank-name-flex"><div class="rank-badge rank-3">3</div> Dorm 12</div>
+                                    <span>91.70%</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="stat-box-sub" style="color: #10b981; font-weight: 700;">
-                        90.1% daripada jumlah pelajar
+
+                    <!-- GRAF KEHADIRAN BULAN INI -->
+                    <div class="content-card">
+                        <div class="card-header-flex">
+                            <h3>GRAF KEHADIRAN BULAN INI</h3>
+                            <a href="#">Lihat semua</a>
+                        </div>
+                        <div style="height: 200px; display: flex; flex-direction: column; justify-content: space-between; position: relative; padding-top: 10px;">
+                            <div style="border-top: 1px dashed var(--border-color); width: 100%;"><span style="font-size: 10px; color: var(--text-gray); transform: translateY(-8px); display:block;">100%</span></div>
+                            <div style="border-top: 1px dashed var(--border-color); width: 100%;"><span style="font-size: 10px; color: var(--text-gray); transform: translateY(-8px); display:block;">75%</span></div>
+                            <div style="border-top: 1px dashed var(--border-color); width: 100%;"><span style="font-size: 10px; color: var(--text-gray); transform: translateY(-8px); display:block;">50%</span></div>
+                            <div style="border-top: 1px dashed var(--border-color); width: 100%;"><span style="font-size: 10px; color: var(--text-gray); transform: translateY(-8px); display:block;">25%</span></div>
+                            <div style="border-top: 1px solid var(--border-color); width: 100%;"><span style="font-size: 10px; color: var(--text-gray); transform: translateY(-8px); display:block;">0%</span></div>
+                            
+                            <svg style="position: absolute; top: 15px; left: 0; width: 100%; height: 160px; overflow: visible;" viewBox="0 0 400 160" preserveAspectRatio="none">
+                                <polyline fill="none" stroke="#1e3e62" stroke-width="3" points="10,120 40,105 70,95 100,80 130,80 160,90 190,75 220,75 250,75 280,85 310,75 340,85 370,85 390,70" />
+                                <circle cx="390" cy="70" r="5" fill="#f58220" stroke="white" stroke-width="2" />
+                            </svg>
+                        </div>
                     </div>
                 </div>
 
-                <div class="stat-box">
-                    <div class="stat-box-header">
-                        <div class="stat-box-icon yellow">🏃</div>
-                        <div class="stat-box-title">
-                            <h4>Keluar Hari Ini</h4>
-                            <p class="stat-main-val">42 <span style="font-size: 13px; font-weight: 600; color: var(--text-gray);">orang</span></p>
-                        </div>
-                    </div>
-                    <div class="stat-box-sub">
-                        Lelaki: 25 | Perempuan: 17
-                    </div>
-                </div>
-
-                <div class="stat-box">
-                    <div class="stat-box-header">
-                        <div class="stat-box-icon red">❌</div>
-                        <div class="stat-box-title">
-                            <h4>Tidak Hadir</h4>
-                            <p class="stat-main-val">68 <span style="font-size: 13px; font-weight: 600; color: var(--text-gray);">orang</span></p>
-                        </div>
-                    </div>
-                    <div class="stat-box-sub" style="color: #ef4444; font-weight: 700;">
-                        9.9% daripada jumlah pelajar
-                    </div>
-                </div>
-            </div>
-
-            <!-- 4 MODUL UTAMA (BANNER KOTAK BERWARNA) -->
-            <div class="action-modules-grid">
-                <a href="#" class="action-card dark-blue">
-                    <div class="action-card-icon">
-                        📱
-                    </div>
-                    <div>
-                        <h3>SCAN KEHADIRAN</h3>
-                        <p>Imbas kad untuk rekod kehadiran</p>
-                    </div>
-                </a>
-
-                <a href="#" class="action-card teal">
-                    <div class="action-card-icon">
-                        🚪
-                    </div>
-                    <div>
-                        <h3>SCAN KELUAR / MASUK</h3>
-                        <p>Imbas kad untuk rekod keluar atau masuk asrama</p>
-                    </div>
-                </a>
-
-                <a href="#" class="action-card purple">
-                    <div class="action-card-icon">
-                        🏠
-                    </div>
-                    <div>
-                        <h3>PEMERIKSAAN DORM</h3>
-                        <p>Rekod markah keceriaan dorm</p>
-                    </div>
-                </a>
-
-                <a href="#" class="action-card orange">
-                    <div class="action-card-icon">
-                        📊
-                    </div>
-                    <div>
-                        <h3>LAPORAN & ANALITIK</h3>
-                        <p>Laporan, carta dan analisis data</p>
-                    </div>
-                </a>
-            </div>
-
-            <!-- BAHAGIAN TENGAH (RANKING & GRAF) -->
-            <div class="middle-grid">
-                
-                <!-- RANKING DORM TERKINI -->
+                <!-- PENGUMUMAN TERKINI -->
                 <div class="content-card">
                     <div class="card-header-flex">
-                        <h3>RANKING DORM TERKINI</h3>
-                        <a href="#">Lihat semua</a>
+                        <h3>PENGUMUMAN TERKINI</h3>
+                        <a href="#" style="background: #1e3e62; color: white; padding: 6px 14px; border-radius: 8px; font-size: 11px;">Lihat Semua</a>
                     </div>
-                    <div class="ranking-tables-container">
-                        <div class="ranking-col">
-                            <h4>ASPURA (LELAKI)</h4>
-                            <div class="ranking-item">
-                                <div class="rank-name-flex"><div class="rank-badge rank-1">1</div> Dorm 17</div>
-                                <span style="color: #10b981;">98.20%</span>
-                            </div>
-                            <div class="ranking-item">
-                                <div class="rank-name-flex"><div class="rank-badge rank-2">2</div> Dorm 11</div>
-                                <span>95.10%</span>
-                            </div>
-                            <div class="ranking-item">
-                                <div class="rank-name-flex"><div class="rank-badge rank-3">3</div> Dorm 3</div>
-                                <span>92.30%</span>
-                            </div>
-                            <div class="ranking-item">
-                                <div class="rank-name-flex"><div class="rank-badge">4</div> Dorm 7</div>
-                                <span>90.50%</span>
-                            </div>
-                            <div class="ranking-item">
-                                <div class="rank-name-flex"><div class="rank-badge">5</div> Dorm 9</div>
-                                <span>89.00%</span>
-                            </div>
-                        </div>
-
-                        <div class="ranking-col">
-                            <h4>ASPURI (PEREMPUAN)</h4>
-                            <div class="ranking-item">
-                                <div class="rank-name-flex"><div class="rank-badge rank-1">1</div> Dorm 21</div>
-                                <span style="color: #10b981;">97.80%</span>
-                            </div>
-                            <div class="ranking-item">
-                                <div class="rank-name-flex"><div class="rank-badge rank-2">2</div> Dorm 6</div>
-                                <span>94.60%</span>
-                            </div>
-                            <div class="ranking-item">
-                                <div class="rank-name-flex"><div class="rank-badge rank-3">3</div> Dorm 12</div>
-                                <span>91.70%</span>
-                            </div>
-                            <div class="ranking-item">
-                                <div class="rank-name-flex"><div class="rank-badge">4</div> Dorm 16</div>
-                                <span>90.20%</span>
-                            </div>
-                            <div class="ranking-item">
-                                <div class="rank-name-flex"><div class="rank-badge">5</div> Dorm 8</div>
-                                <span>88.90%</span>
+                    <div class="announcement-list">
+                        <div class="announcement-item">
+                            <div class="announcement-date"><span>30</span><small>MEI</small></div>
+                            <div class="announcement-details">
+                                <h4>Pemeriksaan Keceriaan Dorm</h4>
+                                <p>Pemeriksaan keceriaan dorm akan dijalankan pada 30 Mei 2026 (Sabtu). Pastikan dorm bersih.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- GRAF KEHADIRAN BULAN INI -->
-                <div class="content-card">
-                    <div class="card-header-flex">
-                        <h3>GRAF KEHADIRAN BULAN INI</h3>
-                        <a href="#">Lihat semua</a>
-                    </div>
-                    <!-- Mockup visual carta garis -->
-                    <div style="height: 200px; display: flex; flex-direction: column; justify-content: space-between; position: relative; padding-top: 10px;">
-                        <!-- Garis panduan horizontal latar belakang -->
-                        <div style="border-top: 1px dashed var(--border-color); width: 100%; display: flex; justify-content: space-between;"><span style="font-size: 10px; color: var(--text-gray); transform: translateY(-8px);">100%</span></div>
-                        <div style="border-top: 1px dashed var(--border-color); width: 100%; display: flex; justify-content: space-between;"><span style="font-size: 10px; color: var(--text-gray); transform: translateY(-8px);">75%</span></div>
-                        <div style="border-top: 1px dashed var(--border-color); width: 100%; display: flex; justify-content: space-between;"><span style="font-size: 10px; color: var(--text-gray); transform: translateY(-8px);">50%</span></div>
-                        <div style="border-top: 1px dashed var(--border-color); width: 100%; display: flex; justify-content: space-between;"><span style="font-size: 10px; color: var(--text-gray); transform: translateY(-8px);">25%</span></div>
-                        <div style="border-top: 1px solid var(--border-color); width: 100%; display: flex; justify-content: space-between;"><span style="font-size: 10px; color: var(--text-gray); transform: translateY(-8px);">0%</span></div>
-                        
-                        <!-- SVG Garis Graf -->
-                        <svg style="position: absolute; top: 15px; left: 0; width: 100%; height: 160px; overflow: visible;" viewBox="0 0 400 160" preserveAspectRatio="none">
-                            <polyline fill="none" stroke="#1e3e62" stroke-width="3" points="10,120 40,105 70,95 100,80 130,80 160,90 190,75 220,75 250,75 280,85 310,75 340,85 370,85 390,70" />
-                            <!-- Titik data -->
-                            <circle cx="10" cy="120" r="4" fill="#1e3e62" />
-                            <circle cx="40" cy="105" r="4" fill="#1e3e62" />
-                            <circle cx="70" cy="95" r="4" fill="#1e3e62" />
-                            <circle cx="100" cy="80" r="4" fill="#1e3e62" />
-                            <circle cx="130" cy="80" r="4" fill="#1e3e62" />
-                            <circle cx="160" cy="90" r="4" fill="#1e3e62" />
-                            <circle cx="190" cy="75" r="4" fill="#1e3e62" />
-                            <circle cx="220" cy="75" r="4" fill="#1e3e62" />
-                            <circle cx="250" cy="75" r="4" fill="#1e3e62" />
-                            <circle cx="280" cy="85" r="4" fill="#1e3e62" />
-                            <circle cx="310" cy="75" r="4" fill="#1e3e62" />
-                            <circle cx="340" cy="85" r="4" fill="#1e3e62" />
-                            <circle cx="370" cy="85" r="4" fill="#1e3e62" />
-                            <circle cx="390" cy="70" r="5" fill="#f58220" stroke="white" stroke-width="2" />
-                        </svg>
-
-                        <!-- Tooltip Popup Simulasi -->
-                        <div style="position: absolute; right: 10px; top: 35px; background: white; border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); font-size: 11px;">
-                            <div style="color: var(--text-gray);">28 Mei 2026</div>
-                            <div style="font-weight: 800; color: #1e3e62;">90.1%</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-gray); margin-top: 5px; font-weight: 600;">
-                        <span>1 Mei</span>
-                        <span>7 Mei</span>
-                        <span>14 Mei</span>
-                        <span>21 Mei</span>
-                        <span>28 Mei</span>
-                    </div>
-                </div>
-
             </div>
 
-            <!-- PENGUMUMAN TERKINI -->
-            <div class="content-card">
-                <div class="card-header-flex">
-                    <h3>PENGUMUMAN TERKINI</h3>
-                    <a href="#" style="background: #1e3e62; color: white; padding: 6px 14px; border-radius: 8px; font-size: 11px;">Lihat Semua Pengumuman</a>
-                </div>
-                <div class="announcement-list">
-                    <div class="announcement-item">
-                        <div class="announcement-date">
-                            <span>27</span>
-                            <small>MEI</small>
-                        </div>
-                        <div class="announcement-details">
-                            <h4>Pemeriksaan Keceriaan Dorm</h4>
-                            <p>Pemeriksaan keceriaan dorm akan dijalankan pada 30 Mei 2026 (Sabtu). Pastikan dorm dalam keadaan bersih dan kemas.</p>
+            <!-- VIEW 2: DASHBOARD KELULUSAN WARDEN -->
+            <div id="wardenView" class="view-section">
+                <div class="content-card">
+                    <div class="card-header-flex">
+                        <h3 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                            <span>Dashboard Kelulusan Asrama</span>
+                        </h3>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="loadData()" style="padding: 6px 12px; font-size: 13px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">🔄 Muat Semula</button>
+                            <button onclick="switchView('dashboardView', document.querySelector('.sidebar-menu .nav-item'))" style="padding: 6px 12px; font-size: 13px; background: #64748b; color: white; border: none; border-radius: 4px; cursor: pointer;">&larr; Kembali</button>
                         </div>
                     </div>
 
-                    <div class="announcement-item">
-                        <div class="announcement-date">
-                            <span>26</span>
-                            <small>MEI</small>
-                        </div>
-                        <div class="announcement-details">
-                            <h4>Program Qiamulail Perdana & Puasa Arafah</h4>
-                            <p>Program akan berlangsung pada 6 Jun 2026 (Jumaat) di Surau Umar Al-Khattab.</p>
-                        </div>
-                    </div>
+                    <div id="loading" class="loading">Sedang memuatkan data papan pemuka...</div>
+
+                    <table id="dataTable" class="warden-table" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>Tarikh Keluar</th>
+                                <th>Nama Pelajar</th>
+                                <th>Maklumat</th>
+                                <th>Sebab</th>
+                                <th>Tarikh Balik</th>
+                                <th>No. Tel Pemohon</th>
+                                <th>Status</th>
+                                <th>Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -806,6 +825,144 @@
 
         <div class="footer-bottom">&copy; 2026 Unit Pengurusan Asrama SMKA Tok Bachok. Hak Cipta Terpelihara.</div>
     </div>
+
+<script>
+    // Fungsi Pengurusan Paparan Views Dalam Satu Fail (SPA Style)
+    function switchView(viewId, element) {
+        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
+        document.getElementById(viewId).classList.add('active-view');
+        
+        if(element && element.classList.contains('nav-item')) {
+            document.querySelectorAll('.sidebar-menu .nav-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+        }
+    }
+
+    // Fungsi Pengaktifan Dashboard Warden & Login Overlay
+    function openWardenDashboard() {
+        document.getElementById('loginOverlay').style.display = 'flex';
+        document.getElementById('passwordInput').focus();
+    }
+
+    const WARDEN_PASSWORD = "warden123"; 
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzaOiZGzdmTneaayNwvGJfV0vB4Z2ZDSKx8h2A1Kd-GpV7Jw4RTM1U3_lMz_lH8dD00/exec';
+    let allData = [];
+
+    function checkPassword() {
+        const inputVal = document.getElementById('passwordInput').value;
+        const errDiv = document.getElementById('errorPass');
+
+        if (inputVal === WARDEN_PASSWORD) {
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('passwordInput').value = '';
+            errDiv.style.display = 'none';
+            switchView('wardenView');
+            loadData(); 
+        } else {
+            errDiv.style.display = 'block';
+        }
+    }
+
+    document.getElementById('passwordInput').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            checkPassword();
+        }
+    });
+
+    async function loadData() {
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('dataTable').style.display = 'none';
+
+        try {
+            const response = await fetch(scriptURL);
+            allData = await response.json();
+            
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            if (allData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px; color: #7f8c8d;">Tiada permohonan dijumpai.</td></tr>';
+            } else {
+                allData.forEach(row => {
+                    const tr = document.createElement('tr');
+                    
+                    let statusVal = row.status || 'Menunggu Kelulusan';
+                    let statusClass = 'status-menunggu';
+                    if (statusVal === 'Diluluskan') statusClass = 'status-lulus';
+                    else if (statusVal === 'Ditolak') statusClass = 'status-tolak';
+
+                    tr.innerHTML = `
+                        <td>${row.tarikhPulang || '-'}</td>
+                        <td><b>${row.namaPelajar || '-'}</b><br><small style="color: #666;">ID: ${row.idPelajar || '-'}</small></td>
+                        <td>${row.kelas || '-'}</td>
+                        <td>${row.sebab || '-'}</td>
+                        <td>${row.tarikhBalik || '-'}</td>
+                        <td><b>${row.noTelefonPemohon || '-'}</b></td>
+                        <td><span class="${statusClass}">${statusVal}</span></td>
+                        <td>
+                            <button class="btn-lulus" onclick='updateStatus(${row.rowIndex}, "Diluluskan", ${JSON.stringify(row)})'>Lulus</button>
+                            <button class="btn-tolak" onclick='updateStatus(${row.rowIndex}, "Ditolak", ${JSON.stringify(row)})'>Tolak</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('dataTable').style.display = 'table';
+        } catch (error) {
+            document.getElementById('loading').innerHTML = 'Ralat memuatkan data: ' + error.message;
+            document.getElementById('loading').style.color = '#c0392b';
+        }
+    }
+
+    async function updateStatus(rowIndex, newStatus, rowData) {
+        if (!confirm(`Adakah anda pasti untuk menukar status permohonan ini kepada "${newStatus}"?`)) return;
+
+        const payload = {
+            action: "updateStatus",
+            rowIndex: rowIndex,
+            status: newStatus
+        };
+
+        try {
+            const response = await fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+            const result = await response.json();
+
+            if (result.result === 'success') {
+                if (rowData.noTelefonPemohon) {
+                    let cleanPhone = String(rowData.noTelefonPemohon).replace(/[^0-9]/g, '');
+                    if (cleanPhone.startsWith('0')) {
+                        cleanPhone = '6' + cleanPhone; 
+                    }
+
+                    if (cleanPhone.length > 5) {
+                        const statusPilihanText = newStatus === 'Diluluskan' ? 'TELAH DILULUSKAN ✅' : 'TELAH DITOLAK ❌';
+                        
+                        const textWhatsAppWaris = `*STATUS PERMOHONAN PULANG BERMALAM*\n\n` +
+                                                 `Nama Pelajar: *${rowData.namaPelajar || '-'}*\n` +
+                                                 `Status Terkini: *${statusPilihanText}*\n\n` +
+                                                 `Sila semak portal warden untuk sebarang pertanyaan.`;
+
+                        const encodedMsg = encodeURIComponent(textWhatsAppWaris);
+                        const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMsg}`;
+
+                        window.open(whatsappUrl, '_blank');
+                    }
+                }
+
+                loadData();
+            } else {
+                alert('Gagal mengemas kini status.');
+            }
+        } catch (error) {
+            alert('Ralat sambungan: ' + error.message);
+        }
+    }
+</script>
 
 </body>
 </html>
