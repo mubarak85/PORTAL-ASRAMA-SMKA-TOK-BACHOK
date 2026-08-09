@@ -73,6 +73,13 @@
             <input type="tel" id="noTelefonPemohon" required placeholder="Cth: 0123456789 (untuk rujukan warden)">
         </div>
 
+        <!-- MEDAN BAHARU: KOD PORTAL IBU BAPA -->
+        <div class="form-group">
+            <label for="portalCode">Kod Portal Ibu Bapa (Diberikan oleh Warden):</label>
+            <input type="password" id="portalCode" required placeholder="Masukkan kod keselamatan portal">
+            <small style="color: #7f8c8d; font-size: 11px;">* Sila hubungi pihak warden asrama sekiranya tidak mempunyai kod ini.</small>
+        </div>
+
         <div class="form-group">
             <label for="sebab">Sebab Keluar / Pulang:</label>
             <textarea id="sebab" rows="3" required placeholder="Cth: Pulang bermalam cuti hujung minggu"></textarea>
@@ -95,8 +102,11 @@
     // Nombor WhatsApp Warden (60132429642)
     const nomorWardenWhatsApp = '60132429642'; 
 
-    // Sila tukar 'https://domain-anda.com/portal-warden.html' kepada URL sebenar portal warden anda
+    // URL Portal Warden
     const portalWardenURL = 'https://mubarak85.github.io/PORTAL-ASRAMA-SMKA-TOK-BACHOK/dashboard-warden.html'; 
+
+    // TETAPAN KOD PORTAL IBU BAPA (Sila tukar nilai di dalam tanda petikan ini jika perlu)
+    const VALID_PORTAL_CODE = 'ASRAMASMKA2026'; 
 
     let studentList = [];
 
@@ -180,10 +190,17 @@
     form.addEventListener('submit', e => {
         e.preventDefault();
         
+        const enteredCode = document.getElementById('portalCode').value.trim();
         const tKeluar = document.getElementById('tarikhPulang').value;
         const tBalik = document.getElementById('tarikhBalik').value;
         const sebabVal = document.getElementById('sebab').value;
         const noTelPemohon = document.getElementById('noTelefonPemohon').value;
+
+        // Semakan Kesahan Kod Portal
+        if (enteredCode !== VALID_PORTAL_CODE) {
+            showAlert('Kod Portal Ibu Bapa tidak sah! Sila semak semula kod yang diberikan oleh warden.', 'error');
+            return;
+        }
 
         if (tBalik < tKeluar) {
             showAlert('Tarikh kembali tidak boleh lebih awal dari tarikh keluar.', 'error');
@@ -216,7 +233,6 @@
                 form.style.display = 'none';
                 alertBox.className = 'alert alert-success';
 
-                // Teks Mesej WhatsApp ke Warden berserta link portal warden yang sah
                 const textWhatsApp = `*PERMOHONAN PULANG BERMALAM*\n\n` +
                                      `*No. Rujukan:* ${refNo}\n` +
                                      `*Nama:* ${formData.namaPelajar}\n` +
