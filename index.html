@@ -290,32 +290,35 @@
             color: var(--sidebar-bg);
         }
 
-        /* Jadual Analisa Dorm */
-        .dorm-table-container {
-            max-height: 220px;
-            overflow-y: auto;
-        }
-
-        .dorm-table {
+        /* Gaya Dropdown Analisa Dorm */
+        .dorm-select {
             width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-        }
-
-        .dorm-table th {
-            background: #f8f9fa;
-            color: var(--text-muted);
-            padding: 8px;
-            text-align: left;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-        }
-
-        .dorm-table td {
-            padding: 8px;
-            border-bottom: 1px solid #f1f2f6;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid #dcdde1;
+            font-size: 13px;
+            background-color: #f8f9fa;
             color: var(--text-main);
+            outline: none;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .dorm-select:focus {
+            border-color: var(--sidebar-bg);
+        }
+
+        .dorm-result-box {
+            margin-top: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--sidebar-bg);
+            text-align: center;
+            border: 1px solid #edf2f7;
+            min-height: 20px;
         }
 
         /* Bahagian Pengumuman Terkini */
@@ -488,26 +491,19 @@
             </a>
         </div>
 
-        <!-- Bahagian Tengah: Analisa Dorm Aspura & Aspuri (Bilangan Ahli) -->
+        <!-- Bahagian Tengah: Analisa Dorm Aspura & Aspuri (Dropdown Versi) -->
         <div class="middle-grid">
             <!-- Analisa Dorm Aspura -->
             <div class="panel-box">
                 <div class="panel-header">
                     <h3>ANALISA DORM ASPURA (LELAKI)</h3>
-                    <span style="font-size: 11px; color: #7f8c8d;">Bilangan Ahli</span>
+                    <span style="font-size: 11px; color: #7f8c8d;">Pilihan Dorm</span>
                 </div>
-                <div class="dorm-table-container">
-                    <table class="dorm-table">
-                        <thead>
-                            <tr>
-                                <th>Nama Dorm</th>
-                                <th style="text-align: right;">Jumlah Pelajar</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-aspura">
-                            <tr><td colspan="2" style="text-align: center; color: #7f8c8d;">Memuatkan data...</td></tr>
-                        </tbody>
-                    </table>
+                <select id="select-aspura" class="dorm-select" onchange="showDormCount('select-aspura', 'result-aspura')">
+                    <option value="">-- Sila Pilih Dorm Aspura --</option>
+                </select>
+                <div id="result-aspura" class="dorm-result-box">
+                    Sila pilih dorm di atas untuk melihat bilangan pelajar.
                 </div>
             </div>
 
@@ -515,20 +511,13 @@
             <div class="panel-box">
                 <div class="panel-header">
                     <h3>ANALISA DORM ASPURI (PEREMPUAN)</h3>
-                    <span style="font-size: 11px; color: #7f8c8d;">Bilangan Ahli</span>
+                    <span style="font-size: 11px; color: #7f8c8d;">Pilihan Dorm</span>
                 </div>
-                <div class="dorm-table-container">
-                    <table class="dorm-table">
-                        <thead>
-                            <tr>
-                                <th>Nama Dorm</th>
-                                <th style="text-align: right;">Jumlah Pelajar</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-aspuri">
-                            <tr><td colspan="2" style="text-align: center; color: #7f8c8d;">Memuatkan data...</td></tr>
-                        </tbody>
-                    </table>
+                <select id="select-aspuri" class="dorm-select" onchange="showDormCount('select-aspuri', 'result-aspuri')">
+                    <option value="">-- Sila Pilih Dorm Aspuri --</option>
+                </select>
+                <div id="result-aspuri" class="dorm-result-box">
+                    Sila pilih dorm di atas untuk melihat bilangan pelajar.
                 </div>
             </div>
         </div>
@@ -542,7 +531,7 @@
             
             <div class="announcement-item">
                 <div class="ann-date">
-                    <span>27</span>
+                    <span>30</span>
                     <small>MEI</small>
                 </div>
                 <div class="ann-content">
@@ -553,8 +542,8 @@
 
             <div class="announcement-item">
                 <div class="ann-date">
-                    <span>26</span>
-                    <small>MEI</small>
+                    <span>06</span>
+                    <small>JUN</small>
                 </div>
                 <div class="ann-content">
                     <h4>Program Qiamullail Perdana & Puasa Arafah</h4>
@@ -574,38 +563,54 @@
                 const response = await fetch(webAppUrl + '?action=getDashboardStats');
                 const data = await response.json();
 
-                // Paparkan statistik umum
+                // 1. Paparkan statistik umum & jumlah dorm yang tepat
                 document.getElementById('val-lelaki').textContent = data.lelaki;
                 document.getElementById('val-perempuan').textContent = data.perempuan;
-                document.getElementById('val-dormaspura').textContent = Object.keys(data.listAspura || {}).length;
-                document.getElementById('val-dormaspuri').textContent = Object.keys(data.listAspuri || {}).length;
+                
+                const listAspura = data.listAspura || {};
+                const listAspuri = data.listAspuri || {};
 
-                // Paparkan jadual Analisa Dorm Aspura
-                const tbodyAspura = document.getElementById('table-aspura');
-                tbodyAspura.innerHTML = '';
-                const keysAspura = Object.keys(data.listAspura || {});
-                if (keysAspura.length === 0) {
-                    tbodyAspura.innerHTML = '<tr><td colspan="2" style="text-align: center; color: #7f8c8d;">Tiada data dorm</td></tr>';
-                } else {
-                    keysAspura.sort().forEach(dorm => {
-                        tbodyAspura.innerHTML += `<tr><td>🏠 ${dorm}</td><td style="text-align: right; font-weight: bold; color: #0d2347;">${data.listAspura[dorm]} orang</td></tr>`;
-                    });
-                }
+                document.getElementById('val-dormaspura').textContent = Object.keys(listAspura).length;
+                document.getElementById('val-dormaspuri').textContent = Object.keys(listAspuri).length;
 
-                // Paparkan jadual Analisa Dorm Aspuri
-                const tbodyAspuri = document.getElementById('table-aspuri');
-                tbodyAspuri.innerHTML = '';
-                const keysAspuri = Object.keys(data.listAspuri || {});
-                if (keysAspuri.length === 0) {
-                    tbodyAspuri.innerHTML = '<tr><td colspan="2" style="text-align: center; color: #7f8c8d;">Tiada data dorm</td></tr>';
-                } else {
-                    keysAspuri.sort().forEach(dorm => {
-                        tbodyAspuri.innerHTML += `<tr><td>🏠 ${dorm}</td><td style="text-align: right; font-weight: bold; color: #0d2347;">${data.listAspuri[dorm]} orang</td></tr>`;
-                    });
-                }
+                // 2. Isi Dropdown Aspura
+                const selectAspura = document.getElementById('select-aspura');
+                selectAspura.innerHTML = '<option value="">-- Sila Pilih Dorm Aspura --</option>';
+                Object.keys(listAspura).sort().forEach(dorm => {
+                    let opt = document.createElement('option');
+                    opt.value = listAspura[dorm];
+                    opt.textContent = `🏠 ${dorm}`;
+                    opt.setAttribute('data-name', dorm);
+                    selectAspura.appendChild(opt);
+                });
+
+                // 3. Isi Dropdown Aspuri
+                const selectAspuri = document.getElementById('select-aspuri');
+                selectAspuri.innerHTML = '<option value="">-- Sila Pilih Dorm Aspuri --</option>';
+                Object.keys(listAspuri).sort().forEach(dorm => {
+                    let opt = document.createElement('option');
+                    opt.value = listAspuri[dorm];
+                    opt.textContent = `🏠 ${dorm}`;
+                    opt.setAttribute('data-name', dorm);
+                    selectAspuri.appendChild(opt);
+                });
 
             } catch (error) {
                 console.error('Ralat memuatkan data analisa dorm:', error);
+            }
+        }
+
+        function showDormCount(selectId, resultId) {
+            const select = document.getElementById(selectId);
+            const resultDiv = document.getElementById(resultId);
+            const selectedOption = select.options[select.selectedIndex];
+            
+            if (select.value === "") {
+                resultDiv.innerHTML = "Sila pilih dorm di atas untuk melihat bilangan pelajar.";
+            } else {
+                const dormName = selectedOption.getAttribute('data-name');
+                const totalStudents = select.value;
+                resultDiv.innerHTML = `Dorm <b>${dormName}</b> mempunyai <b>${totalStudents} orang</b> pelajar.`;
             }
         }
 
