@@ -172,7 +172,7 @@
             border: 1px solid #edf2f7;
         }
 
-        /* Kotak Statistik Ringkas (4 Kotak Baru) */
+        /* Kotak Statistik Ringkas */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -219,7 +219,7 @@
             padding-top: 6px;
         }
 
-        /* Kotak Tindakan Menu Utama (4 Kad Warna-Warni) */
+        /* Kotak Tindakan Utama (4 Kad Warna-Warni) */
         .action-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -262,7 +262,7 @@
             opacity: 0.9;
         }
 
-        /* Bahagian Tengah (Ranking Dorm & Graf) */
+        /* Bahagian Tengah (Analisa Dorm & Carian Pelajar) */
         .middle-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -275,6 +275,8 @@
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
         }
 
         .panel-header {
@@ -290,13 +292,12 @@
             color: var(--sidebar-bg);
         }
 
-        .panel-header a {
-            font-size: 12px;
-            color: #3498db;
-            text-decoration: none;
+        /* Jadual Analisa Dorm */
+        .dorm-table-container {
+            max-height: 220px;
+            overflow-y: auto;
         }
 
-        /* Jadual Ringkas Ranking Dorm */
         .dorm-table {
             width: 100%;
             border-collapse: collapse;
@@ -309,12 +310,68 @@
             padding: 8px;
             text-align: left;
             font-weight: 600;
+            position: sticky;
+            top: 0;
         }
 
         .dorm-table td {
             padding: 8px;
             border-bottom: 1px solid #f1f2f6;
             color: var(--text-main);
+        }
+
+        /* Bahagian Carian Pelajar */
+        .search-box-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #dcdde1;
+            border-radius: 6px;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #3498db;
+        }
+
+        .search-btn {
+            background: #0d2347;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .search-btn:hover {
+            background: #1b365d;
+        }
+
+        .search-result-container {
+            max-height: 160px;
+            overflow-y: auto;
+            border: 1px solid #f1f2f6;
+            border-radius: 6px;
+            background: #fafbfc;
+            padding: 8px;
+            font-size: 12px;
+        }
+
+        .student-result-item {
+            padding: 8px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .student-result-item:last-child {
+            border-bottom: none;
         }
 
         /* Bahagian Pengumuman Terkini */
@@ -419,7 +476,7 @@
             </div>
         </div>
 
-        <!-- Kotak Statistik Ringkas (4 Kotak Baru) -->
+        <!-- Kotak Statistik Ringkas -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-header">
@@ -487,65 +544,41 @@
             </a>
         </div>
 
-        <!-- Bahagian Tengah: Ranking Dorm & Graf Kehadiran -->
+        <!-- Bahagian Tengah: Analisa Dorm Aspura & Carian Maklumat Pelajar -->
         <div class="middle-grid">
-            <!-- Ranking Dorm Terkini -->
+            <!-- Analisa Dorm Aspura & Aspuri -->
             <div class="panel-box">
                 <div class="panel-header">
-                    <h3>RANKING DORM TERKINI</h3>
-                    <a href="#">Lihat semua</a>
+                    <h3>ANALISA DORM ASPURA & ASPURI</h3>
+                    <span style="font-size: 11px; color: #7f8c8d;">Jumlah Ahli</span>
                 </div>
-                <table class="dorm-table">
-                    <thead>
-                        <tr>
-                            <th>ASPURA (LELAKI)</th>
-                            <th style="text-align: right;">Markah</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>🥇 Dorm 17</td><td style="text-align: right; font-weight: bold; color: #27ae60;">98.20%</td></tr>
-                        <tr><td>🥈 Dorm 11</td><td style="text-align: right; font-weight: bold;">95.10%</td></tr>
-                        <tr><td>🥉 Dorm 3</td><td style="text-align: right; font-weight: bold;">92.30%</td></tr>
-                        <tr><td>4. Dorm 7</td><td style="text-align: right;">90.50%</td></tr>
-                        <tr><td>5. Dorm 9</td><td style="text-align: right;">89.00%</td></tr>
-                    </tbody>
-                </table>
+                <div class="dorm-table-container">
+                    <table class="dorm-table">
+                        <thead>
+                            <tr>
+                                <th>Nama Dorm</th>
+                                <th style="text-align: right;">Jumlah Pelajar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-dorm-analysis">
+                            <tr><td colspan="2" style="text-align: center; color: #7f8c8d;">Memuatkan data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <!-- Graf Kehadiran Ringkas -->
+            <!-- Carian Maklumat Pelajar -->
             <div class="panel-box">
                 <div class="panel-header">
-                    <h3>GRAF KEHADIRAN BULAN INI</h3>
-                    <a href="#">Lihat semua</a>
+                    <h3>CARIAN MAKLUMAT PELAJAR</h3>
+                    <span style="font-size: 11px; color: #7f8c8d;">Tab Pelajar</span>
                 </div>
-                <div style="height: 140px; display: flex; align-items: flex-end; justify-content: space-between; padding-top: 15px; border-bottom: 2px solid #edf2f7; position: relative;">
-                    <div style="position: absolute; width: 100%; top: 40%; border-top: 1px dashed #dfe6e9;"></div>
-                    <div style="position: absolute; width: 100%; top: 70%; border-top: 1px dashed #dfe6e9;"></div>
-                    
-                    <div style="text-align: center; flex: 1; font-size: 10px; color: #7f8c8d;">
-                        <div style="height: 70px; background: #e8f4fd; border-radius: 4px 4px 0 0; margin: 0 auto; width: 8px; position: relative;"><span style="position: absolute; top: -5px; left: -2px; width: 12px; height: 12px; background: #3498db; border-radius: 50%;"></span></div>
-                        1 Mei
-                    </div>
-                    <div style="text-align: center; flex: 1; font-size: 10px; color: #7f8c8d;">
-                        <div style="height: 90px; background: #e8f4fd; border-radius: 4px 4px 0 0; margin: 0 auto; width: 8px; position: relative;"><span style="position: absolute; top: -5px; left: -2px; width: 12px; height: 12px; background: #3498db; border-radius: 50%;"></span></div>
-                        7 Mei
-                    </div>
-                    <div style="text-align: center; flex: 1; font-size: 10px; color: #7f8c8d;">
-                        <div style="height: 100px; background: #e8f4fd; border-radius: 4px 4px 0 0; margin: 0 auto; width: 8px; position: relative;"><span style="position: absolute; top: -5px; left: -2px; width: 12px; height: 12px; background: #3498db; border-radius: 50%;"></span></div>
-                        14 Mei
-                    </div>
-                    <div style="text-align: center; flex: 1; font-size: 10px; color: #7f8c8d;">
-                        <div style="height: 85px; background: #e8f4fd; border-radius: 4px 4px 0 0; margin: 0 auto; width: 8px; position: relative;"><span style="position: absolute; top: -5px; left: -2px; width: 12px; height: 12px; background: #3498db; border-radius: 50%;"></span></div>
-                        21 Mei
-                    </div>
-                    <div style="text-align: center; flex: 1; font-size: 10px; color: #7f8c8d;">
-                        <div style="height: 95px; background: #e8f4fd; border-radius: 4px 4px 0 0; margin: 0 auto; width: 8px; position: relative;"><span style="position: absolute; top: -5px; left: -2px; width: 12px; height: 12px; background: #3498db; border-radius: 50%;"></span></div>
-                        28 Mei
-                    </div>
+                <div class="search-box-container">
+                    <input type="text" id="student-search-input" class="search-input" placeholder="Masukkan Nama atau ID Pelajar...">
+                    <button class="search-btn" onclick="searchStudentData()">Cari</button>
                 </div>
-                <div style="display: flex; justify-content: space-between; font-size: 11px; color: #7f8c8d; margin-top: 8px;">
-                    <span>Purata Bulanan</span>
-                    <span style="font-weight: bold; color: #27ae60;">90.1% Kehadiran</span>
+                <div id="search-results" class="search-result-container">
+                    <div style="color: #7f8c8d; text-align: center; padding-top: 20px;">Taip nama atau ID untuk mula carian.</div>
                 </div>
             </div>
         </div>
@@ -584,27 +617,85 @@
 
     <!-- SKRIP JAVASCRIPT UNTUK TARIK DATA DARI GOOGLE SHEET -->
     <script>
-        // Masukkan URL Web App Google Apps Script anda di sini:
         const webAppUrl = 'https://script.google.com/macros/s/AKfycbx53NkRYb-S693vs5v9Ja5BZOr7IvIYYiSSoANLCdNesXuHYkmP-VUolTMyw7IBLwen/exec';
+        let globalStudentList = [];
 
-        async function loadDashboardStats() {
+        async function loadDashboardData() {
             try {
-                const response = await fetch(webAppUrl + '?action=getDashboardStats');
-                const data = await response.json();
+                // Ambil statistik & senarai pelajar
+                const responseStats = await fetch(webAppUrl + '?action=getDashboardStats');
+                const statsData = await responseStats.json();
 
-                // Masukkan data ke dalam elemen HTML secara dinamik
-                document.getElementById('val-lelaki').textContent = data.lelaki;
-                document.getElementById('val-perempuan').textContent = data.perempuan;
-                document.getElementById('val-dormaspura').textContent = data.dormAspura;
-                document.getElementById('val-dormaspuri').textContent = data.dormAspuri;
+                document.getElementById('val-lelaki').textContent = statsData.lelaki;
+                document.getElementById('val-perempuan').textContent = statsData.perempuan;
+                document.getElementById('val-dormaspura').textContent = Object.keys(statsData.listAspura || {}).length;
+                document.getElementById('val-dormaspuri').textContent = Object.keys(statsData.listAspuri || {}).length;
+
+                // Gabungkan senarai jadual dorm Aspura & Aspuri
+                const tbodyDorm = document.getElementById('table-dorm-analysis');
+                tbodyDorm.innerHTML = '';
+                
+                let hasDorm = false;
+                if (statsData.listAspura) {
+                    Object.keys(statsData.listAspura).sort().forEach(dorm => {
+                        hasDorm = true;
+                        tbodyDorm.innerHTML += `<tr><td>🏠 [ASPURA] ${dorm}</td><td style="text-align: right; font-weight: bold; color: #0d2347;">${statsData.listAspura[dorm]} orang</td></tr>`;
+                    });
+                }
+                if (statsData.listAspuri) {
+                    Object.keys(statsData.listAspuri).sort().forEach(dorm => {
+                        hasDorm = true;
+                        tbodyDorm.innerHTML += `<tr><td>🏠 [ASPURI] ${dorm}</td><td style="text-align: right; font-weight: bold; color: #0d2347;">${statsData.listAspuri[dorm]} orang</td></tr>`;
+                    });
+                }
+                if (!hasDorm) {
+                    tbodyDorm.innerHTML = '<tr><td colspan="2" style="text-align: center; color: #7f8c8d;">Tiada data dorm</td></tr>';
+                }
+
+                // Ambil data penuh pelajar untuk fungsi carian
+                const responseStudents = await fetch(webAppUrl + '?action=getStudents');
+                globalStudentList = await responseStudents.json();
 
             } catch (error) {
-                console.error('Ralat memuatkan data statistik:', error);
+                console.error('Ralat memuatkan data papan pemuka:', error);
             }
         }
 
-        // Jalankan fungsi apabila laman selesai dimuatkan
-        loadDashboardStats();
+        function searchStudentData() {
+            const query = document.getElementById('student-search-input').value.toLowerCase().trim();
+            const resultContainer = document.getElementById('search-results');
+            resultContainer.innerHTML = '';
+
+            if (!query) {
+                resultContainer.innerHTML = '<div style="color: #7f8c8d; text-align: center; padding-top: 20px;">Sila masukkan carian.</div>';
+                return;
+            }
+
+            const filtered = globalStudentList.filter(s => {
+                const idStr = String(s.id || '').toLowerCase();
+                const namaStr = String(s.nama || '').toLowerCase();
+                return idStr.includes(query) || namaStr.includes(query);
+            });
+
+            if (filtered.length === 0) {
+                resultContainer.innerHTML = '<div style="color: #e74c3c; text-align: center; padding-top: 20px;">Tiada pelajar dijumpai.</div>';
+                return;
+            }
+
+            filtered.forEach(s => {
+                resultContainer.innerHTML += `
+                    <div class="student-result-item">
+                        <div style="font-weight: bold; color: #0d2347;">${s.nama} <span style="font-size: 10px; color: #7f8c8d;">(ID: ${s.id})</span></div>
+                        <div style="font-size: 11px; color: #57606f; margin-top: 2px;">
+                            <b>Info:</b> ${s.infoTingkatan || '-'} | <b>Kelas:</b> ${s.namaKelas || '-'} | <b>Dorm:</b> ${s.dorm || '-'} | <b>Jantina:</b> ${s.jantina || '-'}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Jalankan apabila laman dimuatkan
+        loadDashboardData();
     </script>
 </body>
 </html>
