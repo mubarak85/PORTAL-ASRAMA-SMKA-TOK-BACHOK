@@ -172,7 +172,7 @@
             border: 1px solid #edf2f7;
         }
 
-        /* Kotak Statistik Ringkas (4 Kotak) */
+        /* Kotak Statistik Ringkas (4 Kotak Baru) */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -238,6 +238,7 @@
             height: 120px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             transition: transform 0.2s;
+            box-sizing: border-box;
         }
 
         .action-card:hover {
@@ -251,7 +252,7 @@
 
         .action-card h3 {
             margin: 0;
-            font-size: 16px;
+            font-size: 15px;
             letter-spacing: 0.5px;
         }
 
@@ -418,39 +419,39 @@
             </div>
         </div>
 
-        <!-- Kotak Statistik Ringkas -->
+        <!-- Kotak Statistik Ringkas (4 Kotak Baru) -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-header">
-                    <span class="stat-title">JUMLAH PELAJAR</span>
-                    <span>👥</span>
+                    <span class="stat-title">PELAJAR LELAKI</span>
+                    <span>👦</span>
                 </div>
-                <div class="stat-value"><span id="val-jumlah">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
-                <div class="stat-footer" id="val-sub-pelajar">Lelaki: ... | Perempuan: ...</div>
+                <div class="stat-value"><span id="val-lelaki">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
+                <div class="stat-footer">Asrama Putera (ASPURA)</div>
             </div>
             <div class="stat-card">
                 <div class="stat-header">
-                    <span class="stat-title">HADIR HARI INI</span>
-                    <span style="color: #27ae60;">✅</span>
+                    <span class="stat-title">PELAJAR PEREMPUAN</span>
+                    <span>👧</span>
                 </div>
-                <div class="stat-value"><span id="val-hadir">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
-                <div class="stat-footer" id="val-peratus-hadir">...% daripada jumlah pelajar</div>
+                <div class="stat-value"><span id="val-perempuan">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
+                <div class="stat-footer">Asrama Puteri (ASPURI)</div>
             </div>
             <div class="stat-card">
                 <div class="stat-header">
-                    <span class="stat-title">KELUAR HARI INI</span>
-                    <span style="color: #f39c12;">🚶</span>
+                    <span class="stat-title">DORM ASPURA</span>
+                    <span>🏢</span>
                 </div>
-                <div class="stat-value"><span id="val-keluar">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
-                <div class="stat-footer" id="val-sub-keluar">Lelaki: ... | Perempuan: ...</div>
+                <div class="stat-value"><span id="val-dormaspura">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">dorm</span></div>
+                <div class="stat-footer">Jumlah Blok/Dorm Lelaki</div>
             </div>
             <div class="stat-card">
                 <div class="stat-header">
-                    <span class="stat-title">TIDAK HADIR</span>
-                    <span style="color: #c0392b;">❌</span>
+                    <span class="stat-title">DORM ASPURI</span>
+                    <span>🏫</span>
                 </div>
-                <div class="stat-value"><span id="val-tidakhadir">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
-                <div class="stat-footer" id="val-peratus-tidakhadir">...% daripada jumlah pelajar</div>
+                <div class="stat-value"><span id="val-dormaspuri">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">dorm</span></div>
+                <div class="stat-footer">Jumlah Blok/Dorm Perempuan</div>
             </div>
         </div>
 
@@ -592,17 +593,10 @@
                 const data = await response.json();
 
                 // Masukkan data ke dalam elemen HTML secara dinamik
-                document.getElementById('val-jumlah').textContent = data.jumlahPelajar;
-                document.getElementById('val-sub-pelajar').textContent = `Lelaki: ${data.lelaki} | Perempuan: ${data.perempuan}`;
-                
-                document.getElementById('val-hadir').textContent = data.hadirHariIni;
-                document.getElementById('val-peratus-hadir').textContent = `${data.peratusHadir}% daripada jumlah pelajar`;
-                
-                document.getElementById('val-keluar').textContent = data.keluarHariIni;
-                document.getElementById('val-sub-keluar').textContent = `Lelaki: ${data.keluarLelaki} | Perempuan: ${data.keluarPerempuan}`;
-                
-                document.getElementById('val-tidakhadir').textContent = data.tidakHadir;
-                document.getElementById('val-peratus-tidakhadir').textContent = `${data.peratusTidakHadir}% daripada jumlah pelajar`;
+                document.getElementById('val-lelaki').textContent = data.lelaki;
+                document.getElementById('val-perempuan').textContent = data.perempuan;
+                document.getElementById('val-dormaspura').textContent = data.dormAspura;
+                document.getElementById('val-dormaspuri').textContent = data.dormAspuri;
 
             } catch (error) {
                 console.error('Ralat memuatkan data statistik:', error);
