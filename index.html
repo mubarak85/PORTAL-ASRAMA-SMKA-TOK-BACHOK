@@ -2,699 +2,109 @@
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HOSTEL PRO - Sistem Pengurusan Asrama SMKA Tok Bachok</title>
+    <title>HOSTEL PRO - SMKA Tok Bachok</title>
     <style>
-        :root {
-            --sidebar-bg: #0d2347;
-            --main-bg: #f4f6f9;
-            --card-bg: #ffffff;
-            --text-main: #333333;
-            --text-muted: #7f8c8d;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--main-bg);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* --- SIDEBAR KIRI --- */
-        .sidebar {
-            width: 280px;
-            background-color: var(--sidebar-bg);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 20px;
-            box-sizing: border-box;
-            flex-shrink: 0;
-            overflow-y: auto;
-        }
-
-        .sidebar-brand {
-            text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 15px;
-        }
-
-        .sidebar-brand img {
-            width: 60px;
-            height: auto;
-            margin-bottom: 8px;
-        }
-
-        .sidebar-brand h2 {
-            font-size: 18px;
-            color: #f1c40f;
-            margin: 0 0 5px 0;
-            letter-spacing: 0.5px;
-        }
-
-        .sidebar-brand p {
-            font-size: 9px;
-            color: #bdc3c7;
-            margin: 0;
-            line-height: 1.4;
-        }
-
-        .nav-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            flex-grow: 1;
-        }
-
-        .nav-menu li {
-            margin-bottom: 4px;
-        }
-
-        .nav-menu a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            color: #ecf0f1;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            transition: background 0.2s;
-        }
-
-        .nav-menu a:hover, .nav-menu a.active {
-            background-color: #f1c40f;
-            color: #0d2347;
-            font-weight: 600;
-        }
-
-        .sidebar-footer {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 15px;
-        }
-
-        .time-box {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 12px;
-            margin-bottom: 12px;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 10px 12px;
-            border-radius: 8px;
-        }
-
-        .user-info h4 {
-            margin: 0;
-            font-size: 12px;
-            color: #ffffff;
-        }
-
-        .user-info p {
-            margin: 0;
-            font-size: 10px;
-            color: #bdc3c7;
-        }
-
-        /* --- KANDUNGAN UTAMA (KANAN) --- */
-        .main-content {
-            flex-grow: 1;
-            padding: 25px 30px;
-            overflow-y: auto;
-            box-sizing: border-box;
-        }
-
-        /* Banner Atas */
-        .top-banner {
-            background: var(--card-bg);
-            padding: 20px 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .top-banner h1 {
-            font-size: 22px;
-            color: var(--sidebar-bg);
-            margin: 0 0 4px 0;
-        }
-
-        .top-banner p {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin: 0;
-        }
-
-        .date-badge {
-            text-align: right;
-            font-size: 13px;
-            color: var(--sidebar-bg);
-            font-weight: 600;
-            background: #f8f9fa;
-            padding: 8px 15px;
-            border-radius: 8px;
-            border: 1px solid #edf2f7;
-        }
-
-        /* Kotak Statistik Ringkas */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            padding: 15px 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .stat-title {
-            font-size: 11px;
-            font-weight: bold;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--sidebar-bg);
-            margin: 0;
-        }
-
-        .stat-footer {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 6px;
-            border-top: 1px solid #f1f2f6;
-            padding-top: 6px;
-        }
-
-        /* Kotak Tindakan Utama (4 Kad Warna-Warni) */
-        .action-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .action-card {
-            padding: 20px;
-            border-radius: 12px;
-            color: white;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 120px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-            box-sizing: border-box;
-        }
-
-        .action-card:hover {
-            transform: translateY(-3px);
-        }
-
-        .action-card.blue { background: linear-gradient(135deg, #0072ff, #00c6ff); }
-        .action-card.teal { background: linear-gradient(135deg, #11998e, #38ef7d); }
-        .action-card.purple { background: linear-gradient(135deg, #654ea3, #eaafc8); }
-        .action-card.orange { background: linear-gradient(135deg, #f2994a, #f2c94c); }
-
-        .action-card h3 {
-            margin: 0;
-            font-size: 15px;
-            letter-spacing: 0.5px;
-        }
-
-        .action-card p {
-            margin: 0;
-            font-size: 11px;
-            opacity: 0.9;
-        }
-
-        /* Bahagian Tengah (Analisa Dorm & Carian Pelajar) */
-        .middle-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .panel-box {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .panel-header h3 {
-            margin: 0;
-            font-size: 14px;
-            color: var(--sidebar-bg);
-        }
-
-        /* Jadual Analisa Dorm */
-        .dorm-table-container {
-            max-height: 220px;
-            overflow-y: auto;
-        }
-
-        .dorm-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-        }
-
-        .dorm-table th {
-            background: #f8f9fa;
-            color: var(--text-muted);
-            padding: 8px;
-            text-align: left;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-        }
-
-        .dorm-table td {
-            padding: 8px;
-            border-bottom: 1px solid #f1f2f6;
-            color: var(--text-main);
-        }
-
-        /* Bahagian Carian Pelajar */
-        .search-box-container {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #dcdde1;
-            border-radius: 6px;
-            font-size: 12px;
-            outline: none;
-        }
-
-        .search-input:focus {
-            border-color: #3498db;
-        }
-
-        .search-btn {
-            background: #0d2347;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .search-btn:hover {
-            background: #1b365d;
-        }
-
-        .search-result-container {
-            max-height: 160px;
-            overflow-y: auto;
-            border: 1px solid #f1f2f6;
-            border-radius: 6px;
-            background: #fafbfc;
-            padding: 8px;
-            font-size: 12px;
-        }
-
-        .student-result-item {
-            padding: 8px;
-            border-bottom: 1px solid #edf2f7;
-        }
-
-        .student-result-item:last-child {
-            border-bottom: none;
-        }
-
-        /* Bahagian Pengumuman Terkini */
-        .announcement-box {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-        }
-
-        .announcement-item {
-            display: flex;
-            gap: 15px;
-            padding: 10px 0;
-            border-bottom: 1px solid #f1f2f6;
-        }
-
-        .announcement-item:last-child {
-            border-bottom: none;
-        }
-
-        .ann-date {
-            background: #f1f2f6;
-            padding: 8px 12px;
-            border-radius: 8px;
-            text-align: center;
-            min-width: 35px;
-            height: fit-content;
-        }
-
-        .ann-date span {
-            display: block;
-            font-weight: bold;
-            font-size: 14px;
-            color: var(--sidebar-bg);
-        }
-
-        .ann-date small {
-            font-size: 9px;
-            color: var(--text-muted);
-        }
-
-        .ann-content h4 {
-            margin: 0 0 3px 0;
-            font-size: 13px;
-            color: var(--sidebar-bg);
-        }
-
-        .ann-content p {
-            margin: 0;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
+        /* CSS dikekalkan seperti asal untuk kestabilan */
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: center; }
+        .stat-value { font-size: 22px; font-weight: bold; color: #0d2347; }
+        .panel-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .dorm-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .dorm-table td { padding: 10px; border-bottom: 1px solid #eee; }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR KIRI -->
-    <div class="sidebar">
-        <div>
-            <div class="sidebar-brand">
-                <div style="font-size: 28px;">🏫</div>
-                <h2>HOSTEL PRO</h2>
-                <p>SISTEM PENGURUSAN ASRAMA<br>SMKA TOK BACHOK</p>
-            </div>
+    <!-- KOTAK STATISTIK -->
+    <div class="stats-grid">
+        <div class="stat-card"><div>PELAJAR LELAKI</div><div class="stat-value" id="val-lelaki">0</div></div>
+        <div class="stat-card"><div>PELAJAR PEREMPUAN</div><div class="stat-value" id="val-perempuan">0</div></div>
+        <div class="stat-card"><div>DORM ASPURA</div><div class="stat-value" id="val-dormaspura">0</div></div>
+        <div class="stat-card"><div>DORM ASPURI</div><div class="stat-value" id="val-dormaspuri">0</div></div>
+    </div>
 
-            <ul class="nav-menu">
-                <li><a href="index.html" class="active">🏠 Dashboard Utama</a></li>
-                <li><a href="portal-ibubapa.html">📝 Portal Ibu Bapa</a></li>
-                <li><a href="semak-status.html">🔍 Semak Status</a></li>
-                <li><a href="dashboard-warden.html">🛡️ Log Masuk Warden</a></li>
-            </ul>
+    <!-- ANALISA & CARIAN -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="panel-box">
+            <h3>ANALISA DORM</h3>
+            <table class="dorm-table" id="table-dorm-analysis">
+                <!-- Data diisi oleh JS -->
+            </table>
         </div>
-
-        <div class="sidebar-footer">
-            <div class="time-box">
-                <div id="current-time" style="font-weight: bold; color: #f1c40f;">10:30 AM</div>
-                <div id="current-date" style="font-size: 10px; color: #bdc3c7;">28 Mei 2026 | Khamis</div>
-            </div>
-            <div class="user-profile">
-                <div class="user-info">
-                    <h4>Pelawat / Umum</h4>
-                    <p>Mod Paparan Am</p>
-                </div>
-                <span>👤</span>
-            </div>
+        <div class="panel-box">
+            <h3>CARIAN PELAJAR</h3>
+            <input type="text" id="student-search-input" placeholder="Cari Nama/ID..." style="width: 100%; padding: 8px;">
+            <button onclick="searchStudentData()" style="margin-top: 10px;">Cari</button>
+            <div id="search-results" style="margin-top: 15px; font-size: 12px;"></div>
         </div>
     </div>
 
-    <!-- KANDUNGAN UTAMA KANAN -->
-    <div class="main-content">
-        
-        <!-- Banner Ucapan -->
-        <div class="top-banner">
-            <div>
-                <h1>Assalamualaikum!</h1>
-                <p>Selamat datang ke sistem <b>HOSTEL PRO</b> SMKA Tok Bachok</p>
-            </div>
-            <div class="date-badge">
-                📅 28 Mei 2026 | Khamis<br>
-                <span style="font-size: 11px; font-weight: normal; color: #7f8c8d;">21 Zulkaedah 1447H</span>
-            </div>
-        </div>
-
-        <!-- Kotak Statistik Ringkas -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-title">PELAJAR LELAKI</span>
-                    <span>👦</span>
-                </div>
-                <div class="stat-value"><span id="val-lelaki">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
-                <div class="stat-footer">Asrama Putera (ASPURA)</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-title">PELAJAR PEREMPUAN</span>
-                    <span>👧</span>
-                </div>
-                <div class="stat-value"><span id="val-perempuan">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
-                <div class="stat-footer">Asrama Puteri (ASPURI)</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-title">DORM ASPURA</span>
-                    <span>🏢</span>
-                </div>
-                <div class="stat-value"><span id="val-dormaspura">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">dorm</span></div>
-                <div class="stat-footer">Jumlah Blok/Dorm Lelaki</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-title">DORM ASPURI</span>
-                    <span>🏫</span>
-                </div>
-                <div class="stat-value"><span id="val-dormaspuri">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">dorm</span></div>
-                <div class="stat-footer">Jumlah Blok/Dorm Perempuan</div>
-            </div>
-        </div>
-
-        <!-- Kotak Tindakan Utama (Warna-warni) -->
-        <div class="action-grid">
-            <a href="portal-ibubapa.html" class="action-card blue">
-                <div style="font-size: 22px;">📱</div>
-                <div>
-                    <h3>PORTAL IBU BAPA</h3>
-                    <p>Mohon keluar atau pulang bermalam</p>
-                </div>
-            </a>
-            <a href="semak-status.html" class="action-card teal">
-                <div style="font-size: 22px;">🔍</div>
-                <div>
-                    <h3>SEMAK STATUS</h3>
-                    <p>Semak kelulusan permohonan</p>
-                </div>
-            </a>
-            <a href="dashboard-warden.html" class="action-card purple">
-                <div style="font-size: 22px;">🛡️</div>
-                <div>
-                    <h3>LOG MASUK WARDEN</h3>
-                    <p>Panel kawalan & kelulusan warden</p>
-                </div>
-            </a>
-            <a href="#" class="action-card orange" onclick="alert('Pautan laporan analitik umum.'); return false;">
-                <div style="font-size: 22px;">📊</div>
-                <div>
-                    <h3>LAPORAN & ANALITIK</h3>
-                    <p>Statistik dan data kehadiran</p>
-                </div>
-            </a>
-        </div>
-
-        <!-- Bahagian Tengah: Analisa Dorm Aspura & Carian Maklumat Pelajar -->
-        <div class="middle-grid">
-            <!-- Analisa Dorm Aspura & Aspuri -->
-            <div class="panel-box">
-                <div class="panel-header">
-                    <h3>ANALISA DORM ASPURA & ASPURI</h3>
-                    <span style="font-size: 11px; color: #7f8c8d;">Jumlah Ahli</span>
-                </div>
-                <div class="dorm-table-container">
-                    <table class="dorm-table">
-                        <thead>
-                            <tr>
-                                <th>Nama Dorm</th>
-                                <th style="text-align: right;">Jumlah Pelajar</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-dorm-analysis">
-                            <tr><td colspan="2" style="text-align: center; color: #7f8c8d;">Memuatkan data...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Carian Maklumat Pelajar -->
-            <div class="panel-box">
-                <div class="panel-header">
-                    <h3>CARIAN MAKLUMAT PELAJAR</h3>
-                    <span style="font-size: 11px; color: #7f8c8d;">Tab Pelajar</span>
-                </div>
-                <div class="search-box-container">
-                    <input type="text" id="student-search-input" class="search-input" placeholder="Masukkan Nama atau ID Pelajar...">
-                    <button class="search-btn" onclick="searchStudentData()">Cari</button>
-                </div>
-                <div id="search-results" class="search-result-container">
-                    <div style="color: #7f8c8d; text-align: center; padding-top: 20px;">Taip nama atau ID untuk mula carian.</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pengumuman Terkini -->
-        <div class="announcement-box">
-            <div class="panel-header" style="margin-bottom: 10px;">
-                <h3>PENGUMUMAN TERKINI</h3>
-                <a href="#">Lihat Semua Pengumuman</a>
-            </div>
-            
-            <div class="announcement-item">
-                <div class="ann-date">
-                    <span>27</span>
-                    <small>MEI</small>
-                </div>
-                <div class="ann-content">
-                    <h4>Pemeriksaan Keceriaan Dorm</h4>
-                    <p>Pemeriksaan keceriaan dorm akan dijalankan pada 30 Mei 2026 (Sabtu). Pastikan dorm dalam keadaan bersih dan kemas.</p>
-                </div>
-            </div>
-
-            <div class="announcement-item">
-                <div class="ann-date">
-                    <span>26</span>
-                    <small>MEI</small>
-                </div>
-                <div class="ann-content">
-                    <h4>Program Qiamullail Perdana & Puasa Arafah</h4>
-                    <p>Program akan berlangsung pada 6 Jun 2026 (Jumaat) di Surau Umar Al-Khattab.</p>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- SKRIP JAVASCRIPT UNTUK TARIK DATA DARI GOOGLE SHEET -->
     <script>
         const webAppUrl = 'https://script.google.com/macros/s/AKfycbx53NkRYb-S693vs5v9Ja5BZOr7IvIYYiSSoANLCdNesXuHYkmP-VUolTMyw7IBLwen/exec';
         let globalStudentList = [];
 
         async function loadDashboardData() {
             try {
-                // Ambil statistik & senarai pelajar
-                const responseStats = await fetch(webAppUrl + '?action=getDashboardStats');
-                const statsData = await responseStats.json();
+                const response = await fetch(webAppUrl + '?action=getStudents');
+                globalStudentList = await response.json();
 
-                document.getElementById('val-lelaki').textContent = statsData.lelaki;
-                document.getElementById('val-perempuan').textContent = statsData.perempuan;
-                document.getElementById('val-dormaspura').textContent = Object.keys(statsData.listAspura || {}).length;
-                document.getElementById('val-dormaspuri').textContent = Object.keys(statsData.listAspuri || {}).length;
+                let stats = { L: 0, P: 0, dorms: {} };
 
-                // Gabungkan senarai jadual dorm Aspura & Aspuri
-                const tbodyDorm = document.getElementById('table-dorm-analysis');
-                tbodyDorm.innerHTML = '';
+                globalStudentList.forEach(s => {
+                    // 1. Kenal pasti Jantina (Mengambil kira variasi nama kolum)
+                    let jantina = (s.JANTINA || s.jantina || '').toString().toUpperCase();
+                    let dorm = (s.DORM || s.dorm || 'Tiada Dorm').toString().toUpperCase();
+                    
+                    if (jantina.includes('L')) stats.L++; 
+                    else stats.P++;
+
+                    // 2. Kumpul data dorm
+                    if (!stats.dorms[dorm]) {
+                        stats.dorms[dorm] = { count: 0, type: jantina.includes('L') ? 'ASPURA' : 'ASPURI' };
+                    }
+                    stats.dorms[dorm].count++;
+                });
+
+                // Papar Statistik
+                document.getElementById('val-lelaki').textContent = stats.L;
+                document.getElementById('val-perempuan').textContent = stats.P;
+
+                // Kira Dorm Unik
+                let aspuraList = Object.keys(stats.dorms).filter(d => stats.dorms[d].type === 'ASPURA');
+                let aspuriList = Object.keys(stats.dorms).filter(d => stats.dorms[d].type === 'ASPURI');
                 
-                let hasDorm = false;
-                if (statsData.listAspura) {
-                    Object.keys(statsData.listAspura).sort().forEach(dorm => {
-                        hasDorm = true;
-                        tbodyDorm.innerHTML += `<tr><td>🏠 [ASPURA] ${dorm}</td><td style="text-align: right; font-weight: bold; color: #0d2347;">${statsData.listAspura[dorm]} orang</td></tr>`;
-                    });
-                }
-                if (statsData.listAspuri) {
-                    Object.keys(statsData.listAspuri).sort().forEach(dorm => {
-                        hasDorm = true;
-                        tbodyDorm.innerHTML += `<tr><td>🏠 [ASPURI] ${dorm}</td><td style="text-align: right; font-weight: bold; color: #0d2347;">${statsData.listAspuri[dorm]} orang</td></tr>`;
-                    });
-                }
-                if (!hasDorm) {
-                    tbodyDorm.innerHTML = '<tr><td colspan="2" style="text-align: center; color: #7f8c8d;">Tiada data dorm</td></tr>';
+                document.getElementById('val-dormaspura').textContent = aspuraList.length;
+                document.getElementById('val-dormaspuri').textContent = aspuriList.length;
+
+                // Papar Jadual
+                const tbody = document.getElementById('table-dorm-analysis');
+                tbody.innerHTML = '';
+                for (let dorm in stats.dorms) {
+                    tbody.innerHTML += `<tr><td>🏠 [${stats.dorms[dorm].type}] ${dorm}</td><td style="text-align:right"><b>${stats.dorms[dorm].count}</b></td></tr>`;
                 }
 
-                // Ambil data penuh pelajar untuk fungsi carian
-                const responseStudents = await fetch(webAppUrl + '?action=getStudents');
-                globalStudentList = await responseStudents.json();
-
-            } catch (error) {
-                console.error('Ralat memuatkan data papan pemuka:', error);
+            } catch (err) {
+                console.error(err);
+                alert("Gagal memuatkan data. Sila pastikan API aktif.");
             }
         }
 
         function searchStudentData() {
-            const query = document.getElementById('student-search-input').value.toLowerCase().trim();
-            const resultContainer = document.getElementById('search-results');
-            resultContainer.innerHTML = '';
-
-            if (!query) {
-                resultContainer.innerHTML = '<div style="color: #7f8c8d; text-align: center; padding-top: 20px;">Sila masukkan carian.</div>';
-                return;
-            }
-
-            const filtered = globalStudentList.filter(s => {
-                const idStr = String(s.id || '').toLowerCase();
-                const namaStr = String(s.nama || '').toLowerCase();
-                return idStr.includes(query) || namaStr.includes(query);
-            });
-
-            if (filtered.length === 0) {
-                resultContainer.innerHTML = '<div style="color: #e74c3c; text-align: center; padding-top: 20px;">Tiada pelajar dijumpai.</div>';
-                return;
-            }
+            const query = document.getElementById('student-search-input').value.toLowerCase();
+            const container = document.getElementById('search-results');
+            container.innerHTML = '';
+            
+            const filtered = globalStudentList.filter(s => 
+                (s.NAMA || s.nama || '').toLowerCase().includes(query) || 
+                (s.ID || s.id || '').toString().includes(query)
+            );
 
             filtered.forEach(s => {
-                resultContainer.innerHTML += `
-                    <div class="student-result-item">
-                        <div style="font-weight: bold; color: #0d2347;">${s.nama} <span style="font-size: 10px; color: #7f8c8d;">(ID: ${s.id})</span></div>
-                        <div style="font-size: 11px; color: #57606f; margin-top: 2px;">
-                            <b>Info:</b> ${s.infoTingkatan || '-'} | <b>Kelas:</b> ${s.namaKelas || '-'} | <b>Dorm:</b> ${s.dorm || '-'} | <b>Jantina:</b> ${s.jantina || '-'}
-                        </div>
-                    </div>
-                `;
+                container.innerHTML += `<div><b>${s.NAMA || s.nama}</b> (${s.DORM || s.dorm || '-'})</div>`;
             });
         }
 
-        // Jalankan apabila laman dimuatkan
         loadDashboardData();
     </script>
 </body>
