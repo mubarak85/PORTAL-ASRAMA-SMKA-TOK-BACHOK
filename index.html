@@ -2,106 +2,129 @@
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
-    <title>HOSTEL PRO - SMKA Tok Bachok</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOSTEL PRO - Sistem Pengurusan Asrama SMKA Tok Bachok</title>
     <style>
-        /* CSS dikekalkan seperti asal untuk kestabilan */
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: center; }
-        .stat-value { font-size: 22px; font-weight: bold; color: #0d2347; }
-        .panel-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .dorm-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .dorm-table td { padding: 10px; border-bottom: 1px solid #eee; }
+        :root { --sidebar-bg: #0d2347; --main-bg: #f4f6f9; --card-bg: #ffffff; --text-main: #333333; --text-muted: #7f8c8d; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--main-bg); margin: 0; padding: 0; display: flex; height: 100vh; overflow: hidden; }
+
+        /* Sidebar */
+        .sidebar { width: 280px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; flex-shrink: 0; overflow-y: auto; }
+        .sidebar-brand { text-align: center; padding-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 15px; }
+        .sidebar-brand h2 { font-size: 18px; color: #f1c40f; margin: 0 0 5px 0; }
+        .nav-menu { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
+        .nav-menu a { display: flex; align-items: center; gap: 12px; padding: 10px 14px; color: #ecf0f1; text-decoration: none; border-radius: 8px; font-size: 13px; transition: background 0.2s; }
+        .nav-menu a:hover, .nav-menu a.active { background-color: #f1c40f; color: #0d2347; font-weight: 600; }
+        
+        /* Main Content */
+        .main-content { flex-grow: 1; padding: 25px 30px; overflow-y: auto; }
+        .stats-grid, .action-grid, .middle-grid { display: grid; gap: 15px; margin-bottom: 20px; }
+        .stats-grid { grid-template-columns: repeat(4, 1fr); }
+        .action-grid { grid-template-columns: repeat(4, 1fr); }
+        .middle-grid { grid-template-columns: 1fr 1fr; }
+        
+        .stat-card, .panel-box, .announcement-box { background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .stat-value { font-size: 24px; font-weight: bold; color: var(--sidebar-bg); }
+        .action-card { padding: 20px; border-radius: 12px; color: white; text-decoration: none; height: 120px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .blue { background: linear-gradient(135deg, #0072ff, #00c6ff); }
+        .teal { background: linear-gradient(135deg, #11998e, #38ef7d); }
+        .purple { background: linear-gradient(135deg, #654ea3, #eaafc8); }
+        .orange { background: linear-gradient(135deg, #f2994a, #f2c94c); }
+        
+        .search-input { width: 100%; padding: 10px; border: 1px solid #dcdde1; border-radius: 6px; box-sizing: border-box; }
+        .search-result-container { max-height: 200px; overflow-y: auto; border: 1px solid #f1f2f6; border-radius: 6px; padding: 8px; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <!-- KOTAK STATISTIK -->
-    <div class="stats-grid">
-        <div class="stat-card"><div>PELAJAR LELAKI</div><div class="stat-value" id="val-lelaki">0</div></div>
-        <div class="stat-card"><div>PELAJAR PEREMPUAN</div><div class="stat-value" id="val-perempuan">0</div></div>
-        <div class="stat-card"><div>DORM ASPURA</div><div class="stat-value" id="val-dormaspura">0</div></div>
-        <div class="stat-card"><div>DORM ASPURI</div><div class="stat-value" id="val-dormaspuri">0</div></div>
+    <div class="sidebar">
+        <div>
+            <div class="sidebar-brand">
+                <div style="font-size: 28px;">🏫</div>
+                <h2>HOSTEL PRO</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#" class="active">🏠 Dashboard Utama</a></li>
+            </ul>
+        </div>
     </div>
 
-    <!-- ANALISA & CARIAN -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-        <div class="panel-box">
-            <h3>ANALISA DORM</h3>
-            <table class="dorm-table" id="table-dorm-analysis">
-                <!-- Data diisi oleh JS -->
-            </table>
+    <div class="main-content">
+        <h1>Dashboard Utama</h1>
+        
+        <div class="stats-grid">
+            <div class="stat-card"><div>PELAJAR LELAKI</div><div class="stat-value" id="val-lelaki">...</div></div>
+            <div class="stat-card"><div>PELAJAR PEREMPUAN</div><div class="stat-value" id="val-perempuan">...</div></div>
+            <div class="stat-card"><div>DORM ASPURA</div><div class="stat-value" id="val-dormaspura">...</div></div>
+            <div class="stat-card"><div>DORM ASPURI</div><div class="stat-value" id="val-dormaspuri">...</div></div>
         </div>
-        <div class="panel-box">
-            <h3>CARIAN PELAJAR</h3>
-            <input type="text" id="student-search-input" placeholder="Cari Nama/ID..." style="width: 100%; padding: 8px;">
-            <button onclick="searchStudentData()" style="margin-top: 10px;">Cari</button>
-            <div id="search-results" style="margin-top: 15px; font-size: 12px;"></div>
+
+        <div class="middle-grid">
+            <!-- Analisa Dorm Dropdown -->
+            <div class="panel-box">
+                <h3>ANALISA DORM</h3>
+                <select id="dorm-selector" class="search-input" onchange="showDormData()" style="margin-bottom: 10px;">
+                    <option value="">-- Pilih Dorm --</option>
+                </select>
+                <div id="dorm-result" style="padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center;">
+                    Pilih dorm untuk lihat jumlah pelajar.
+                </div>
+            </div>
+
+            <!-- Carian Pelajar -->
+            <div class="panel-box">
+                <h3>CARIAN PELAJAR</h3>
+                <div style="display:flex; gap:5px;">
+                    <input type="text" id="student-search-input" class="search-input" placeholder="Nama atau ID...">
+                    <button onclick="searchStudentData()" style="padding:0 15px;">Cari</button>
+                </div>
+                <div id="search-results" class="search-result-container"></div>
+            </div>
         </div>
     </div>
 
     <script>
         const webAppUrl = 'https://script.google.com/macros/s/AKfycbx53NkRYb-S693vs5v9Ja5BZOr7IvIYYiSSoANLCdNesXuHYkmP-VUolTMyw7IBLwen/exec';
         let globalStudentList = [];
+        let globalDormData = {};
 
         async function loadDashboardData() {
             try {
-                const response = await fetch(webAppUrl + '?action=getStudents');
-                globalStudentList = await response.json();
-
-                let stats = { L: 0, P: 0, dorms: {} };
-
-                globalStudentList.forEach(s => {
-                    // 1. Kenal pasti Jantina (Mengambil kira variasi nama kolum)
-                    let jantina = (s.JANTINA || s.jantina || '').toString().toUpperCase();
-                    let dorm = (s.DORM || s.dorm || 'Tiada Dorm').toString().toUpperCase();
-                    
-                    if (jantina.includes('L')) stats.L++; 
-                    else stats.P++;
-
-                    // 2. Kumpul data dorm
-                    if (!stats.dorms[dorm]) {
-                        stats.dorms[dorm] = { count: 0, type: jantina.includes('L') ? 'ASPURA' : 'ASPURI' };
-                    }
-                    stats.dorms[dorm].count++;
+                const res = await fetch(webAppUrl + '?action=getDashboardStats');
+                const data = await res.json();
+                
+                document.getElementById('val-lelaki').textContent = data.lelaki;
+                document.getElementById('val-perempuan').textContent = data.perempuan;
+                globalDormData = { ...data.listAspura, ...data.listAspuri };
+                
+                const selector = document.getElementById('dorm-selector');
+                Object.keys(globalDormData).sort().forEach(dorm => {
+                    let opt = document.createElement('option');
+                    opt.value = dorm;
+                    opt.textContent = dorm;
+                    selector.appendChild(opt);
                 });
 
-                // Papar Statistik
-                document.getElementById('val-lelaki').textContent = stats.L;
-                document.getElementById('val-perempuan').textContent = stats.P;
+                const resS = await fetch(webAppUrl + '?action=getStudents');
+                globalStudentList = await resS.json();
+            } catch(e) { console.error(e); }
+        }
 
-                // Kira Dorm Unik
-                let aspuraList = Object.keys(stats.dorms).filter(d => stats.dorms[d].type === 'ASPURA');
-                let aspuriList = Object.keys(stats.dorms).filter(d => stats.dorms[d].type === 'ASPURI');
-                
-                document.getElementById('val-dormaspura').textContent = aspuraList.length;
-                document.getElementById('val-dormaspuri').textContent = aspuriList.length;
-
-                // Papar Jadual
-                const tbody = document.getElementById('table-dorm-analysis');
-                tbody.innerHTML = '';
-                for (let dorm in stats.dorms) {
-                    tbody.innerHTML += `<tr><td>🏠 [${stats.dorms[dorm].type}] ${dorm}</td><td style="text-align:right"><b>${stats.dorms[dorm].count}</b></td></tr>`;
-                }
-
-            } catch (err) {
-                console.error(err);
-                alert("Gagal memuatkan data. Sila pastikan API aktif.");
-            }
+        function showDormData() {
+            const dorm = document.getElementById('dorm-selector').value;
+            const resDiv = document.getElementById('dorm-result');
+            resDiv.innerHTML = dorm ? `Dorm <b>${dorm}</b> mempunyai <b>${globalDormData[dorm]}</b> pelajar.` : "Pilih dorm untuk lihat jumlah pelajar.";
         }
 
         function searchStudentData() {
             const query = document.getElementById('student-search-input').value.toLowerCase();
             const container = document.getElementById('search-results');
             container.innerHTML = '';
-            
             const filtered = globalStudentList.filter(s => 
-                (s.NAMA || s.nama || '').toLowerCase().includes(query) || 
-                (s.ID || s.id || '').toString().includes(query)
+                String(s.nama).toLowerCase().includes(query) || String(s.id).includes(query)
             );
-
             filtered.forEach(s => {
-                container.innerHTML += `<div><b>${s.NAMA || s.nama}</b> (${s.DORM || s.dorm || '-'})</div>`;
+                container.innerHTML += `<div style="padding:5px; border-bottom:1px solid #eee;">${s.nama} (${s.dorm})</div>`;
             });
         }
 
