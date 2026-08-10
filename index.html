@@ -375,7 +375,6 @@
     <div class="sidebar">
         <div>
             <div class="sidebar-brand">
-                <!-- Anda boleh letakkan logo sekolah di sini -->
                 <div style="font-size: 28px;">🏫</div>
                 <h2>HOSTEL PRO</h2>
                 <p>SISTEM PENGURUSAN ASRAMA<br>SMKA TOK BACHOK</p>
@@ -426,32 +425,32 @@
                     <span class="stat-title">JUMLAH PELAJAR</span>
                     <span>👥</span>
                 </div>
-                <div class="stat-value">688 <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
-                <div class="stat-footer">Lelaki: 343 | Perempuan: 345</div>
+                <div class="stat-value"><span id="val-jumlah">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
+                <div class="stat-footer" id="val-sub-pelajar">Lelaki: ... | Perempuan: ...</div>
             </div>
             <div class="stat-card">
                 <div class="stat-header">
                     <span class="stat-title">HADIR HARI INI</span>
                     <span style="color: #27ae60;">✅</span>
                 </div>
-                <div class="stat-value">620 <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
-                <div class="stat-footer">90.1% daripada jumlah pelajar</div>
+                <div class="stat-value"><span id="val-hadir">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
+                <div class="stat-footer" id="val-peratus-hadir">...% daripada jumlah pelajar</div>
             </div>
             <div class="stat-card">
                 <div class="stat-header">
                     <span class="stat-title">KELUAR HARI INI</span>
                     <span style="color: #f39c12;">🚶</span>
                 </div>
-                <div class="stat-value">42 <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
-                <div class="stat-footer">Lelaki: 25 | Perempuan: 17</div>
+                <div class="stat-value"><span id="val-keluar">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
+                <div class="stat-footer" id="val-sub-keluar">Lelaki: ... | Perempuan: ...</div>
             </div>
             <div class="stat-card">
                 <div class="stat-header">
                     <span class="stat-title">TIDAK HADIR</span>
                     <span style="color: #c0392b;">❌</span>
                 </div>
-                <div class="stat-value">68 <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
-                <div class="stat-footer">9.9% daripada jumlah pelajar</div>
+                <div class="stat-value"><span id="val-tidakhadir">...</span> <span style="font-size: 12px; font-weight: normal; color: #7f8c8d;">orang</span></div>
+                <div class="stat-footer" id="val-peratus-tidakhadir">...% daripada jumlah pelajar</div>
             </div>
         </div>
 
@@ -519,7 +518,6 @@
                     <a href="#">Lihat semua</a>
                 </div>
                 <div style="height: 140px; display: flex; align-items: flex-end; justify-content: space-between; padding-top: 15px; border-bottom: 2px solid #edf2f7; position: relative;">
-                    <!-- Simulasi Visual Graf Garisan -->
                     <div style="position: absolute; width: 100%; top: 40%; border-top: 1px dashed #dfe6e9;"></div>
                     <div style="position: absolute; width: 100%; top: 70%; border-top: 1px dashed #dfe6e9;"></div>
                     
@@ -583,5 +581,36 @@
 
     </div>
 
+    <!-- SKRIP JAVASCRIPT UNTUK TARIK DATA DARI GOOGLE SHEET -->
+    <script>
+        // Masukkan URL Web App Google Apps Script anda di sini:
+        const webAppUrl = 'https://script.google.com/macros/s/AKfycbzaOiZGzdmTneaayNwvGJfV0vB4Z2ZDSKx8h2A1Kd-GpV7Jw4RTM1U3_lMz_lH8dD00/exec';
+
+        async function loadDashboardStats() {
+            try {
+                const response = await fetch(webAppUrl + '?action=getDashboardStats');
+                const data = await response.json();
+
+                // Masukkan data ke dalam elemen HTML secara dinamik
+                document.getElementById('val-jumlah').textContent = data.jumlahPelajar;
+                document.getElementById('val-sub-pelajar').textContent = `Lelaki: ${data.lelaki} | Perempuan: ${data.perempuan}`;
+                
+                document.getElementById('val-hadir').textContent = data.hadirHariIni;
+                document.getElementById('val-peratus-hadir').textContent = `${data.peratusHadir}% daripada jumlah pelajar`;
+                
+                document.getElementById('val-keluar').textContent = data.keluarHariIni;
+                document.getElementById('val-sub-keluar').textContent = `Lelaki: ${data.keluarLelaki} | Perempuan: ${data.keluarPerempuan}`;
+                
+                document.getElementById('val-tidakhadir').textContent = data.tidakHadir;
+                document.getElementById('val-peratus-tidakhadir').textContent = `${data.peratusTidakHadir}% daripada jumlah pelajar`;
+
+            } catch (error) {
+                console.error('Ralat memuatkan data statistik:', error);
+            }
+        }
+
+        // Jalankan fungsi apabila laman selesai dimuatkan
+        loadDashboardStats();
+    </script>
 </body>
 </html>
