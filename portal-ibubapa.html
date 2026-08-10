@@ -3,109 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Asrama - Permohonan Pulang Bermalam</title>
+    <title>Portal Ibu Bapa - HOSTEL PRO SMKA Tok Bachok</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); margin: 0; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
-        .container { max-width: 550px; width: 100%; background: #ffffff; padding: 35px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); box-sizing: border-box; }
-        .back-btn { display: inline-block; margin-bottom: 20px; color: #3498db; text-decoration: none; font-weight: 600; font-size: 14px; }
-        .back-btn:hover { color: #2980b9; text-decoration: underline; }
-        h2 { color: #2c3e50; text-align: center; margin-top: 0; margin-bottom: 25px; font-size: 24px; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; }
-        .form-group { margin-bottom: 20px; position: relative; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #34495e; font-size: 14px; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #dcdde1; border-radius: 6px; box-sizing: border-box; font-size: 14px; background-color: #fdfdfd; }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: #3498db; box-shadow: 0 0 5px rgba(52, 152, 219, 0.3); background-color: #fff; }
-        input:readonly { background-color: #eaeded; color: #555; cursor: not-allowed; }
-        button { background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 14px; border: none; border-radius: 6px; width: 100%; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3); }
+        :root {
+            --primary-color: #0d2347;
+            --accent-color: #f5f7fa;
+            --text-color: #333333;
+            --border-color: #dcdde1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--accent-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Kiri ala HOSTEL PRO */
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .sidebar-top .logo-area {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar-top .logo-area h2 {
+            font-size: 20px;
+            color: #f1c40f;
+            margin: 10px 0 5px 0;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-top .logo-area p {
+            font-size: 11px;
+            color: #bdc3c7;
+            margin: 0;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-links li {
+            margin-bottom: 8px;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: #ecf0f1;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        /* Kandungan Utama Sebelah Kanan */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .header-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e1e8ed;
+            padding-bottom: 15px;
+        }
+
+        .header-title h1 {
+            color: var(--primary-color);
+            font-size: 22px;
+            margin: 0;
+        }
+
+        .form-container {
+            max-width: 700px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            background-color: #fdfdfd;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+            background-color: #fff;
+        }
+
+        input:readonly {
+            background-color: #eaeded;
+            color: #555;
+            cursor: not-allowed;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+
         button:hover { opacity: 0.9; }
         button:disabled { background: #bdc3c7; box-shadow: none; cursor: not-allowed; }
-        .alert { padding: 15px; margin-bottom: 20px; border-radius: 6px; font-size: 14px; display: none; }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            display: none;
+        }
         .alert-success { background-color: #e8f8f5; color: #27ae60; border: 1px solid #a3e4d7; }
         .alert-error { background-color: #ffd2d2; color: #c0392b; border: 1px solid #f5b7b1; }
-        .receipt-box { background: #f9f9f9; border: 1px dashed #27ae60; padding: 15px; border-radius: 6px; margin-top: 15px; text-align: left; font-size: 13px; color: #333; }
-        .action-btn { background: #27ae60; color: white; padding: 10px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; display: inline-block; text-decoration: none; text-align: center; flex: 1; }
-        .action-btn:hover { opacity: 0.9; }
         
+        .receipt-box {
+            background: #f9f9f9;
+            border: 1px dashed #27ae60;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            text-align: left;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .action-btn {
+            background: #27ae60;
+            color: white;
+            padding: 10px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+            flex: 1;
+        }
+        .action-btn:hover { opacity: 0.9; }
+
         /* Senarai Autocomplete */
-        .autocomplete-items { position: absolute; border: 1px solid #dcdde1; border-bottom: none; border-top: none; z-index: 99; top: 100%; left: 0; right: 0; max-height: 200px; overflow-y: auto; background-color: #fff; border-radius: 0 0 6px 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .autocomplete-items div { padding: 12px; cursor: pointer; border-bottom: 1px solid #dcdde1; font-size: 14px; color: #333; }
-        .autocomplete-items div:hover { background-color: #e8f4f8; color: #2980b9; font-weight: bold; }
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #fff;
+            border-radius: 0 0 6px 6px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .autocomplete-items div {
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            color: #333;
+        }
+        .autocomplete-items div:hover {
+            background-color: #e8f4f8;
+            color: #2980b9;
+            font-weight: bold;
+        }
 
         @media print {
-            .no-print { display: none; }
-            body { background: white; padding: 0; }
-            .container { box-shadow: none; padding: 0; max-width: 100%; }
+            .sidebar { display: none; }
+            .main-content { padding: 0; overflow: visible; }
+            .form-container { box-shadow: none; border: none; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <a href="index.html" class="back-btn no-print">&larr; Kembali ke Menu Utama</a>
-    <h2>Permohonan Keluar / Pulang Bermalam</h2>
-    
-    <div id="alertBox" class="alert"></div>
-
-    <form id="leaveForm" class="no-print">
-        <div class="form-group">
-            <label for="searchNama">Cari Nama Pelajar:</label>
-            <input type="text" id="searchNama" autocomplete="off" placeholder="Sedang memuat turun senarai pelajar..." disabled required>
-            <div id="autocompleteList" class="autocomplete-items"></div>
-            <small id="searchHelp" style="color: #7f8c8d; font-size: 12px;">Sila tunggu sebentar, sedang memuat data...</small>
+    <!-- SIDEBAR KIRI (Gaya Seragam HOSTEL PRO) -->
+    <div class="sidebar">
+        <div class="sidebar-top">
+            <div class="logo-area">
+                <h2>HOSTEL PRO</h2>
+                <p>SISTEM PENGURUSAN ASRAMA<br>SMKA TOK BACHOK</p>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">🏠 Menu Utama</a></li>
+                <li><a href="portal-ibubapa.html" class="active">📝 Portal Ibu Bapa</a></li>
+                <li><a href="semak-status.html">🔍 Semak Status</a></li>
+                <li><a href="dashboard-warden.html">🛡️ Log Masuk Warden</a></li>
+            </ul>
         </div>
-
-        <div class="form-group" style="display:none;">
-            <label for="idPelajar">No. ID Pelajar:</label>
-            <input type="text" id="idPelajar" readonly>
+        <div style="font-size: 11px; color: #7f8c8d; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+            &copy; 2026 SMKA Tok Bachok
         </div>
+    </div>
 
-        <div class="form-group">
-            <label for="namaPelajar">Nama Penuh Pelajar:</label>
-            <input type="text" id="namaPelajar" readonly required placeholder="Dipilih automatik daripada carian">
-        </div>
-        
-        <div class="form-group">
-            <label for="kelas">Maklumat Kelas & Dorm:</label>
-            <input type="text" id="kelas" readonly required placeholder="Dipilih automatik daripada carian">
+    <!-- KANDUNGAN UTAMA SEBELAH KANAN -->
+    <div class="main-content">
+        <div class="header-title">
+            <h1>Portal Ibu Bapa - Permohonan Pulang Bermalam</h1>
+            <span style="font-size: 13px; color: #555; background: #fff; padding: 6px 12px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">Sistem Rasmi Asrama</span>
         </div>
 
-        <div class="form-group">
-            <label for="noTelefonPemohon">No. Telefon Pemohon / Waris (WhatsApp):</label>
-            <input type="tel" id="noTelefonPemohon" required placeholder="Cth: 0123456789 (untuk rujukan warden)">
-        </div>
+        <div class="form-container">
+            <div id="alertBox" class="alert"></div>
 
-        <!-- MEDAN KOD PORTAL IBU BAPA YANG DIMINTA -->
-        <div class="form-group">
-            <label for="portalCode">Kod Portal Ibu Bapa (Diberikan oleh Warden):</label>
-            <input type="password" id="portalCode" required placeholder="Masukkan kod keselamatan portal">
-            <small style="color: #7f8c8d; font-size: 11px;">* Sila hubungi pihak warden asrama sekiranya tidak mempunyai kod ini.</small>
-        </div>
+            <form id="leaveForm">
+                <div class="form-group">
+                    <label for="searchNama">Cari Nama Pelajar:</label>
+                    <input type="text" id="searchNama" autocomplete="off" placeholder="Sedang memuat turun senarai pelajar..." disabled required>
+                    <div id="autocompleteList" class="autocomplete-items"></div>
+                    <small id="searchHelp" style="color: #7f8c8d; font-size: 12px;">Sila tunggu sebentar, sedang memuat data...</small>
+                </div>
 
-        <div class="form-group">
-            <label for="sebab">Sebab Keluar / Pulang:</label>
-            <textarea id="sebab" rows="3" required placeholder="Cth: Pulang bermalam cuti hujung minggu"></textarea>
+                <div class="form-group" style="display:none;">
+                    <label for="idPelajar">No. ID Pelajar:</label>
+                    <input type="text" id="idPelajar" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="namaPelajar">Nama Penuh Pelajar:</label>
+                    <input type="text" id="namaPelajar" readonly required placeholder="Dipilih automatik daripada carian">
+                </div>
+                
+                <div class="form-group">
+                    <label for="kelas">Maklumat Kelas & Dorm:</label>
+                    <input type="text" id="kelas" readonly required placeholder="Dipilih automatik daripada carian">
+                </div>
+
+                <div class="form-group">
+                    <label for="noTelefonPemohon">No. Telefon Pemohon / Waris (WhatsApp):</label>
+                    <input type="tel" id="noTelefonPemohon" required placeholder="Cth: 0123456789 (untuk rujukan warden)">
+                </div>
+
+                <!-- MEDAN KOD PORTAL IBU BAPA -->
+                <div class="form-group">
+                    <label for="portalCode">Kod Portal Ibu Bapa (Diberikan oleh Warden):</label>
+                    <input type="password" id="portalCode" required placeholder="Masukkan kod keselamatan portal">
+                    <small style="color: #7f8c8d; font-size: 11px;">* Sila hubungi pihak warden asrama sekiranya tidak mempunyai kod ini.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="sebab">Sebab Keluar / Pulang:</label>
+                    <textarea id="sebab" rows="3" required placeholder="Cth: Pulang bermalam cuti hujung minggu"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="tarikhPulang">Tarikh Keluar Asrama:</label>
+                    <input type="date" id="tarikhPulang" required>
+                </div>
+                <div class="form-group">
+                    <label for="tarikhBalik">Tarikh Kembali ke Asrama:</label>
+                    <input type="date" id="tarikhBalik" required>
+                </div>
+                <button type="submit" id="submitBtn" disabled style="background: #bdc3c7;">Hantar Permohonan (Sila Pilih Nama Pelajar Dulu)</button>
+            </form>
         </div>
-        <div class="form-group">
-            <label for="tarikhPulang">Tarikh Keluar Asrama:</label>
-            <input type="date" id="tarikhPulang" required>
-        </div>
-        <div class="form-group">
-            <label for="tarikhBalik">Tarikh Kembali ke Asrama:</label>
-            <input type="date" id="tarikhBalik" required>
-        </div>
-        <button type="submit" id="submitBtn" disabled style="background: #bdc3c7;">Hantar Permohonan (Sila Pilih Nama Pelajar Dulu)</button>
-    </form>
-</div>
+    </div>
 
 <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzaOiZGzdmTneaayNwvGJfV0vB4Z2ZDSKx8h2A1Kd-GpV7Jw4RTM1U3_lMz_lH8dD00/exec';
-    
-    // Nombor WhatsApp Warden (60132429642)
     const nomorWardenWhatsApp = '60132429642'; 
-
-    // URL Portal Warden
     const portalWardenURL = 'https://mubarak85.github.io/PORTAL-ASRAMA-SMKA-TOK-BACHOK/dashboard-warden.html'; 
-
-    // KOD KESELAMATAN PORTAL IBU BAPA (Boleh ditukar mengikut kesesuaian)
     const VALID_PORTAL_CODE = 'ASRAMASMKA2026'; 
 
     let studentList = [];
@@ -127,7 +345,7 @@
             searchHelp.textContent = "Taip nama dan klik pada senarai yang muncul di bawah.";
         } catch(err) {
             console.error('Gagal memuatkan senarai pelajar:', err);
-            searchHelp.textContent = "Gagal memuat senarai pelajar. Sila segar semula (refresh) halaman.";
+            searchHelp.textContent = "Gagal memuat senarai pelajar. Sila segar semula halaman.";
             searchHelp.style.color = "#c0392b";
         }
     }
@@ -196,7 +414,6 @@
         const sebabVal = document.getElementById('sebab').value;
         const noTelPemohon = document.getElementById('noTelefonPemohon').value;
 
-        // Semakan Kesahan Kod Portal Ibu Bapa
         if (enteredCode !== VALID_PORTAL_CODE) {
             showAlert('Kod Portal Ibu Bapa tidak sah! Sila semak semula kod yang diberikan oleh warden.', 'error');
             return;
@@ -249,7 +466,7 @@
 
                 alertBox.innerHTML = `
                     <b>Permohonan Berjaya Dihantar!</b>
-                    <div id="printableReceipt" class="receipt-box">
+                    <div class="receipt-box">
                         <p style="margin: 0 0 5px 0; font-weight: bold; text-align: center; color: #2c3e50;">RESIT PERMOHONAN PULANG BERMALAM</p>
                         <hr style="border: 0; border-top: 1px solid #ddd; margin: 5px 0;">
                         <b>No. Rujukan:</b> <span style="color: #2980b9;">${refNo}</span><br>
@@ -261,7 +478,7 @@
                         <b>Tarikh Balik:</b> ${tBalik}<br>
                         <b>Status:</b> Menunggu Kelulusan Warden
                     </div>
-                    <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;" class="no-print">
+                    <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
                         <div style="display: flex; gap: 8px;">
                             <a href="${whatsappLink}" target="_blank" class="action-btn" style="background: #25D366; text-align: center;">💬 Hantar ke WhatsApp Warden</a>
                             <button class="action-btn" onclick="window.print()" style="background: #27ae60;">🖨️ Cetak Bukti</button>
